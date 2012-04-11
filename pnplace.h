@@ -19,8 +19,11 @@ class PNPlace
 {
 private:
     TokenVector tokens;
+    int x;
+    int y;
 public:
     PNPlace();
+    PNPlace(int x, int y, TokenVector tokens): tokens(tokens), x(x), y(y) {}
     bool hasTokens();
 };
 

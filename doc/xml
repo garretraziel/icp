@@ -5,3 +5,15 @@ každý prvek má jedinečný identifikátor
 ukládáme:
 místa, každé má identifikátor, výčet prvků co v něm jsou (jak pro počáteční nastavení, tak pro stav simulace).
 přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchovávat in i out), seznam míst které jsou input, seznam míst, které jsou output, podle unikátního ID
+
+<?xml....>
+<petrinet>
+<places>
+    <place id="123456" positionx="123" positiony="2456"> // budu uchovavat X a Y? asi bych mel
+        <token>5</token>
+        <token>6</token>
+    </place>
+</places>
+<transitions>
+</transitions>
+</petrinet>
