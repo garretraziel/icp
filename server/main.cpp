@@ -1,5 +1,6 @@
 #include <QtCore/QCoreApplication>
 #include "petrinetserver.h"
+#include "petrisim.h"
 
 int main(int argc, char *argv[])
 {

@@ -35,4 +35,13 @@ bool PetriNetServer::start() {
 
 void PetriNetServer::handleNewConnection() {
     qDebug() << "client connected";
+
+    QTcpSocket *socket = nextPendingConnection();
+    if (!socket) return;
+
+    connect(socket, SIGNAL(readyRead()), SLOT(communicate()));
+}
+
+void PetriNetServer::communicate() {
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(this->sender());
 }

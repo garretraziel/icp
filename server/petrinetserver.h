@@ -13,6 +13,7 @@ class PetriNetServer : public QTcpServer
 private:
     QHostAddress my_ip;
     int port;
+
 public:
     explicit PetriNetServer(QObject *parent = 0, int maxconnections = 50, QString ip = "127.0.0.1", int port = 0);
     ~PetriNetServer();
@@ -24,6 +25,7 @@ public slots:
 
 private slots:
     void handleNewConnection();
+    void communicate();
 };
 
 #endif // PETRINETSERVER_H

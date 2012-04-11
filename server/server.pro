@@ -16,7 +16,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    petrinetserver.cpp
+    petrinetserver.cpp \
+    petrisim.cpp
 
 HEADERS += \
-    petrinetserver.h
+    petrinetserver.h \
+    petrisim.h
+
+
