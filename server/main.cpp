@@ -1,4 +1,5 @@
 #include <QtCore/QCoreApplication>
+#include "petrinetserver.h"
 
 int main(int argc, char *argv[])
 {
