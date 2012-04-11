@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network
+QT       += core network xml
 
 QT       -= gui
 
@@ -19,13 +19,15 @@ SOURCES += main.cpp \
     petrinetserver.cpp \
     petrisim.cpp \
     pnplace.cpp \
-    pntrans.cpp
+    pntrans.cpp \
+    simstate.cpp
 
 HEADERS += \
     petrinetserver.h \
     petrisim.h \
     pnplace.h \
-    pntrans.h
+    pntrans.h \
+    simstate.h
 
 OTHER_FILES += \
     doc/protokol
