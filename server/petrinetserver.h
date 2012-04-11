@@ -2,17 +2,28 @@
 #define PETRINETSERVER_H
 
 #include <QTcpServer>
+#include <QTcpSocket>
+
+class QTcpServer;
+class QTcpSocket;
 
 class PetriNetServer : public QTcpServer
 {
     Q_OBJECT
+private:
+    QHostAddress my_ip;
+    int port;
 public:
-    explicit PetriNetServer(QObject *parent = 0);
+    explicit PetriNetServer(QObject *parent = 0, int maxconnections = 50, QString ip = "127.0.0.1", int port = 0);
+    ~PetriNetServer();
+    bool start();
     
 signals:
     
 public slots:
-    
+
+private slots:
+    void handleNewConnection();
 };
 
 #endif // PETRINETSERVER_H
