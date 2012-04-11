@@ -17,11 +17,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     petrinetserver.cpp \
-    petrisim.cpp
+    petrisim.cpp \
+    pnplace.cpp \
+    pntrans.cpp
 
 HEADERS += \
     petrinetserver.h \
-    petrisim.h
+    petrisim.h \
+    pnplace.h \
+    pntrans.h
 
 OTHER_FILES += \
     doc/protokol
