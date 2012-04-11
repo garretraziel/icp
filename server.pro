@@ -23,4 +23,7 @@ HEADERS += \
     petrinetserver.h \
     petrisim.h
 
+OTHER_FILES += \
+    doc/protokol
+
 
