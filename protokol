@@ -1,0 +1,36 @@
+server naslouchá
+
+client posílá: OHAI (vítací řětězec)
+
+1) login, register
+------------------
+client posílá: LOGIN/delka_loginu/:login | client posílá: REGISTER/delka_loginu/:login
+client posílá: PASS/delka_hesla/:password (posílat jako SHA?, při registraci asi plaintext)
+
+server posílá: OK | server posílá: FAILLOG, konec | server posílá: BADPASS, konec | server posílá: EXISTUSER, konec
+
+2) načítání
+-----------
+client posílá: SHOW_FILES
+
+server posílá: FILES/delka_vstupu/:soubor/@verze@verze,soubor
+
+client posílá: LOAD/delka_nazvu/:soubor
+client posílá: LOADV/verze/delka_nazvu/:soubor
+
+server posílá: OK | server posílá: FAILLOAD, konec
+server posílá: SIMFILE/delka_souboru/:[XML se simulaci]
+
+3) simulace
+-----------
+client posílá: SIMSTEP | client posílá: SIMALL
+server posílá: SIMFILE/delka_souboru/:[XML se simulaci]
+
+4) posílání souborů
+-------------------
+client posílá: SIMFILE/delka_souboru/:[XML se simulaci]@info (pokud soubor s daným názvem existuje, uloží se nová verze)
+
+5) konec
+--------
+pokud server najde chybu, zavře spojení, jinak
+client posílá: KTHXBYE
