@@ -1,0 +1,7 @@
+Co všechno musí být uložené v XML (a co budeme načítat):
+
+každý prvek má jedinečný identifikátor
+
+ukládáme:
+místa, každé má identifikátor, výčet prvků co v něm jsou (jak pro počáteční nastavení, tak pro stav simulace).
+přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchovávat in i out), seznam míst které jsou input, seznam míst, které jsou output, podle unikátního ID

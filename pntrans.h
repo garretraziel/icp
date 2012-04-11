@@ -4,9 +4,7 @@
 #include <vector>
 #include "pnplace.h"
 
-class PNPlace;
-
-typedef std::vector<PNPlace> PlaceVector;
+typedef std::vector<PNPlace*> PlaceVector;
 
 class PNTrans
 {

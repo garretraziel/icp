@@ -6,6 +6,8 @@
 #include "pnplace.h"
 #include "pntrans.h"
 
+typedef std::vector<PNTrans*> TransVector;
+
 // Pro uchovani aktualniho stavu simulace
 class SimState
 {

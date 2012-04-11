@@ -30,6 +30,7 @@ HEADERS += \
     simstate.h
 
 OTHER_FILES += \
-    doc/protokol
+    doc/protokol \
+    doc/xml
 
 
