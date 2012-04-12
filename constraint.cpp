@@ -27,7 +27,8 @@ StringToPntypeMap Constraint::chooseValues(StringToTokensMap possible_values)
     return results;
 }
 
-bool Constraint::createCondition(QString string_condition) {
+bool Constraint::createCondition(QString string_condition)
+{
     //proparsuju string
     //todo: kontrolovat, zda to muzu rozrezavat v poradku
     QString first_var = string_condition.section(' ',0,0);
@@ -52,4 +53,38 @@ bool Constraint::createCondition(QString string_condition) {
     cond.op = Operators(op);
     conditions.push_back(cond);
     return true;
+}
+
+bool Constraint::conditionAccepts(struct condition cond, StringToPntypeMap values)
+{
+    pntype first = values[cond.first];
+    pntype second = (cond.type == TYPEVAR)? values[cond.second_var] : cond.second_const;
+
+    bool ok;
+
+    switch(cond.op) {
+    case OP_LESS:
+        ok = first < second;
+        break;
+    case OP_LESSEQ:
+        ok = first <= second;
+        break;
+    case OP_MOREEQ:
+        ok = first >= second;
+        break;
+    case OP_MORE:
+        ok = first > second;
+        break;
+    case OP_EQ:
+        ok = first == second;
+        break;
+    case OP_NOTEQ:
+        ok = first != second;
+        break;
+    default:
+        ok = false;
+        break;
+    }
+
+    return ok;
 }

@@ -39,6 +39,7 @@ class Constraint
 private:
     ConditionVector conditions;
     bool createCondition(QString string_condition);
+    bool conditionAccepts(struct condition cond, StringToPntypeMap values);
 public:
     Constraint();
     Constraint(StringVector initstrings);
