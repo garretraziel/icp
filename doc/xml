@@ -16,8 +16,8 @@ přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchováv
 </places>
 <transitions>
     <transition operation="x+y-y" posx="65" posy="465">
-        <constrain>x>y</constrain>
-        <constrain>z>1</constrain>
+        <constrain>x 0 y</constrain> // tady si musime dat pozor. oddelujeme mezerou, cislo udava operaci
+        <constrain>z 1 1</constrain>
         <inplace name="x">123456</inplace>
         <inplace name="y">32456</inplace>
         <inplace name="z">6544487</inplace>
