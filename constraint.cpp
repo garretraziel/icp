@@ -1,7 +1,15 @@
 #include "constraint.h"
+#include <QChar>
 
 Constraint::Constraint()
 {
+}
+
+Constraint::Constraint(StringVector initstrings) {
+    StringVector::iterator it;
+    for (it = initstrings.begin(); it < initstrings.end(); it++) {
+
+    }
 }
 
 StringToPntypeMap Constraint::chooseValues(StringToTokensMap possible_values)
@@ -13,4 +21,10 @@ StringToPntypeMap Constraint::chooseValues(StringToTokensMap possible_values)
 
     //vysledkem je mapa string na hodnotu, napr. "x" : 5. pokud neni mozno, vysledek je nulove delky
     return results;
+}
+
+bool Constraint::createCondition(QString string_condition) {
+    //proparsuju string
+    QString first_var;
+
 }
