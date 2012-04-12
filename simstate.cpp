@@ -42,12 +42,25 @@ bool SimState::setState(QString xml)
         }
         int x = one_place.attribute("x").toInt();
         int y = one_place.attribute("y").toInt();
-        PNPlace place(x,y,tokens);
-        placemap[one_place.attribute("id")] = &place;
+        PNPlace *place = new PNPlace(x,y,tokens);
+        places.push_back(place);
+        placemap[one_place.attribute("id")] = place;
         one_place = xml_places.firstChildElement("place");
     }
 
     QDomElement xml_trans = root.firstChildElement("transitions");
 
     return true;
+}
+
+SimState::~SimState()
+{
+    PlaceVector::iterator pit;
+    for (pit = places.begin(); pit < places.end(); pit++) {
+        delete *pit;
+    }
+    TransVector::iterator tit;
+    for (tit = transits.begin(); tit < transits.end(); tit++) {
+        delete *tit;
+    }
 }
