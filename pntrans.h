@@ -4,6 +4,7 @@
 #include <vector>
 #include <QString>
 #include "pnplace.h"
+#include "constraint.h"
 
 enum Operations {
     ADD,
@@ -11,13 +12,14 @@ enum Operations {
 };
 
 typedef std::vector<PNPlace*> PlaceVector;
+typedef std::vector<Constraint*> ConstraintVector;
 
 class PNTrans
 {
 private:
     PlaceVector ins;
     PlaceVector outs;
-    QString constraint;
+    ConstraintVector constraints;
     QString operation;
     int x;
     int y;
@@ -25,6 +27,7 @@ public:
     PNTrans();
     PNTrans(PlaceVector ins, PlaceVector outs, int x, int y)
         :ins(ins),outs(outs),x(x),y(y) {}
+    ~PNTrans();
 };
 
 #endif // PNTRANS_H

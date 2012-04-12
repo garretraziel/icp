@@ -15,7 +15,9 @@ přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchováv
     </place>
 </places>
 <transitions>
-    <transition constraint="x<y<z" operation="x+y-y" posx="65" posy="465">
+    <transition operation="x+y-y" posx="65" posy="465">
+        <constrain>x>y</constrain>
+        <constrain>z>1</constrain>
         <inplace name="x">123456</inplace>
         <inplace name="y">32456</inplace>
         <inplace name="z">6544487</inplace>

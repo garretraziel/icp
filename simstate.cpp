@@ -39,8 +39,8 @@ bool SimState::setState(QString xml)
             tokens.push_back(token);
             one_token = one_place.firstChildElement("token");
         }
-        int x = one_place.attribute("x").toInt();
-        int y = one_place.attribute("y").toInt();
+        int x = one_place.attribute("posx").toInt();
+        int y = one_place.attribute("posy").toInt();
         PNPlace *place = new PNPlace(x,y,tokens);
         places.push_back(place);
         placemap[one_place.attribute("id")] = place;
@@ -64,8 +64,8 @@ bool SimState::setState(QString xml)
             one_element = one_trans.firstChildElement("outplace");
         }
         //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
-        int x = one_trans.attribute("x").toInt();
-        int y = one_trans.attribute("y").toInt();
+        int x = one_trans.attribute("posx").toInt();
+        int y = one_trans.attribute("posy").toInt();
         PNTrans *trans = new PNTrans(ins, outs, x, y);
         transits.push_back(trans);
         one_trans = xml_trans.firstChildElement("transition");
