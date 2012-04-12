@@ -9,7 +9,10 @@ Constraint::Constraint()
 Constraint::Constraint(StringVector initstrings) {
     StringVector::iterator it;
     for (it = initstrings.begin(); it < initstrings.end(); it++) {
-
+        if (!createCondition(*it)) {
+            qCritical() << "Error: cannot create constraints properly.";
+            return;
+        }
     }
 }
 
