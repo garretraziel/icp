@@ -11,11 +11,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    connectdialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    connectdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    connectdialog.ui
 
 OTHER_FILES += \
     doc/protokol
