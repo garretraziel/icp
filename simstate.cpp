@@ -35,8 +35,7 @@ bool SimState::setState(QString xml)
         TokenVector tokens;
         QDomElement one_token = one_place.firstChildElement("token");
         while (!one_token.isNull()) {
-            QString string_val =  one_token.text();
-            pntype token = string_val.toInt();
+            pntype token = one_token.text().toInt();
             tokens.push_back(token);
             one_token = one_place.firstChildElement("token");
         }
@@ -49,6 +48,28 @@ bool SimState::setState(QString xml)
     }
 
     QDomElement xml_trans = root.firstChildElement("transitions");
+    QDomElement one_trans = xml_trans.firstChildElement("transition");
+
+    while (!one_trans.isNull()) {
+        PlaceVector ins;
+        PlaceVector outs;
+        QDomElement one_element = one_trans.firstChildElement("inplace");
+        while (!one_element.isNull()) {
+            ins.push_back(placemap[one_element.text()]);
+            one_element = one_trans.firstChildElement("inplace");
+        }
+        one_element = one_trans.firstChildElement("outplace");
+        while (!one_element.isNull()) {
+            outs.push_back(placemap[one_element.text()]);
+            one_element = one_trans.firstChildElement("outplace");
+        }
+        //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
+        int x = one_trans.attribute("x").toInt();
+        int y = one_trans.attribute("y").toInt();
+        PNTrans *trans = new PNTrans(ins, outs, x, y);
+        transits.push_back(trans);
+        one_trans = xml_trans.firstChildElement("transition");
+    }
 
     return true;
 }
