@@ -20,30 +20,24 @@ enum Operators {
 };
 
 enum ConditionType {
+    TYPENONE,
     TYPEVAR,
     TYPECONST
 };
 
-struct condition {
-    ConditionType type;
-    QString first;
-    Operators op;
-    int second_const;
-    QString second_var;
-};
-
-typedef std::vector<condition> ConditionVector;
-
 class Constraint
 {
 private:
-    ConditionVector conditions;
-    bool createCondition(QString string_condition);
-    bool conditionAccepts(struct condition cond, StringToPntypeMap values);
+    ConditionType type;
+    QString first;
+    Operators op;
+    QString second_var;
+    int second_const;
 public:
     Constraint();
-    Constraint(StringVector initstrings);
+    Constraint(QString string_condition);
     StringToPntypeMap chooseValues(StringToTokensMap possible_values);
+    bool conditionAccepts(StringToPntypeMap values);
 };
 
 #endif // CONSTRAINT_H

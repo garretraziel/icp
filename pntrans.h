@@ -25,8 +25,8 @@ private:
     int y;
 public:
     PNTrans();
-    PNTrans(PlaceVector ins, PlaceVector outs, int x, int y)
-        :ins(ins),outs(outs),x(x),y(y) {}
+    PNTrans(PlaceVector ins, PlaceVector outs, int x, int y, ConstraintVector constraints)
+        :ins(ins),outs(outs),constraints(constraints),x(x),y(y) {}
     ~PNTrans();
 };
 

@@ -66,7 +66,16 @@ bool SimState::setState(QString xml)
         //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
         int x = one_trans.attribute("posx").toInt();
         int y = one_trans.attribute("posy").toInt();
-        PNTrans *trans = new PNTrans(ins, outs, x, y);
+
+        ConstraintVector constraints;
+        QDomElement one_cond = one_trans.firstChildElement("constraint");
+        while (!one_cond.isNull()) {
+            Constraint *cond = new Constraint(one_cond.text());
+            constraints.push_back(cond);
+            one_cond = one_trans.firstChildElement("constraint");
+        }
+
+        PNTrans *trans = new PNTrans(ins, outs, x, y, constraints);
         transits.push_back(trans);
         one_trans = xml_trans.firstChildElement("transition");
     }
