@@ -53,16 +53,23 @@ bool SimState::setState(QString xml)
     while (!one_trans.isNull()) {
         PlaceVector ins;
         PlaceVector outs;
+        StringToPnplaceMap in_names;
+        StringToPnplaceMap out_names;
+
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
             ins.push_back(placemap[one_element.text()]);
+            in_names[one_element.attribute("name")] = placemap[one_element.text()];
             one_element = one_trans.firstChildElement("inplace");
         }
+
         one_element = one_trans.firstChildElement("outplace");
         while (!one_element.isNull()) {
             outs.push_back(placemap[one_element.text()]);
+            out_names[one_element.attribute("name")] = placemap[one_element.text()];
             one_element = one_trans.firstChildElement("outplace");
         }
+
         //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
         int x = one_trans.attribute("posx").toInt();
         int y = one_trans.attribute("posy").toInt();
@@ -75,7 +82,7 @@ bool SimState::setState(QString xml)
             one_cond = one_trans.firstChildElement("constraint");
         }
 
-        PNTrans *trans = new PNTrans(ins, outs, x, y, constraints);
+        PNTrans *trans = new PNTrans(ins, outs, x, y, constraints, in_names, out_names);
         transits.push_back(trans);
         one_trans = xml_trans.firstChildElement("transition");
     }

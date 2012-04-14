@@ -11,3 +11,18 @@ PNTrans::~PNTrans()
         delete *cit;
     }
 }
+
+bool PNTrans::fire()
+{
+    bool was_fired = false;
+
+    PlaceVector::iterator it;
+
+    StringToTokensMap hash;
+
+    for (it = ins.begin(); it < ins.end(); it++) {
+
+    }
+
+    return was_fired;
+}
