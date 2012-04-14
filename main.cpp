@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     PetriSim simulace;
 
     simulace.setState(str);
+    simulace.step();
 
     return a.exec();
 }
