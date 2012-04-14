@@ -1,5 +1,7 @@
 #include "petrinetserver.h"
 #include <QNetworkProxy>
+#include <iostream>
+#include <QByteArray>
 
 PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, QString ip, int port) :
     QTcpServer(parent)
@@ -44,4 +46,6 @@ void PetriNetServer::handleNewConnection() {
 
 void PetriNetServer::communicate() {
     QTcpSocket *socket = qobject_cast<QTcpSocket*>(this->sender());
+    QByteArray msg = socket->readAll();
+    std::cout <<  msg.data() << std::endl;
 }
