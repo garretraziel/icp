@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>642</width>
-    <height>479</height>
+    <width>673</width>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,49 +17,36 @@
    <string/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="view">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>641</width>
-      <height>381</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>380</y>
-      <width>621</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PUSH THE TEMPO</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonRect">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>400</y>
-      <width>621</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>BEHOLD, PRECHOD!</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QGraphicsView" name="view"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>PUSH THE TEMPO</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonRect">
+        <property name="text">
+         <string>BEHOLD, PRECHOD!</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>642</width>
+     <width>673</width>
      <height>20</height>
     </rect>
    </property>

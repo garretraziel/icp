@@ -1,13 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "connectdialog.h"
-#include <QtGui>
 #include <QGraphicsScene>
 #include <iostream>
-#include <map>
+#include <vector>
 
-QPointF startpos;
-bool line;
+#include "pngui.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     canvas = new QGraphicsScene(this);
 
     ui->view->setScene(canvas);
-    //ui->view->setRenderHint(QPainter::Antialiasing);
+    ui->view->setRenderHint(QPainter::Antialiasing);
     ui->view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
 }
@@ -56,76 +54,4 @@ void MainWindow::addItemRect(){
 }
 
 
-pnCircle::pnCircle(QGraphicsScene * _canvas){
-    setCursor(Qt::OpenHandCursor);
-    setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
-    canvas = _canvas;
-    canvas->addItem(this);
-}
 
-pnRect::pnRect(QGraphicsScene * _canvas){
-    setCursor(Qt::OpenHandCursor);
-    setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
-    canvas = _canvas;
-    canvas->addItem(this);
-}
-
-void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
- {
-    if(event->button()==Qt::LeftButton){
-        setCursor(Qt::ClosedHandCursor);
-        line = false;
-    }
-    else{
-        if(line){
-            line = false;
-            canvas->addLine(startpos.x(),startpos.y(),
-                            event->scenePos().x(),event->scenePos().y(),
-                            QPen(Qt::black, 1));
-        }else{
-            startpos = event->scenePos();
-            line = true;
-        }
-
-    }
- }
-
-void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
-    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton))
-             .length() < QApplication::startDragDistance()) {
-             return;
-    } //netusim k cemu to je, copypasta
-
-    this->setPos(event->scenePos().x(),event->scenePos().y());
-    setCursor(Qt::OpenHandCursor);
-}
-
-void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
- {
-     if(event->button()==Qt::LeftButton)
-         setCursor(Qt::OpenHandCursor);
-     else{
-     }
- }
-
-QRectF pnItem::boundingRect() const{
-    return QRectF(-15.5, -15.5, 34, 34);
-}
-
-void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
-    painter->setPen(QPen(Qt::black, 1));
-    painter->setBrush(QBrush(QColor(255,255,255)));
-    painter->drawEllipse(-15, -15, 30, 30);
-}
-
-void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
-    painter->setPen(QPen(Qt::black, 1));
-    painter->setBrush(QBrush(QColor(255,255,255)));
-    painter->drawRect(-15,-5,30,10);
-}

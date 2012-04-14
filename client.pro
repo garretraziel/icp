@@ -12,10 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    connectdialog.cpp
+    connectdialog.cpp \
+    pngui.cpp
 
 HEADERS  += mainwindow.h \
-    connectdialog.h
+    connectdialog.h \
+    pngui.h
 
 FORMS    += mainwindow.ui \
     connectdialog.ui
