@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>714</width>
-    <height>425</height>
+    <width>642</width>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <string/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGraphicsView" name="view">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -27,13 +27,26 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>380</y>
+      <width>621</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PUSH THE TEMPO</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>714</width>
+     <width>642</width>
      <height>20</height>
     </rect>
    </property>
