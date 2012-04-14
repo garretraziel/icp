@@ -19,6 +19,7 @@ public:
     SimState();
     ~SimState();
     bool setState(QString xml);
+    TransVector getTransits() {return transits;}
     //todo: a taky zde bude funkce vracejici XML, neco jako getStaticState a getDynamicState
 };
 

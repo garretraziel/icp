@@ -11,9 +11,23 @@ SimState PetriSim::getState()
     return state;
 }
 
-bool PetriSim::setState(SimState state)
+bool PetriSim::setState(QString xml)
 {
-    this -> state = state;
     //todo: vse co je potreba pro nastaveni stavu
-    return true;
+    return this -> state.setState(xml);
+}
+
+void PetriSim::step()
+{
+    TransVector transits = state.getTransits();
+
+    TransVector::iterator it;
+
+    bool was_fired = false;
+
+    for (it = transits.begin(); it<transits.end(); it++) {
+        if ((*it)->fire()) {
+            was_fired = true;
+        }
+    }
 }

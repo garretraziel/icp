@@ -9,11 +9,19 @@ přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchováv
 <?xml....>
 <petrinet>
 <places>
-    <place id="123456" positionx="123" positiony="2456"> // budu uchovavat X a Y? asi bych mel
+    <place id="123456" posx="123" posy="2456"> // budu uchovavat X a Y? asi bych mel
         <token>5</token>
         <token>6</token>
     </place>
 </places>
 <transitions>
+    <transition operation="x+y-y" posx="65" posy="465">
+        <constrain>x 0 y</constrain> // tady si musime dat pozor. oddelujeme mezerou, cislo udava operaci
+        <constrain>z 1 1</constrain>
+        <inplace name="x">123456</inplace>
+        <inplace name="y">32456</inplace>
+        <inplace name="z">6544487</inplace>
+        <outplace name="w">456456</outplace>
+    </transition>
 </transitions>
 </petrinet>

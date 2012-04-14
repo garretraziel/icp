@@ -20,14 +20,16 @@ SOURCES += main.cpp \
     petrisim.cpp \
     pnplace.cpp \
     pntrans.cpp \
-    simstate.cpp
+    simstate.cpp \
+    constraint.cpp
 
 HEADERS += \
     petrinetserver.h \
     petrisim.h \
     pnplace.h \
     pntrans.h \
-    simstate.h
+    simstate.h \
+    constraint.h
 
 OTHER_FILES += \
     doc/protokol \

@@ -1,6 +1,8 @@
 #include <QtCore/QCoreApplication>
 #include "petrinetserver.h"
 #include "petrisim.h"
+#include <QFile>
+#include <QTextStream>
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +16,27 @@ int main(int argc, char *argv[])
         qCritical() << "Cannot start server\n";
         return 1; //todo: chyby nejak lip
     }
+
+    QFile soubor("test.sim");
+
+    if(!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCritical("Cannot open file.");
+        return 1;
+    }
+
+    QString str;
+    QTextStream stream(&soubor);
+
+    while (!stream.atEnd()) {
+        str += stream.readLine();
+    }
+
+    soubor.close();
+
+    PetriSim simulace;
+
+    simulace.setState(str);
+    simulace.step();
 
     return a.exec();
 }

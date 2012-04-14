@@ -35,20 +35,57 @@ bool SimState::setState(QString xml)
         TokenVector tokens;
         QDomElement one_token = one_place.firstChildElement("token");
         while (!one_token.isNull()) {
-            QString string_val =  one_token.text();
-            pntype token = string_val.toInt();
+            pntype token = one_token.text().toInt();
             tokens.push_back(token);
-            one_token = one_place.firstChildElement("token");
+            one_token = one_token.nextSiblingElement("token");
         }
-        int x = one_place.attribute("x").toInt();
-        int y = one_place.attribute("y").toInt();
+        int x = one_place.attribute("posx").toInt();
+        int y = one_place.attribute("posy").toInt();
         PNPlace *place = new PNPlace(x,y,tokens);
         places.push_back(place);
         placemap[one_place.attribute("id")] = place;
-        one_place = xml_places.firstChildElement("place");
+        one_place = one_place.nextSiblingElement("place");
     }
 
     QDomElement xml_trans = root.firstChildElement("transitions");
+    QDomElement one_trans = xml_trans.firstChildElement("transition");
+
+    while (!one_trans.isNull()) {
+        PlaceVector ins;
+        PlaceVector outs;
+        PnplaceToStringMap in_names;
+        PnplaceToStringMap out_names;
+
+        QDomElement one_element = one_trans.firstChildElement("inplace");
+        while (!one_element.isNull()) {
+            ins.push_back(placemap[one_element.text()]);
+            in_names[placemap[one_element.text()]] = one_element.attribute("name");
+            one_element = one_element.nextSiblingElement("inplace");
+        }
+
+        one_element = one_trans.firstChildElement("outplace");
+        while (!one_element.isNull()) {
+            outs.push_back(placemap[one_element.text()]);
+            out_names[placemap[one_element.text()]] = one_element.attribute("name");
+            one_element = one_element.nextSiblingElement("outplace");
+        }
+
+        //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
+        int x = one_trans.attribute("posx").toInt();
+        int y = one_trans.attribute("posy").toInt();
+
+        ConstraintVector constraints;
+        QDomElement one_cond = one_trans.firstChildElement("constraint");
+        while (!one_cond.isNull()) {
+            Constraint *cond = new Constraint(one_cond.text());
+            constraints.push_back(cond);
+            one_cond = one_cond.nextSiblingElement("constraint");
+        }
+
+        PNTrans *trans = new PNTrans(ins, outs, x, y, constraints, in_names, out_names);
+        transits.push_back(trans);
+        one_trans = one_trans.nextSiblingElement("transition");
+    }
 
     return true;
 }
