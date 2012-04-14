@@ -22,7 +22,8 @@ enum Operators {
 enum ConditionType {
     TYPENONE,
     TYPEVAR,
-    TYPECONST
+    TYPECONST,
+    TYPEANYTHING
 };
 
 class Constraint
@@ -36,7 +37,8 @@ private:
 public:
     Constraint();
     Constraint(QString string_condition);
-    StringToPntypeMap chooseValues(StringToTokensMap possible_values);
+    Constraint(QString variable, ConditionType type)
+        :type(type),first(variable) {}
     bool conditionAccepts(StringToPntypeMap values);
 };
 

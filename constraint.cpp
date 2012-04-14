@@ -18,6 +18,7 @@ Constraint::Constraint(QString string_condition) {
         this -> second_var = second_var.remove(0,2);
     } else if (second_var.startsWith("c:")) {
         type = TYPECONST;
+        second_var.remove(0,2);
         this -> second_const = second_var.toInt();
     } else {
         qCritical() << "Error: bad value in condition in XML";
@@ -32,6 +33,8 @@ Constraint::Constraint(QString string_condition) {
 
 bool Constraint::conditionAccepts(StringToPntypeMap values)
 {
+    if (type == TYPEANYTHING) return true;
+
     pntype first = values[this->first];
     pntype second = (type == TYPEVAR)? values[second_var] : second_const;
 

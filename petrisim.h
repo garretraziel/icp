@@ -12,7 +12,7 @@ public:
     void run();
 
     SimState getState(); //vrati stav pro ulozeni nebo prenos
-    bool setState(SimState state); // nastavi stav, pro nahrani simulace
+    bool setState(QString xml); // nastavi stav, pro nahrani simulace
 };
 
 #endif // PETRISIM_H

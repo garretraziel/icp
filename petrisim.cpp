@@ -11,9 +11,8 @@ SimState PetriSim::getState()
     return state;
 }
 
-bool PetriSim::setState(SimState state)
+bool PetriSim::setState(QString xml)
 {
-    this -> state = state;
     //todo: vse co je potreba pro nastaveni stavu
-    return true;
+    return this -> state.setState(xml);
 }
