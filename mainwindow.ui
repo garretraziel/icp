@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>642</width>
-    <height>446</height>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,6 +38,19 @@
     </property>
     <property name="text">
      <string>PUSH THE TEMPO</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRect">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>400</y>
+      <width>621</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>BEHOLD, PRECHOD!</string>
     </property>
    </widget>
   </widget>

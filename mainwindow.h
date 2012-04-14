@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
 #include "connectdialog.h"
 
 namespace Ui {
@@ -25,18 +26,31 @@ private:
 public slots:
     void showConnectDialog();
     void addItem();
+    void addItemRect();
 };
 
 class pnItem: public QGraphicsItem
 {
 public:
-    pnItem();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    //asi mozna lepsi pres globalno promennou, uvidime
+    QGraphicsScene * canvas;
 };
+
+class pnCircle: public pnItem{
+public:
+    pnCircle(QGraphicsScene * _canvas);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+};
+class pnRect: public pnItem{
+public:
+    pnRect(QGraphicsScene * _canvas);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+};
+
 
 #endif // MAINWINDOW_H
