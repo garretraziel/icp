@@ -15,6 +15,7 @@ enum Operations {
 typedef std::vector<PNPlace*> PlaceVector;
 typedef std::vector<Constraint*> ConstraintVector;
 typedef std::map<QString,PNPlace*> StringToPnplaceMap;
+typedef std::map<PNPlace*,QString> PnplaceToStringMap;
 
 class PNTrans
 {
@@ -23,14 +24,14 @@ private:
     PlaceVector outs;
     ConstraintVector constraints;
     QString operation;
-    StringToPnplaceMap in_names;
-    StringToPnplaceMap out_names;
+    PnplaceToStringMap in_names;
+    PnplaceToStringMap out_names;
     int x;
     int y;
 public:
     PNTrans();
     PNTrans(PlaceVector ins, PlaceVector outs, int x, int y, ConstraintVector constraints,
-            StringToPnplaceMap in_names, StringToPnplaceMap out_names)
+            PnplaceToStringMap in_names, PnplaceToStringMap out_names)
         :ins(ins),outs(outs),constraints(constraints),in_names(in_names),out_names(out_names),x(x),y(y) {}
     ~PNTrans();
     bool fire();

@@ -53,20 +53,20 @@ bool SimState::setState(QString xml)
     while (!one_trans.isNull()) {
         PlaceVector ins;
         PlaceVector outs;
-        StringToPnplaceMap in_names;
-        StringToPnplaceMap out_names;
+        PnplaceToStringMap in_names;
+        PnplaceToStringMap out_names;
 
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
             ins.push_back(placemap[one_element.text()]);
-            in_names[one_element.attribute("name")] = placemap[one_element.text()];
+            in_names[placemap[one_element.text()]] = one_element.attribute("name");
             one_element = one_trans.firstChildElement("inplace");
         }
 
         one_element = one_trans.firstChildElement("outplace");
         while (!one_element.isNull()) {
             outs.push_back(placemap[one_element.text()]);
-            out_names[one_element.attribute("name")] = placemap[one_element.text()];
+            out_names[placemap[one_element.text()]] = one_element.attribute("name");
             one_element = one_trans.firstChildElement("outplace");
         }
 

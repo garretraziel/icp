@@ -21,7 +21,7 @@ bool PNTrans::fire()
     StringToTokensMap hash;
 
     for (it = ins.begin(); it < ins.end(); it++) {
-
+        hash[in_names[*it]] = (*it)->getTokens();
     }
 
     return was_fired;
