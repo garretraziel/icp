@@ -17,6 +17,9 @@ public:
     
 private:
     Ui::ConnectDialog *ui;
+
+public slots:
+    virtual void accept();
 };
 
 #endif // CONNECTDIALOG_H

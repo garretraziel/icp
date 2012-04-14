@@ -19,6 +19,9 @@ public:
 private:
     Ui::MainWindow *ui;
     ConnectDialog * cd;
+
+public slots:
+    void showConnectDialog();
 };
 
 #endif // MAINWINDOW_H
