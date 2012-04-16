@@ -21,7 +21,11 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QGraphicsView" name="view"/>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton">
@@ -55,21 +59,8 @@
      <string>Client</string>
     </property>
     <addaction name="actionConnect_to_server"/>
+    <addaction name="actionNew_Simulation"/>
     <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuSimulation">
-    <property name="title">
-     <string>Simulation</string>
-    </property>
-    <addaction name="actionStep"/>
-    <addaction name="actionRun"/>
-    <addaction name="actionStop"/>
-   </widget>
-   <widget class="QMenu" name="menuWhatever">
-    <property name="title">
-     <string>Whatever</string>
-    </property>
-    <addaction name="actionHurr_Durr"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -77,18 +68,8 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="menuNet">
-    <property name="title">
-     <string>Net</string>
-    </property>
-    <addaction name="actionSave"/>
-    <addaction name="actionLoad"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuSimulation"/>
-   <addaction name="menuWhatever"/>
    <addaction name="menuHelp"/>
-   <addaction name="menuNet"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -147,6 +128,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionNew_Simulation">
+   <property name="text">
+    <string>New Simulation</string>
    </property>
   </action>
  </widget>

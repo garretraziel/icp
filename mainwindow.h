@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "connectdialog.h"
 #include "pngui.h"
+#include <vector>
+#include <QGraphicsView>
+#include <QGraphicsScene>
 
 namespace Ui {
 class MainWindow;
@@ -22,8 +25,14 @@ private:
     ConnectDialog * cd;
     QGraphicsScene * canvas;
 
+    std::vector<QWidget *> tabVect;
+    std::vector<QGraphicsView *> viewVect;
+    std::vector<QGraphicsScene *> canvasVect;
+
 public slots:
     void showConnectDialog();
+    void showAboutDialog();
+    void newTab();
     void addItem();
     void addItemRect();
 };

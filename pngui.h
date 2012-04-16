@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QtGui>
 #include <vector>
+#include "editdialog.h"
 
 class pnItem: public QGraphicsItem
 {
@@ -29,14 +30,17 @@ public:
     pnRect(QGraphicsScene * _canvas);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
-class pnLine {
+
+class pnLine{
 private:
     pnItem * start;
     pnItem * end;
     QGraphicsScene * canvas;
     QGraphicsLineItem * line;
+    QGraphicsTextItem * label;
 public:
     pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas);
+    ~pnLine();
     void update();
 };
 

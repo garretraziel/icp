@@ -13,14 +13,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     connectdialog.cpp \
-    pngui.cpp
+    pngui.cpp \
+    aboutdialog.cpp \
+    editdialog.cpp
 
 HEADERS  += mainwindow.h \
     connectdialog.h \
-    pngui.h
+    pngui.h \
+    aboutdialog.h \
+    editdialog.h
 
 FORMS    += mainwindow.ui \
-    connectdialog.ui
+    connectdialog.ui \
+    aboutdialog.ui \
+    editdialog.ui
 
 OTHER_FILES += \
     doc/protokol

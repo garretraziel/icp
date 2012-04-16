@@ -1,4 +1,8 @@
 #include "pngui.h"
+#include <math.h>
+#include <mainwindow.h>
+
+#include <iostream>
 
 
 pnItem * startpos;
@@ -89,8 +93,15 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
    line->setZValue(-1);
    lineVect.push_back(this);
+   label = canvas->addText("Line");
+   label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
+   label->setAcceptedMouseButtons(Qt::LeftButton);
+}
+
+pnLine::~pnLine(){
 }
 
 void pnLine::update(){
     line->setLine(start->x(),start->y(),end->x(),end->y());
+    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
 }
