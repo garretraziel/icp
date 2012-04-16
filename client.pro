@@ -29,4 +29,5 @@ FORMS    += mainwindow.ui \
     editdialog.ui
 
 OTHER_FILES += \
-    doc/protokol
+    doc/protokol \
+    typologo.png

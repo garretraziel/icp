@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <iostream>
 #include <vector>
+#include <QSizePolicy>
 
 #include "pngui.h"
 
@@ -13,29 +14,22 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     cd = new ConnectDialog(this);
+    ad = new aboutDialog(this);
 
-    QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),
-                     this, SLOT(showConnectDialog()) );
+    QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
     QObject::connect(ui->pushButtonRect, SIGNAL(clicked()),this,SLOT(addItemRect()));
     QObject::connect(ui->actionAbout, SIGNAL(activated()),this,SLOT(showAboutDialog()));
     QObject::connect(ui->actionNew_Simulation, SIGNAL(activated()),this,SLOT(newTab()));
 
-    /*
-    canvas = new QGraphicsScene(this);
-    ui->view->setScene(canvas);
-    ui->view->setRenderHint(QPainter::Antialiasing);
-    ui->view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    */
-    //toto fakt není uplnì nejlep¹í
-    //((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->setRenderHint(QPainter::Antialiasing);
-
+    //layout = new QVBoxLayout();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete cd;
+    delete ad;
 
     foreach(QGraphicsScene * canvas, canvasVect){
         delete canvas;
@@ -43,23 +37,27 @@ MainWindow::~MainWindow()
     foreach(QGraphicsView * view, viewVect){
         delete view;
     }
-
-    //TODO ja kurva nevim jestli to uklizi samo a valgrindu se bojim, co to vyhodi
+    //TODO ja kurva nevim jestli to uklizi samo nejak nebo ne
 }
 
 void MainWindow::newTab(){
     //TODO oddelat ty dementni back();
     tabVect.push_back(new QWidget());
+
+    //~~~~~ tyto dva musi byt v tomto poradi
     viewVect.push_back(new QGraphicsView(tabVect.back()));
+    QLayout * layout = new QVBoxLayout(tabVect.back()); //TODO zkontrolovat jestli se uklidi
+    //~~~~~
+
     canvasVect.push_back(new QGraphicsScene(viewVect.back()));
-    //TOTO vyresit rozmery
-    viewVect.back()->setGeometry(0,0,ui->tabWidget->width(),ui->tabWidget->height());
+    viewVect.back()->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     viewVect.back()->setRenderHint(QPainter::Antialiasing);
     viewVect.back()->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     viewVect.back()->setScene(canvasVect.back());
 
+    layout->addWidget(viewVect.back());
 
-    ui->tabWidget->addTab(tabVect.back(),QString("Empty"));
+    ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
     ui->tabWidget->setCurrentWidget(tabVect.back());
 }
 
@@ -70,10 +68,10 @@ void MainWindow::showConnectDialog()
 
 void MainWindow::showAboutDialog()
 {
-    //ad->show();
+    ad->show();
 }
 
-
+//TOTO KURVA, TOTO JE MOC MOC MOC MOC KREHKY!!!!!!!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ index !!
 #define currentTabScene (((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scene())
 
 //tyhle dve by snad mohly jit sjednotit do jedne

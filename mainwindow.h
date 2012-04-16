@@ -7,6 +7,7 @@
 #include <vector>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include "aboutdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,7 @@ public:
 private:
     Ui::MainWindow *ui;
     ConnectDialog * cd;
+    aboutDialog * ad;
     QGraphicsScene * canvas;
 
     std::vector<QWidget *> tabVect;
