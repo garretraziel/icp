@@ -42,7 +42,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::newTab(){
     //TODO oddelat ty dementni back();
-    tabVect.push_back(new QWidget());
+    tabVect.push_back(new QWidget(this));
 
     //~~~~~ tyto dva musi byt v tomto poradi
     viewVect.push_back(new QGraphicsView(tabVect.back()));

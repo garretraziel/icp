@@ -14,6 +14,8 @@ pnCircle::pnCircle(QGraphicsScene * _canvas){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
+    //~~~~~~~~~~~~~~~~~~~~~  ehm...
+    editor = new editDialog;
 }
 
 pnRect::pnRect(QGraphicsScene * _canvas){
@@ -64,6 +66,10 @@ void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
      }
  }
 
+void pnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+    editor->show();
+}
+
 QRectF pnItem::boundingRect() const{
     return QRectF(-15.5, -15.5, 34, 34);
 }
@@ -86,6 +92,20 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->drawRect(-15,-5,30,10);
 }
 
+class dClickLabel: public QGraphicsTextItem {
+private:
+    pnLine * sender;
+public:
+    dClickLabel(pnLine * _sender){
+        sender = _sender;
+    }
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+        sender->editor->show();
+    }
+};
+
+
 pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    start = _start;
    end = _end;
@@ -93,9 +113,13 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
    line->setZValue(-1);
    lineVect.push_back(this);
-   label = canvas->addText("Line");
+   label = new dClickLabel(this);
+   label->setPlainText("?? Line");
+   canvas->addItem(label);
+   //label = canvas->addText("Line");
    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
    label->setAcceptedMouseButtons(Qt::LeftButton);
+   editor = new editDialog;
 }
 
 pnLine::~pnLine(){
