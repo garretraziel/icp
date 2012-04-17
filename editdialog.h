@@ -7,6 +7,8 @@ namespace Ui {
 class editDialog;
 }
 
+class pnPrimitive;
+
 class editDialog : public QDialog
 {
     Q_OBJECT
@@ -14,9 +16,10 @@ class editDialog : public QDialog
 public:
     explicit editDialog(QWidget *parent = 0);
     ~editDialog();
-    
+    void loadData(pnPrimitive * sender);
 private:
     Ui::editDialog *ui;
+    pnPrimitive * sender;
 public slots:
     virtual void accept();
 };

@@ -6,14 +6,15 @@
 #include <QGraphicsScene>
 #include <QtGui>
 #include <vector>
+
 #include "editdialog.h"
 
 class pnPrimitive {
 public:
     editDialog * editor;
+    QGraphicsTextItem * label;
 protected:
     QGraphicsScene * canvas;
-    QGraphicsTextItem * label;
 public slots:
     void editorDeleter();
 };

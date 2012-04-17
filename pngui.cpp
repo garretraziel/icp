@@ -92,6 +92,7 @@ void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 
 void pnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     Q_UNUSED(event);
+    editor->loadData(this);
     editor->show();
 }
 
@@ -127,9 +128,11 @@ public:
 protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
         Q_UNUSED(event);
+        sender->editor->loadData(sender);
         sender->editor->show();
     }
     void mousePressEvent(QGraphicsSceneMouseEvent *event){
+        Q_UNUSED(event);
         if(erase){
             for(std::vector<pnLine *>::iterator it = lineVect.begin(); it!=lineVect.end(); ++it){
                 if((*it)==sender){
