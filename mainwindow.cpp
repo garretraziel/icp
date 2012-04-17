@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->pushButtonRect, SIGNAL(clicked()),this,SLOT(addItemRect()));
     QObject::connect(ui->actionAbout, SIGNAL(activated()),this,SLOT(showAboutDialog()));
     QObject::connect(ui->actionNew_Simulation, SIGNAL(activated()),this,SLOT(newTab()));
+    QObject::connect(ui->deleter, SIGNAL(clicked()),this,SLOT(checkErase()));
 
     //layout = new QVBoxLayout();
 }
@@ -59,6 +60,7 @@ void MainWindow::newTab(){
 
     ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
     ui->tabWidget->setCurrentWidget(tabVect.back());
+
 }
 
 void MainWindow::showConnectDialog()
@@ -87,5 +89,8 @@ void MainWindow::addItemRect(){
     Q_UNUSED(item);
 }
 
+void MainWindow::checkErase(){
+    erase = ui->deleter->isChecked();
+}
 
 

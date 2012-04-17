@@ -17,6 +17,8 @@ public:
     
 private:
     Ui::editDialog *ui;
+public slots:
+    virtual void accept();
 };
 
 #endif // EDITDIALOG_H

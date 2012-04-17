@@ -12,3 +12,8 @@ editDialog::~editDialog()
 {
     delete ui;
 }
+
+void editDialog::accept(){
+
+    this->hide();
+}

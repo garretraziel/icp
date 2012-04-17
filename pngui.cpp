@@ -1,19 +1,22 @@
 #include "pngui.h"
 #include <math.h>
 #include <mainwindow.h>
-
+#include <QKeyEvent>
 #include <iostream>
 
 
 pnItem * startpos;
 bool line;
 std::vector<pnLine*> lineVect;
+bool erase;
 
 pnCircle::pnCircle(QGraphicsScene * _canvas){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
+    label = canvas->addText("?? Place");
+    label->setPos(this->x()+15,this->y()-5);
     //~~~~~~~~~~~~~~~~~~~~~  ehm...
     editor = new editDialog;
 }
@@ -23,10 +26,34 @@ pnRect::pnRect(QGraphicsScene * _canvas){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
+    label = canvas->addText("?? Transition");
+    label->setPos(this->x()+15,this->y()-5);
+    //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
+    editor = new editDialog;
 }
 
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  {
+    if(erase){
+        // toto je ovsem ohavne, ale mazat pri iterovani pres vektor se mi nepodarilo
+        std::vector<pnLine *> tmp;
+        foreach(pnLine * l, lineVect){
+            if(l->start==this || l->end == this)
+                delete l;
+            else
+                tmp.push_back(l);
+        }
+        lineVect.clear();
+        foreach(pnLine * l, tmp)
+            lineVect.push_back(l);
+
+
+        delete editor;
+        delete label;
+        delete this;
+        return; //!!! lol suicide
+    }
+
     if(event->button()==Qt::LeftButton){
         setCursor(Qt::ClosedHandCursor);
         line = false;
@@ -35,7 +62,7 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         if(line){
             line = false;
             pnLine * new_line = new pnLine(startpos,this,canvas);
-            lineVect.push_back(new_line);
+            Q_UNUSED(new_line);
         }else{
             startpos = this;
             line = true;
@@ -51,6 +78,7 @@ void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     } //netusim k cemu to je, copypasta
 
     this->setPos(event->scenePos().x(),event->scenePos().y());
+    label->setPos(this->x()+15,this->y()-5);
     foreach(pnLine * l,lineVect){
         l->update();
     }
@@ -67,6 +95,7 @@ void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
  }
 
 void pnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+    Q_UNUSED(event);
     editor->show();
 }
 
@@ -101,6 +130,7 @@ public:
     }
 protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+        Q_UNUSED(event);
         sender->editor->show();
     }
 };
@@ -112,6 +142,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    canvas = _canvas;
    line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
    line->setZValue(-1);
+   //line->
    lineVect.push_back(this);
    label = new dClickLabel(this);
    label->setPlainText("?? Line");
@@ -123,6 +154,9 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
 }
 
 pnLine::~pnLine(){
+    delete editor;
+    delete line;
+    delete label;
 }
 
 void pnLine::update(){

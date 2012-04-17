@@ -37,6 +37,7 @@ public slots:
     void newTab();
     void addItem();
     void addItemRect();
+    void checkErase();
 };
 
 

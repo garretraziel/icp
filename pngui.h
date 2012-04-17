@@ -8,7 +8,17 @@
 #include <vector>
 #include "editdialog.h"
 
-class pnItem: public QGraphicsItem
+class pnPrimitive {
+public:
+    editDialog * editor;
+protected:
+    QGraphicsScene * canvas;
+    QGraphicsTextItem * label;
+public slots:
+    void editorDeleter();
+};
+
+class pnItem: public QGraphicsItem, public pnPrimitive
 {
 public:
     QRectF boundingRect() const;
@@ -17,10 +27,6 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    //asi mozna lepsi pres globalno promennou, uvidime
-    QGraphicsScene * canvas;
-    //toto bude chtit jeste nejak rozumne poresit, zatim pro efekt okay...
-    editDialog * editor;
 };
 
 class pnCircle: public pnItem{
@@ -34,25 +40,21 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 
-class pnLine{
+class pnLine: public pnPrimitive{
 private:
-    pnItem * start;
-    pnItem * end;
-    QGraphicsScene * canvas;
     QGraphicsLineItem * line;
-    QGraphicsTextItem * label;
 public:
     pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas);
     ~pnLine();
     void update();
-    //to by slo snad lip
-    editDialog * editor;
-protected:
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    //to by asi chtelo nejakyho pritele, nez public
+    pnItem * start;
+    pnItem * end;
 };
 
 
 extern pnItem * startpos;
 extern bool line;
 extern std::vector<pnLine*> lineVect;
+extern bool erase;
 #endif // PNGUI_H

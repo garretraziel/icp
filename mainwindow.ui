@@ -29,6 +29,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>PUSH THE TEMPO</string>
         </property>
@@ -42,6 +45,16 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="deleter">
+      <property name="text">
+       <string>Delete</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
