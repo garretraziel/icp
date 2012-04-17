@@ -17,8 +17,8 @@ pnCircle::pnCircle(QGraphicsScene * _canvas){
     canvas->addItem(this);
     label = canvas->addText("?? Place");
     label->setPos(this->x()+15,this->y()-5);
-    //~~~~~~~~~~~~~~~~~~~~~  ehm...
-    editor = new editDialog;
+
+    editor = new editDialog; //toto se asi neuklizi
 }
 
 pnRect::pnRect(QGraphicsScene * _canvas){
@@ -28,6 +28,7 @@ pnRect::pnRect(QGraphicsScene * _canvas){
     canvas->addItem(this);
     label = canvas->addText("?? Transition");
     label->setPos(this->x()+15,this->y()-5);
+
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
     editor = new editDialog;
 }
@@ -72,11 +73,6 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  }
 
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
-    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton))
-             .length() < QApplication::startDragDistance()) {
-             return;
-    } //netusim k cemu to je, copypasta
-
     this->setPos(event->scenePos().x(),event->scenePos().y());
     label->setPos(this->x()+15,this->y()-5);
     foreach(pnLine * l,lineVect){
@@ -133,6 +129,17 @@ protected:
         Q_UNUSED(event);
         sender->editor->show();
     }
+    void mousePressEvent(QGraphicsSceneMouseEvent *event){
+        if(erase){
+            for(std::vector<pnLine *>::iterator it = lineVect.begin(); it!=lineVect.end(); ++it){
+                if((*it)==sender){
+                    lineVect.erase(it);
+                    delete (*it);
+                    break;
+                }
+            }
+        }
+    }
 };
 
 
@@ -140,16 +147,17 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    start = _start;
    end = _end;
    canvas = _canvas;
+
    line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
    line->setZValue(-1);
-   //line->
    lineVect.push_back(this);
+
    label = new dClickLabel(this);
    label->setPlainText("?? Line");
-   canvas->addItem(label);
-   //label = canvas->addText("Line");
    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
-   label->setAcceptedMouseButtons(Qt::LeftButton);
+   label->setAcceptedMouseButtons(Qt::LeftButton);   
+   canvas->addItem(label);
+
    editor = new editDialog;
 }
 
