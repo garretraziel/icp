@@ -16,6 +16,7 @@ typedef std::vector<PNPlace*> PlaceVector;
 typedef std::vector<Constraint*> ConstraintVector;
 typedef std::map<QString,PNPlace*> StringToPnplaceMap;
 typedef std::map<PNPlace*,QString> PnplaceToStringMap;
+typedef std::vector<StringToPntypeMap> StrPntMapVector;
 
 class PNTrans
 {
@@ -27,7 +28,7 @@ private:
     int x;
     int y;
 
-    StringToPntypeMap chooseValues(StringToTokensMap hash);
+    StrPntMapVector chooseValues(StringToTokensMap hash);
 public:
     PNTrans();
     PNTrans(int x, int y, ConstraintVector constraints,
