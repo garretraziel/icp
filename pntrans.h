@@ -20,19 +20,19 @@ typedef std::map<PNPlace*,QString> PnplaceToStringMap;
 class PNTrans
 {
 private:
-    PlaceVector ins;
-    PlaceVector outs;
     ConstraintVector constraints;
     QString operation;
-    PnplaceToStringMap in_names;
-    PnplaceToStringMap out_names;
+    StringToPnplaceMap in_names;
+    StringToPnplaceMap out_names;
     int x;
     int y;
+
+    StringToPntypeMap chooseValues(StringToTokensMap hash);
 public:
     PNTrans();
-    PNTrans(PlaceVector ins, PlaceVector outs, int x, int y, ConstraintVector constraints,
-            PnplaceToStringMap in_names, PnplaceToStringMap out_names)
-        :ins(ins),outs(outs),constraints(constraints),in_names(in_names),out_names(out_names),x(x),y(y) {}
+    PNTrans(int x, int y, ConstraintVector constraints,
+            StringToPnplaceMap in_names, StringToPnplaceMap out_names)
+        :constraints(constraints),in_names(in_names),out_names(out_names),x(x),y(y) {}
     ~PNTrans();
     bool fire();
 };

@@ -51,22 +51,18 @@ bool SimState::setState(QString xml)
     QDomElement one_trans = xml_trans.firstChildElement("transition");
 
     while (!one_trans.isNull()) {
-        PlaceVector ins;
-        PlaceVector outs;
-        PnplaceToStringMap in_names;
-        PnplaceToStringMap out_names;
+        StringToPnplaceMap in_names;
+        StringToPnplaceMap out_names;
 
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
-            ins.push_back(placemap[one_element.text()]);
-            in_names[placemap[one_element.text()]] = one_element.attribute("name");
+            in_names[one_element.attribute("name")] = placemap[one_element.text()];
             one_element = one_element.nextSiblingElement("inplace");
         }
 
         one_element = one_trans.firstChildElement("outplace");
         while (!one_element.isNull()) {
-            outs.push_back(placemap[one_element.text()]);
-            out_names[placemap[one_element.text()]] = one_element.attribute("name");
+            out_names[one_element.attribute("name")] = placemap[one_element.text()];
             one_element = one_element.nextSiblingElement("outplace");
         }
 
@@ -82,7 +78,7 @@ bool SimState::setState(QString xml)
             one_cond = one_cond.nextSiblingElement("constraint");
         }
 
-        PNTrans *trans = new PNTrans(ins, outs, x, y, constraints, in_names, out_names);
+        PNTrans *trans = new PNTrans(x, y, constraints, in_names, out_names);
         transits.push_back(trans);
         one_trans = one_trans.nextSiblingElement("transition");
     }
