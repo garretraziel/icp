@@ -1,5 +1,6 @@
 #include "pntrans.h"
 #include <QDebug>
+#include <iostream>
 
 typedef std::vector<int> IntVector;
 
@@ -32,6 +33,19 @@ bool PNTrans::fire()
     if (!result.empty()) {
         was_fired = true;
         // a tady odeberu prvky a provedu operaci
+        StrPntMapVector::iterator it;
+        for (it = result.begin(); it != result.end(); it++) {
+            using std::cout;
+            using std::endl;
+            StringToPntypeMap val = (*it);
+            StringToPntypeMap::iterator mapiter;
+            for (mapiter = val.begin(); mapiter != val.end(); mapiter++) {
+                QString name = (*mapiter).first;
+                pntype value = (*mapiter).second;
+                cout << qPrintable(name) << ": " << value << endl;
+            }
+            cout << endl;
+        }
     }
 
     return was_fired;
