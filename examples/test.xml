@@ -15,17 +15,19 @@
       <token>2000</token>
       <token>3000</token>
     </place>
-    <place id="5" posx="4" posy="4">
+    <place id="4" posx="3" posy="3">
       <token>501</token>
       <token>401</token>
       <token>101</token>
       <token>201</token>
     </place>
-    <place id="4" posx="3" posy="3">
+    <place id="10" posx="5" posy="5">
+    </place>
+    <place id="11" posx="6" posy="6">
     </place>
   </places>
   <transitions>
-    <transition operation="x+y-z" posx="5" posy="5">
+    <transition id="10" posx="5" posy="5">
       <constraint type="const" var1="x" op="3" const="1"/>
       <constraint type="var" var1="x" op="0" var2="y"/>
       <constraint type="const" var1="z" op="3" const="1000"/>
@@ -33,8 +35,19 @@
       <inplace name="x">1</inplace>
       <inplace name="y">2</inplace>
       <inplace name="z">3</inplace>
-      <inplace name="ze">5</inplace>
-      <outplace name="w">4</outplace>
+      <inplace name="ze">4</inplace>
+      <outplace name="w">10</outplace>
+      <outplace name="v">11</outplace>
+      <operation output="w">
+        <plus id="x"/>
+        <minus id="y"/>
+        <plus id="z"/>
+        <plus id="ze"/>
+      </operation>
+      <operation output="v">
+        <plus id="y"/>
+        <minus id="z"/>
+      </operation>
     </transition>
   </transitions>
 </petrinet>
