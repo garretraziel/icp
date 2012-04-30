@@ -1,8 +1,6 @@
 #include "simstate.h"
 #include <map>
 
-typedef std::map<QString,PNPlace*> PlaceMap;
-
 SimState::SimState()
 {
 }
@@ -29,8 +27,6 @@ bool SimState::setState(QString xml)
     QDomElement xml_places = root.firstChildElement("places");
     QDomElement one_place = xml_places.firstChildElement("place");
 
-    PlaceMap placemap;
-
     while (!one_place.isNull()) {
         TokenVector tokens;
         QDomElement one_token = one_place.firstChildElement("token");
@@ -41,9 +37,9 @@ bool SimState::setState(QString xml)
         }
         int x = one_place.attribute("posx").toInt();
         int y = one_place.attribute("posy").toInt();
-        PNPlace *place = new PNPlace(x,y,tokens);
+        PNPlace *place = new PNPlace(x,y,one_place.attribute("id").toInt(),tokens);
         places.push_back(place);
-        placemap[one_place.attribute("id")] = place;
+        places_id[one_place.attribute("id")] = place;
         one_place = one_place.nextSiblingElement("place");
     }
 
@@ -56,13 +52,13 @@ bool SimState::setState(QString xml)
 
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
-            in_names[one_element.attribute("name")] = placemap[one_element.text()];
+            in_names[one_element.attribute("name")] = places_id[one_element.text()];
             one_element = one_element.nextSiblingElement("inplace");
         }
 
         one_element = one_trans.firstChildElement("outplace");
         while (!one_element.isNull()) {
-            out_names[one_element.attribute("name")] = placemap[one_element.text()];
+            out_names[one_element.attribute("name")] = places_id[one_element.text()];
             one_element = one_element.nextSiblingElement("outplace");
         }
 
@@ -83,7 +79,29 @@ bool SimState::setState(QString xml)
             one_cond = one_cond.nextSiblingElement("constraint");
         }
 
-        PNTrans *trans = new PNTrans(x, y, constraints, in_names, out_names);
+        OutputOperations operations;
+        QDomElement one_op = one_trans.firstChildElement("operation");
+        while (!one_op.isNull()){
+            OneOut oneout;
+            oneout.output = places_id[one_trans.attribute("output")];
+            QDomElement one_operation = one_op.firstChildElement();
+            while(!one_operation.isNull()) {
+                Operation op;
+                if (one_operation.tagName() == "plus") {
+                    op.op = ADD;
+                } else {
+                    op.op = SUB;
+                }
+                op.var = one_operation.attribute("id");
+                oneout.operations.push_back(op);
+                one_operation.nextSiblingElement();
+            }
+            operations.push_back(oneout);
+            one_op = one_op.nextSiblingElement("operation");
+        }
+
+        PNTrans *trans = new PNTrans(x, y, one_trans.attribute("id").toInt(), constraints, in_names, out_names, operations);
+        transits_id[one_trans.attribute("id")] = trans;
         transits.push_back(trans);
         one_trans = one_trans.nextSiblingElement("transition");
     }

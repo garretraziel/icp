@@ -9,16 +9,17 @@ typedef std::vector<pntype> TokenVector;
 class PNPlace
 {
 private:
-    TokenVector ready_tokens;
-    TokenVector new_tokens;
+    TokenVector tokens;
     int x;
     int y;
+    int id;
+
 public:
     PNPlace();
-    PNPlace(int x, int y, TokenVector tokens): ready_tokens(tokens), x(x), y(y) {}
+    PNPlace(int x, int y, int id, TokenVector tokens): tokens(tokens), x(x), y(y), id(id) {}
     bool hasTokens();
     TokenVector getTokens();
-    void updateTokens();
+    void putToken(pntype token);
 };
 
 #endif // PNPLACE_H

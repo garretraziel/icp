@@ -6,18 +6,15 @@ PNPlace::PNPlace()
 
 bool PNPlace::hasTokens()
 {
-    if (ready_tokens.size())
-        return true;
-    return false;
+    return !tokens.empty();
 }
 
 TokenVector PNPlace::getTokens()
 {
-    return ready_tokens;
+    return tokens;
 }
 
-void PNPlace::updateTokens()
+void PNPlace::putToken(pntype token)
 {
-    ready_tokens.insert(ready_tokens.end(),new_tokens.begin(),new_tokens.end());
-    new_tokens.clear();
+    tokens.push_back(token);
 }

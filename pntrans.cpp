@@ -18,8 +18,6 @@ PNTrans::~PNTrans()
 
 bool PNTrans::fire()
 {
-    bool was_fired = false;
-
     StringToPnplaceMap::iterator it;
 
     StringToTokensMap hash;
@@ -28,27 +26,13 @@ bool PNTrans::fire()
         hash[(*it).first] = (*it).second->getTokens();
     }
 
-    StrPntMapVector result = chooseValues(hash); //todo: bude vracet vector tohohle, kvuli moznostem
+    possible_choices = chooseValues(hash); //todo: bude vracet vector tohohle, kvuli moznostem
 
-    if (!result.empty()) {
-        was_fired = true;
-        // a tady odeberu prvky a provedu operaci
-        StrPntMapVector::iterator it;
-        for (it = result.begin(); it != result.end(); it++) {
-            using std::cout;
-            using std::endl;
-            StringToPntypeMap val = (*it);
-            StringToPntypeMap::iterator mapiter;
-            for (mapiter = val.begin(); mapiter != val.end(); mapiter++) {
-                QString name = (*mapiter).first;
-                pntype value = (*mapiter).second;
-                cout << qPrintable(name) << ": " << value << endl;
-            }
-            cout << endl;
-        }
+    if (possible_choices.empty()) {
+        return false;
     }
 
-    return was_fired;
+    return true;
 }
 
 StrPntMapVector PNTrans::chooseValues(StringToTokensMap hash)
@@ -103,4 +87,31 @@ StrPntMapVector PNTrans::chooseValues(StringToTokensMap hash)
     }
 
     return result;
+}
+
+bool PNTrans::doOperations(unsigned int choice)
+{
+    if (choice >= possible_choices.size()) return false;
+    StringToPntypeMap mapping_choice = possible_choices[choice];
+
+    OutputOperations::iterator outit;
+    for (outit = operations.begin(); outit < operations.end(); outit++) {
+        pntype result = 0;
+        OneOut oneout = (*outit);
+        OperationVector::iterator opit;
+        for (opit = oneout.operations.begin(); opit < oneout.operations.end(); opit++) {
+            Operation op = (*opit);
+            if (op.op == ADD) {
+                result += mapping_choice[op.var];
+            } else if (op.op == SUB){
+                result -= mapping_choice[op.var];
+            } else {
+                qCritical() << "Error: bad operation in transition";
+                return false;
+            }
+        }
+        oneout.output->putToken(result);
+    }
+
+    return true;
 }

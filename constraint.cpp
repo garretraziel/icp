@@ -7,7 +7,8 @@ Constraint::Constraint()
     type = TYPENONE;
 }
 
-Constraint::Constraint(QString var1, int op, QString var2) {
+Constraint::Constraint(QString var1, int op, QString var2)
+{
     first = var1;
     second_var = var2;
     if (op < 0 || op > 5) {
@@ -18,7 +19,8 @@ Constraint::Constraint(QString var1, int op, QString var2) {
     type = TYPEVAR;
 }
 
-Constraint::Constraint(QString var1, int op, int cons) {
+Constraint::Constraint(QString var1, int op, int cons)
+{
     first = var1;
     second_const = cons;
     if (op < 0 || op > 5) {
@@ -29,7 +31,8 @@ Constraint::Constraint(QString var1, int op, int cons) {
     type = TYPECONST;
 }
 
-Constraint::Constraint(QString string_condition) {
+Constraint::Constraint(QString string_condition)
+{
     //proparsuju string
     //todo: kontrolovat, zda to muzu rozrezavat v poradku
     first = string_condition.section(' ',0,0);

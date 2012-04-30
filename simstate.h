@@ -2,12 +2,14 @@
 #define SIMSTATE_H
 
 #include <vector>
+#include <map>
 #include <QtXml>
 #include <QDomDocument>
 #include "pnplace.h"
 #include "pntrans.h"
 
 typedef std::vector<PNTrans*> TransVector;
+typedef std::map<QString,PNTrans*> StringToPntransMap;
 
 // Pro uchovani aktualniho stavu simulace
 class SimState
@@ -15,6 +17,9 @@ class SimState
 private:
     PlaceVector places;
     TransVector transits;
+    StringToPnplaceMap places_id;
+    StringToPntransMap transits_id;
+
 public:
     SimState();
     ~SimState();
