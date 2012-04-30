@@ -40,13 +40,14 @@ private:
     OutputOperations operations;
     int x;
     int y;
-    int id;
     StrPntMapVector possible_choices;
 
     StrPntMapVector chooseValues(StringToTokensMap hash);
 public:
+    QString id;
+
     PNTrans();
-    PNTrans(int x, int y, int id, ConstraintVector constraints,
+    PNTrans(int x, int y, QString id, ConstraintVector constraints,
             StringToPnplaceMap in_names, StringToPnplaceMap out_names, OutputOperations operations)
         :constraints(constraints),in_names(in_names),out_names(out_names),operations(operations),x(x),y(y),id(id) {}
     ~PNTrans();

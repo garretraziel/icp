@@ -37,7 +37,7 @@ bool SimState::setState(QString xml)
         }
         int x = one_place.attribute("posx").toInt();
         int y = one_place.attribute("posy").toInt();
-        PNPlace *place = new PNPlace(x,y,one_place.attribute("id").toInt(),tokens);
+        PNPlace *place = new PNPlace(x,y,one_place.attribute("id"),tokens);
         places.push_back(place);
         places_id[one_place.attribute("id")] = place;
         one_place = one_place.nextSiblingElement("place");
@@ -62,7 +62,6 @@ bool SimState::setState(QString xml)
             one_element = one_element.nextSiblingElement("outplace");
         }
 
-        //todo: jeste cteni podminek = vymyset zpusob, jak se bude ukladat
         int x = one_trans.attribute("posx").toInt();
         int y = one_trans.attribute("posy").toInt();
 
@@ -83,7 +82,7 @@ bool SimState::setState(QString xml)
         QDomElement one_op = one_trans.firstChildElement("operation");
         while (!one_op.isNull()){
             OneOut oneout;
-            oneout.output = places_id[one_trans.attribute("output")];
+            oneout.output = out_names[one_trans.attribute("output")];
             QDomElement one_operation = one_op.firstChildElement();
             while(!one_operation.isNull()) {
                 Operation op;
@@ -94,13 +93,13 @@ bool SimState::setState(QString xml)
                 }
                 op.var = one_operation.attribute("id");
                 oneout.operations.push_back(op);
-                one_operation.nextSiblingElement();
+                one_operation = one_operation.nextSiblingElement();
             }
             operations.push_back(oneout);
             one_op = one_op.nextSiblingElement("operation");
         }
 
-        PNTrans *trans = new PNTrans(x, y, one_trans.attribute("id").toInt(), constraints, in_names, out_names, operations);
+        PNTrans *trans = new PNTrans(x, y, one_trans.attribute("id"), constraints, in_names, out_names, operations);
         transits_id[one_trans.attribute("id")] = trans;
         transits.push_back(trans);
         one_trans = one_trans.nextSiblingElement("transition");
@@ -119,4 +118,9 @@ SimState::~SimState()
     for (tit = transits.begin(); tit < transits.end(); tit++) {
         delete *tit;
     }
+}
+
+QString SimState::getState()
+{
+
 }

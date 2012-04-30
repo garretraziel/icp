@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         return 1; //todo: chyby nejak lip
     }
 
-    QFile soubor("test2.xml");
+    QFile soubor("test.xml");
 
     if(!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCritical("Cannot open file.");

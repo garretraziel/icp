@@ -2,6 +2,7 @@
 #define PNPLACE_H
 
 #include <vector>
+#include <QString>
 
 typedef int pntype;
 typedef std::vector<pntype> TokenVector;
@@ -12,11 +13,12 @@ private:
     TokenVector tokens;
     int x;
     int y;
-    int id;
 
 public:
+    QString id;
+
     PNPlace();
-    PNPlace(int x, int y, int id, TokenVector tokens): tokens(tokens), x(x), y(y), id(id) {}
+    PNPlace(int x, int y, QString id, TokenVector tokens): tokens(tokens), x(x), y(y), id(id) {}
     bool hasTokens();
     TokenVector getTokens();
     void putToken(pntype token);
