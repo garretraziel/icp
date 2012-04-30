@@ -37,6 +37,8 @@ private:
 public:
     Constraint();
     Constraint(QString string_condition);
+    Constraint(QString var1, int op, QString var2);
+    Constraint(QString var1, int op, int cons);
     Constraint(QString variable, ConditionType type)
         :type(type),first(variable) {}
     bool conditionAccepts(StringToPntypeMap values);

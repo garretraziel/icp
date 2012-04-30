@@ -73,7 +73,12 @@ bool SimState::setState(QString xml)
         ConstraintVector constraints;
         QDomElement one_cond = one_trans.firstChildElement("constraint");
         while (!one_cond.isNull()) {
-            Constraint *cond = new Constraint(one_cond.text());
+            Constraint *cond;
+            if (one_cond.attribute("type") == "const") {
+                cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("const").toInt());
+            } else {
+                cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("var2"));
+            }
             constraints.push_back(cond);
             one_cond = one_cond.nextSiblingElement("constraint");
         }
