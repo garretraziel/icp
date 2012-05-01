@@ -28,13 +28,13 @@ enum ConditionType {
 
 class Constraint
 {
-private:
+public:
     ConditionType type;
     QString first;
     Operators op;
     QString second_var;
     int second_const;
-public:
+
     Constraint();
     Constraint(QString string_condition);
     Constraint(QString var1, int op, QString var2);

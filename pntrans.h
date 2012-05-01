@@ -34,14 +34,14 @@ typedef std::vector<struct OneOut> OutputOperations;
 class PNTrans
 {
 private:
-    ConstraintVector constraints;
-    StringToPnplaceMap in_names;
-    StringToPnplaceMap out_names;
-    OutputOperations operations;
     StrPntMapVector possible_choices;
 
     StrPntMapVector chooseValues(StringToTokensMap hash);
 public:
+    ConstraintVector constraints;
+    StringToPnplaceMap in_names;
+    StringToPnplaceMap out_names;
+    OutputOperations operations;
     QString id;
     QString x;
     QString y;

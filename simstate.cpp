@@ -129,13 +129,13 @@ QString SimState::getState()
 
     doc.writeStartElement("places");
 
-    StringToPnplaceMap::iterator pit;
+    PlaceVector::iterator pit;
 
-    for (pit = places_id.begin(); pit != places_id.end(); pit++) {
+    for (pit = places.begin(); pit != places.end(); pit++) {
         doc.writeStartElement("place");
 
-        PNPlace *place = (*pit).second;
-        doc.writeAttribute("id",(*pit).first);
+        PNPlace *place = (*pit);
+        doc.writeAttribute("id",place->id);
         doc.writeAttribute("posx",place->x);
         doc.writeAttribute("posy",place->y);
 
@@ -152,6 +152,71 @@ QString SimState::getState()
     doc.writeEndElement();
 
     doc.writeStartElement("transitions");
+
+    TransVector::iterator trit;
+
+    for (trit = transits.begin(); trit != transits.end(); trit++) {
+        doc.writeStartElement("transition");
+
+        PNTrans *transit = (*trit);
+        doc.writeAttribute("id",transit->id);
+        doc.writeAttribute("posx",transit->x);
+        doc.writeAttribute("posy",transit->y);
+
+        ConstraintVector::iterator cvit;
+        for (cvit = transit->constraints.begin(); cvit != transit->constraints.end(); cvit++) {
+            Constraint *constraint = (*cvit);
+
+            doc.writeEmptyElement("constraint");
+
+            if (constraint -> type == TYPENONE) {
+                doc.writeAttribute("type","none");
+            } else if (constraint -> type == TYPEANYTHING) {
+                doc.writeAttribute("type","anything"); //todo: toto implementovat i v nacitani
+            } else {
+                doc.writeAttribute("var1",constraint->first);
+                doc.writeAttribute("op",QString::number(int(constraint->op)));
+                if (constraint -> type == TYPEVAR) {
+                    doc.writeAttribute("type","var");
+                    doc.writeAttribute("var2",constraint->second_var);
+                } else if (constraint -> type == TYPECONST) {
+                    doc.writeAttribute("type","const");
+                    doc.writeAttribute("const",QString::number(constraint->second_const));
+                }
+            }
+
+        }
+
+        StringToPnplaceMap::iterator placeit;
+
+        for (placeit = transit->in_names.begin(); placeit != transit->in_names.end(); placeit++) {
+            doc.writeStartElement("inplace");
+            PNPlace *place = (*placeit).second;
+            doc.writeAttribute("name",(*placeit).first);
+            doc.writeCharacters(place->id);
+            doc.writeEndElement();
+        }
+
+        for (placeit = transit->out_names.begin(); placeit != transit->out_names.end(); placeit++) {
+            doc.writeStartElement("outplace");
+            doc.writeAttribute("name",(*placeit).first);
+            PNPlace *place = (*placeit).second;
+            doc.writeCharacters(place->id);
+            doc.writeEndElement();
+        }
+
+        OutputOperations::iterator oit;
+
+        for (oit = transit->operations.begin(); oit != transit->operations.end(); oit++) {
+            doc.writeStartElement("operation");
+            doc.writeEndElement();
+        }
+
+
+
+        doc.writeEndElement();
+    }
+
     doc.writeEndElement();
 
     doc.writeEndElement();
