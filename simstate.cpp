@@ -79,7 +79,7 @@ bool SimState::setState(QString xml)
         QDomElement one_op = one_trans.firstChildElement("operation");
         while (!one_op.isNull()){
             OneOut oneout;
-            oneout.output = out_names[one_op.attribute("output")];
+            oneout.output = one_op.attribute("output");
             QDomElement one_operation = one_op.firstChildElement();
             while(!one_operation.isNull()) {
                 Operation op;
@@ -209,10 +209,21 @@ QString SimState::getState()
 
         for (oit = transit->operations.begin(); oit != transit->operations.end(); oit++) {
             doc.writeStartElement("operation");
+            doc.writeAttribute("output",(*oit).output);
+            OperationVector::iterator opit;
+
+            for (opit = (*oit).operations.begin(); opit != (*oit).operations.end(); opit++) {
+                Operation operation = (*opit);
+                if (operation.op == ADD) doc.writeEmptyElement("plus");
+                else if (operation.op == SUB) doc.writeEmptyElement("minus");
+                else {
+                    qCritical() << "Error: unknown operation during saving XML";
+                }
+                doc.writeAttribute("id",operation.var);
+            }
+
             doc.writeEndElement();
         }
-
-
 
         doc.writeEndElement();
     }

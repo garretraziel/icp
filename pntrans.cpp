@@ -112,7 +112,7 @@ bool PNTrans::doOperations(unsigned int choice)
             }
             in_names[op.var]->removeToken(value); //todo: kontrolovat spravne smazani
         }
-        oneout.output->putToken(result);
+        out_names[oneout.output]->putToken(result);
     }
 
     return true;

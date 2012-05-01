@@ -26,7 +26,7 @@ typedef std::vector<struct Operation> OperationVector;
 
 struct OneOut {
     OperationVector operations;
-    PNPlace *output;
+    QString output;
 };
 
 typedef std::vector<struct OneOut> OutputOperations;
