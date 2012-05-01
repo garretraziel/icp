@@ -27,6 +27,7 @@ void PetriSim::step()
 
     for (it = transits.begin(); it<transits.end(); it++) {
         if ((*it)->fire()) {
+            (*it)->doOperations(0);
             was_fired = true;
         }
     }

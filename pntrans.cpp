@@ -101,14 +101,16 @@ bool PNTrans::doOperations(unsigned int choice)
         OperationVector::iterator opit;
         for (opit = oneout.operations.begin(); opit < oneout.operations.end(); opit++) {
             Operation op = (*opit);
+            pntype value = mapping_choice[op.var];
             if (op.op == ADD) {
-                result += mapping_choice[op.var];
+                result += value;
             } else if (op.op == SUB){
-                result -= mapping_choice[op.var];
+                result -= value;
             } else {
                 qCritical() << "Error: bad operation in transition";
                 return false;
             }
+            in_names[op.var]->removeToken(value); //todo: kontrolovat spravne smazani
         }
         oneout.output->putToken(result);
     }

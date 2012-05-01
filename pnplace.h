@@ -11,17 +11,18 @@ class PNPlace
 {
 private:
     TokenVector tokens;
-    int x;
-    int y;
 
 public:
     QString id;
+    QString x;
+    QString y;
 
     PNPlace();
-    PNPlace(int x, int y, QString id, TokenVector tokens): tokens(tokens), x(x), y(y), id(id) {}
+    PNPlace(QString x, QString y, QString id, TokenVector tokens): tokens(tokens),id(id),x(x),y(y) {}
     bool hasTokens();
     TokenVector getTokens();
     void putToken(pntype token);
+    bool removeToken(pntype token);
 };
 
 #endif // PNPLACE_H

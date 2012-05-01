@@ -1,5 +1,6 @@
 #include "simstate.h"
 #include <map>
+#include <QXmlStreamWriter>
 
 SimState::SimState()
 {
@@ -35,9 +36,8 @@ bool SimState::setState(QString xml)
             tokens.push_back(token);
             one_token = one_token.nextSiblingElement("token");
         }
-        int x = one_place.attribute("posx").toInt();
-        int y = one_place.attribute("posy").toInt();
-        PNPlace *place = new PNPlace(x,y,one_place.attribute("id"),tokens);
+        PNPlace *place = new PNPlace(one_place.attribute("posx"),one_place.attribute("posy")
+                                     ,one_place.attribute("id"),tokens);
         places.push_back(place);
         places_id[one_place.attribute("id")] = place;
         one_place = one_place.nextSiblingElement("place");
@@ -62,9 +62,6 @@ bool SimState::setState(QString xml)
             one_element = one_element.nextSiblingElement("outplace");
         }
 
-        int x = one_trans.attribute("posx").toInt();
-        int y = one_trans.attribute("posy").toInt();
-
         ConstraintVector constraints;
         QDomElement one_cond = one_trans.firstChildElement("constraint");
         while (!one_cond.isNull()) {
@@ -82,7 +79,7 @@ bool SimState::setState(QString xml)
         QDomElement one_op = one_trans.firstChildElement("operation");
         while (!one_op.isNull()){
             OneOut oneout;
-            oneout.output = out_names[one_trans.attribute("output")];
+            oneout.output = out_names[one_op.attribute("output")];
             QDomElement one_operation = one_op.firstChildElement();
             while(!one_operation.isNull()) {
                 Operation op;
@@ -99,7 +96,8 @@ bool SimState::setState(QString xml)
             one_op = one_op.nextSiblingElement("operation");
         }
 
-        PNTrans *trans = new PNTrans(x, y, one_trans.attribute("id"), constraints, in_names, out_names, operations);
+        PNTrans *trans = new PNTrans(one_trans.attribute("posx"), one_trans.attribute("posy"),
+                                     one_trans.attribute("id"), constraints, in_names, out_names, operations);
         transits_id[one_trans.attribute("id")] = trans;
         transits.push_back(trans);
         one_trans = one_trans.nextSiblingElement("transition");
@@ -122,5 +120,43 @@ SimState::~SimState()
 
 QString SimState::getState()
 {
+    QString result;
+    QXmlStreamWriter doc(&result);
+    doc.setAutoFormatting(true);
+    doc.writeStartDocument();
 
+    doc.writeStartElement("petrinet");
+
+    doc.writeStartElement("places");
+
+    StringToPnplaceMap::iterator pit;
+
+    for (pit = places_id.begin(); pit != places_id.end(); pit++) {
+        doc.writeStartElement("place");
+
+        PNPlace *place = (*pit).second;
+        doc.writeAttribute("id",(*pit).first);
+        doc.writeAttribute("posx",place->x);
+        doc.writeAttribute("posy",place->y);
+
+        TokenVector::iterator tit;
+        TokenVector tokens = place->getTokens();
+
+        for (tit = tokens.begin(); tit < tokens.end(); tit++) {
+            doc.writeTextElement("token",QString::number(*tit));
+        }
+
+        doc.writeEndElement();
+    }
+
+    doc.writeEndElement();
+
+    doc.writeStartElement("transitions");
+    doc.writeEndElement();
+
+    doc.writeEndElement();
+
+    doc.writeEndDocument();
+
+    return result;
 }

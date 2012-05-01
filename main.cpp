@@ -3,6 +3,7 @@
 #include "petrisim.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +38,8 @@ int main(int argc, char *argv[])
 
     simulace.setState(str);
     simulace.step();
+
+    qDebug() << simulace.getState().getState();
 
     return a.exec();
 }

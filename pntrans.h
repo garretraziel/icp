@@ -38,18 +38,18 @@ private:
     StringToPnplaceMap in_names;
     StringToPnplaceMap out_names;
     OutputOperations operations;
-    int x;
-    int y;
     StrPntMapVector possible_choices;
 
     StrPntMapVector chooseValues(StringToTokensMap hash);
 public:
     QString id;
+    QString x;
+    QString y;
 
     PNTrans();
-    PNTrans(int x, int y, QString id, ConstraintVector constraints,
+    PNTrans(QString x, QString y, QString id, ConstraintVector constraints,
             StringToPnplaceMap in_names, StringToPnplaceMap out_names, OutputOperations operations)
-        :constraints(constraints),in_names(in_names),out_names(out_names),operations(operations),x(x),y(y),id(id) {}
+        :constraints(constraints),in_names(in_names),out_names(out_names),operations(operations),id(id),x(x),y(y) {}
     ~PNTrans();
     bool fire();
     bool doOperations(unsigned int choice);
