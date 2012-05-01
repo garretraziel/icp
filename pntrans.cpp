@@ -12,8 +12,10 @@ PNTrans::~PNTrans()
 {
     ConstraintVector::iterator cit;
     for (cit = constraints.begin(); cit < constraints.end(); cit++) {
-        delete *cit;
+        Constraint *c = (*cit);
+        delete c;
     }
+    constraints.clear();
 }
 
 bool PNTrans::fire()

@@ -34,12 +34,24 @@ int main(int argc, char *argv[])
 
     soubor.close();
 
-    PetriSim simulace;
+    PetriSim *simulace = new PetriSim;
 
-    simulace.setState(str);
-    simulace.step();
+    simulace->setState(str);
 
-    qDebug() << simulace.getState().getState();
+    qDebug() << simulace->getState();
+
+    simulace->step();
+
+    qDebug() << simulace->getState();
+
+    simulace->step();
+
+    qDebug() << simulace->getState();
+
+    //qDebug() << "trololo";
+
+    delete simulace;
+    delete server;
 
     return a.exec();
 }

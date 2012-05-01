@@ -6,9 +6,9 @@ PetriSim::PetriSim()
 {
 }
 
-SimState PetriSim::getState()
+QString PetriSim::getState()
 {
-    return state;
+    return state.getState();
 }
 
 bool PetriSim::setState(QString xml)

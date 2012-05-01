@@ -110,12 +110,18 @@ SimState::~SimState()
 {
     PlaceVector::iterator pit;
     for (pit = places.begin(); pit < places.end(); pit++) {
-        delete *pit;
+        PNPlace *place = (*pit);
+        delete place;
     }
+    places.clear();
     TransVector::iterator tit;
     for (tit = transits.begin(); tit < transits.end(); tit++) {
-        delete *tit;
+        PNTrans *trans = (*tit);
+        delete trans;
     }
+    transits.clear();
+    places_id.clear();
+    transits_id.clear();
 }
 
 QString SimState::getState()

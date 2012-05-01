@@ -11,7 +11,7 @@ public:
     void step();
     void run();
 
-    SimState getState(); //vrati stav pro ulozeni nebo prenos
+    QString getState(); //vrati stav pro ulozeni nebo prenos
     bool setState(QString xml); // nastavi stav, pro nahrani simulace
 };
 

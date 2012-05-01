@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QString>
+#include <QDebug>
 
 typedef int pntype;
 typedef std::vector<pntype> TokenVector;
@@ -19,6 +20,7 @@ public:
 
     PNPlace();
     PNPlace(QString x, QString y, QString id, TokenVector tokens): tokens(tokens),id(id),x(x),y(y) {}
+    //~PNPlace(){qCritical() << "vola se destruktor, mfg";}
     bool hasTokens();
     TokenVector getTokens();
     void putToken(pntype token);
