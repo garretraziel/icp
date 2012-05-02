@@ -35,11 +35,12 @@ public slots:
     void showConnectDialog();
     void showAboutDialog();
     void newTab();
-    void addItem();
-    void addItemRect();
+    pnItem * addItem();
+    pnItem * addItemRect();
     void checkErase();
+    void loadSim();
 };
 
-
+extern MainWindow * mw;
 
 #endif // MAINWINDOW_H

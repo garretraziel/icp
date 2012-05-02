@@ -5,12 +5,14 @@
 #include <iostream>
 #include <QLineF>
 #include <QPointF>
-
+#include <typeinfo>
+#include <QString>
 
 pnItem * startpos;
 bool line;
-std::vector<pnLine*> lineVect;
+std::vector<pnLine*> lineVect; //FIXME!
 bool erase;
+
 
 pnCircle::pnCircle(QGraphicsScene * _canvas){
     setCursor(Qt::OpenHandCursor);
@@ -26,6 +28,8 @@ pnCircle::pnCircle(QGraphicsScene * _canvas){
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     funcLabel = NULL;
     editor = new editDialog; //toto se asi neuklizi
+
+    isRect=false;
 }
 
 pnRect::pnRect(QGraphicsScene * _canvas){
@@ -44,6 +48,8 @@ pnRect::pnRect(QGraphicsScene * _canvas){
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
     editor = new editDialog;
+
+    isRect = true;
 }
 
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -75,6 +81,9 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     else{
         if(line){
             line = false;
+            if(startpos->isRect == this->isRect || startpos == this)
+                return;
+
             pnLine * new_line = new pnLine(startpos,this,canvas);
             Q_UNUSED(new_line);
         }else{

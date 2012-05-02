@@ -28,6 +28,7 @@ private:
     //QGraphicsLineItem * separator;
 public:
     QRectF boundingRect() const;
+    bool isRect;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

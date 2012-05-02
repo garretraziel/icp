@@ -115,7 +115,7 @@
      <x>0</x>
      <y>0</y>
      <width>673</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -124,6 +124,7 @@
     </property>
     <addaction name="actionConnect_to_server"/>
     <addaction name="actionNew_Simulation"/>
+    <addaction name="actionLoad_Simulation"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -197,6 +198,11 @@
   <action name="actionNew_Simulation">
    <property name="text">
     <string>New Simulation</string>
+   </property>
+  </action>
+  <action name="actionLoad_Simulation">
+   <property name="text">
+    <string>Load Simulation</string>
    </property>
   </action>
  </widget>
