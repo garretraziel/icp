@@ -1,6 +1,9 @@
 #include "editdialog.h"
 #include "ui_editdialog.h"
 #include "pngui.h"
+#include <QString>
+#include <QStringList>
+#include <QRegExp>
 
 editDialog::editDialog(QWidget *parent) :
     QDialog(parent),
@@ -15,7 +18,18 @@ editDialog::~editDialog()
 }
 
 void editDialog::accept(){
-    sender->label->setPlainText(ui->labelEdit->text() );
+    QString text = ui->labelEdit->text();
+    QStringList parts= text.split("&&");
+    foreach(QString part, parts){
+        //QString rel = (part.split(QRegExp("\\s")))[1];
+        QRegExp rx("\\s*\\S+\\s*(<|>|<=|>=|==|!=)\\s*\\S+\\s*");
+        if(!rx.exactMatch(part)){
+            QMessageBox::critical(this,tr("Wrong guard"),tr("Correct the guarding condition"));
+            return;
+        }
+    }
+
+    sender->label->setPlainText(text);
     this->hide();
 }
 
