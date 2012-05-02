@@ -2,17 +2,21 @@
 #define PNSIMTHREAD_H
 
 #include <QThread>
+#include <QTcpSocket>
 
-class PnsimThread : public QThread
+class PNSimThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit PnsimThread(QObject *parent = 0);
+    explicit PNSimThread(int socketDescriptor, QObject *parent = 0);
+
+    void run();
 
 signals:
+    void error(QTcpSocket::SocketError socketError);
 
-public slots:
-
+private:
+    int socketDescriptor;
 };
 
 #endif // PNSIMTHREAD_H

@@ -15,7 +15,6 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, QString ip, 
 
     this -> port = port; //pokud je port 0, automaticky vyber portu. Asi to neni spravne.
 
-    connect(this, SIGNAL(newConnection()), this, SLOT(handleNewConnection()));
 }
 
 PetriNetServer::~PetriNetServer()
@@ -37,19 +36,9 @@ bool PetriNetServer::start()
     return true;
 }
 
-void PetriNetServer::handleNewConnection()
+void PetriNetServer::incomingConnection(int socketDescriptor)
 {
-    qDebug() << "client connected";
-
-    QTcpSocket *socket = nextPendingConnection();
-    if (!socket) return;
-
-    connect(socket, SIGNAL(readyRead()), SLOT(communicate()));
-}
-
-void PetriNetServer::communicate()
-{
-    QTcpSocket *socket = qobject_cast<QTcpSocket*>(this->sender());
-    QByteArray msg = socket->readAll();
-    std::cout <<  msg.data() << std::endl;
+    PNSimThread *thread = new PNSimThread(socketDescriptor, this);
+    connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
+    thread->start();
 }

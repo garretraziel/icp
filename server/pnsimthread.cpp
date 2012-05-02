@@ -1,6 +1,11 @@
 #include "pnsimthread.h"
 
-PnsimThread::PnsimThread(QObject *parent) :
-    QThread(parent)
+PNSimThread::PNSimThread( int socketDescriptor, QObject *parent) :
+    QThread(parent), socketDescriptor(socketDescriptor)
 {
+}
+
+void PNSimThread::run()
+{
+
 }
