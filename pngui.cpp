@@ -3,6 +3,8 @@
 #include <mainwindow.h>
 #include <QKeyEvent>
 #include <iostream>
+#include <QLineF>
+#include <QPointF>
 
 
 pnItem * startpos;
@@ -15,9 +17,14 @@ pnCircle::pnCircle(QGraphicsScene * _canvas){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
-    label = canvas->addText("?? Place");
-    label->setPos(this->x()+15,this->y()-5);
-
+    //jojo, moc pekne, indexace do "neznama"
+    QGraphicsView * thisView = canvas->views()[0];
+    QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
+    this->setPos(center.x(),center.y());
+    label = canvas->addText("?? P");
+    labelPos = QPointF(15,-5);
+    label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
+    funcLabel = NULL;
     editor = new editDialog; //toto se asi neuklizi
 }
 
@@ -26,9 +33,15 @@ pnRect::pnRect(QGraphicsScene * _canvas){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
-    label = canvas->addText("?? Transition");
-    label->setPos(this->x()+15,this->y()-5);
+    QGraphicsView * thisView = canvas->views()[0];
+    QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
+    this->setPos(center.x(),center.y());
+    label = canvas->addText("?? T");
+    labelPos = QPointF(-60,-20);
+    label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
 
+    funcLabel = canvas->addText("a = x + y + z");
+    funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
     editor = new editDialog;
 }
@@ -74,13 +87,16 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     this->setPos(event->scenePos().x(),event->scenePos().y());
-    label->setPos(this->x()+15,this->y()-5);
+    label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
+    if(funcLabel)
+        funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     foreach(pnLine * l,lineVect){
         l->update();
     }
 
     setCursor(Qt::OpenHandCursor);
 }
+
 
 void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
  {
@@ -109,13 +125,20 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawEllipse(-15, -15, 30, 30);
 }
 
+QRectF pnRect::boundingRect() const{
+    return QRectF(-67, -27, 134, 54);
+}
+
 void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
     painter->setPen(QPen(Qt::black, 1));
     painter->setBrush(QBrush(QColor(255,255,255)));
-    painter->drawRect(-15,-5,30,10);
+    int textLen = label->toPlainText().length()*5;
+    int funcLen = funcLabel->toPlainText().length()*5;
+    std::cout << textLen << " " << funcLen << std::endl << ((textLen > funcLen)? textLen : funcLen) << std::endl;
+    painter->drawRect(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
 }
 
 class dClickLabel: public QGraphicsTextItem {
@@ -156,7 +179,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    lineVect.push_back(this);
 
    label = new dClickLabel(this);
-   label->setPlainText("?? Line");
+   label->setPlainText("?? L");
    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
    label->setAcceptedMouseButtons(Qt::LeftButton);   
    canvas->addItem(label);
@@ -172,5 +195,5 @@ pnLine::~pnLine(){
 
 void pnLine::update(){
     line->setLine(start->x(),start->y(),end->x(),end->y());
-    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
+    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);    
 }

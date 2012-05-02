@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <QSizePolicy>
-
+#include <QPointF>
 #include "pngui.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -56,6 +56,9 @@ void MainWindow::newTab(){
     viewVect.back()->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     viewVect.back()->setScene(canvasVect.back());
 
+    canvasVect.back()->setSceneRect(0,0,2000,2000);
+    viewVect.back()->centerOn(1000,1000);
+
     layout->addWidget(viewVect.back());
 
     ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
@@ -81,7 +84,7 @@ void MainWindow::addItem(){
     pnItem * item = new pnCircle(currentTabScene);
     Q_UNUSED(item);
     //toto asi neni moc cisty, no
-    //canvas->addItem(item);
+    //canvas->addItem(item)
 }
 
 void MainWindow::addItemRect(){

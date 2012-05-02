@@ -6,21 +6,26 @@
 #include <QGraphicsScene>
 #include <QtGui>
 #include <vector>
-
+#include <QPointF>
 #include "editdialog.h"
 
 class pnPrimitive {
 public:
     editDialog * editor;
     QGraphicsTextItem * label;
+    QGraphicsTextItem * funcLabel;
 protected:
     QGraphicsScene * canvas;
+    QPointF labelPos;
+    //QPointF funcPos;
 public slots:
     void editorDeleter();
 };
 
 class pnItem: public QGraphicsItem, public pnPrimitive
 {
+private:
+    //QGraphicsLineItem * separator;
 public:
     QRectF boundingRect() const;
 protected:
@@ -35,10 +40,11 @@ public:
     pnCircle(QGraphicsScene * _canvas);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
-class pnRect: public pnItem{
+class pnRect: public pnItem{    
 public:
     pnRect(QGraphicsScene * _canvas);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
 };
 
 class pnLine: public pnPrimitive{
