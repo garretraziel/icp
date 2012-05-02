@@ -104,6 +104,10 @@ QString fromOperation(OneOut oper){
 
 void MainWindow::loadSim(){
     newTab();
+
+    //TOO DOO
+    //(((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.5,0.5));
+
     simVect.push_back(new SimState());
     QFile xmlfile("test.xml");
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
