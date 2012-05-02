@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network
+QT       += core network xml
 
 QT       -= gui
 
@@ -17,10 +17,26 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     petrinetserver.cpp \
-    petrisim.cpp
+    petrisim.cpp \
+    pnplace.cpp \
+    pntrans.cpp \
+    simstate.cpp \
+    constraint.cpp
 
 HEADERS += \
     petrinetserver.h \
-    petrisim.h
+    petrisim.h \
+    pnplace.h \
+    pntrans.h \
+    simstate.h \
+    constraint.h
+
+OTHER_FILES += \
+    doc/protokol \
+    doc/xml \
+    examples/test2.xml \
+    examples/test.xml \
+    examples/semafor.xml
+
 
 

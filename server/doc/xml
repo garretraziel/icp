@@ -1,0 +1,27 @@
+Co všechno musí být uložené v XML (a co budeme načítat):
+
+každý prvek má jedinečný identifikátor
+
+ukládáme:
+místa, každé má identifikátor, výčet prvků co v něm jsou (jak pro počáteční nastavení, tak pro stav simulace).
+přechody, každý má zapsanou podmínku pro přechod (tady bude nutny uchovávat in i out), seznam míst které jsou input, seznam míst, které jsou output, podle unikátního ID
+
+<?xml....>
+<petrinet>
+<places>
+    <place id="123456" posx="123" posy="2456"> // budu uchovavat X a Y? asi bych mel
+        <token>5</token>
+        <token>6</token>
+    </place>
+</places>
+<transitions>
+    <transition operation="x+y-y" posx="65" posy="465">
+        <constrain>x 0 y</constrain> // tady si musime dat pozor. oddelujeme mezerou, cislo udava operaci
+        <constrain>z 1 1</constrain>
+        <inplace name="x">123456</inplace>
+        <inplace name="y">32456</inplace>
+        <inplace name="z">6544487</inplace>
+        <outplace name="w">456456</outplace>
+    </transition>
+</transitions>
+</petrinet>

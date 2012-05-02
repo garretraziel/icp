@@ -1,5 +1,7 @@
 #include "petrinetserver.h"
 #include <QNetworkProxy>
+#include <iostream>
+#include <QByteArray>
 
 PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, QString ip, int port) :
     QTcpServer(parent)
@@ -16,12 +18,14 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, QString ip, 
     connect(this, SIGNAL(newConnection()), this, SLOT(handleNewConnection()));
 }
 
-PetriNetServer::~PetriNetServer() { //todo: mozna odchytavat signal?
+PetriNetServer::~PetriNetServer()
+{ //todo: mozna odchytavat signal?
     qDebug() << "Ending server";
     close();
 }
 
-bool PetriNetServer::start() {
+bool PetriNetServer::start()
+{
     bool listening = listen(my_ip, port);
 
     if (not listening) {
@@ -33,7 +37,8 @@ bool PetriNetServer::start() {
     return true;
 }
 
-void PetriNetServer::handleNewConnection() {
+void PetriNetServer::handleNewConnection()
+{
     qDebug() << "client connected";
 
     QTcpSocket *socket = nextPendingConnection();
@@ -42,6 +47,9 @@ void PetriNetServer::handleNewConnection() {
     connect(socket, SIGNAL(readyRead()), SLOT(communicate()));
 }
 
-void PetriNetServer::communicate() {
+void PetriNetServer::communicate()
+{
     QTcpSocket *socket = qobject_cast<QTcpSocket*>(this->sender());
+    QByteArray msg = socket->readAll();
+    std::cout <<  msg.data() << std::endl;
 }
