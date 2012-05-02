@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<petrinet>
+  <places>
+    <place id="1" posx="0" posy="0">
+      <token>1</token>
+    </place>
+    <place id="2" posx="0" posy="0">
+      <token>1</token>
+    </place>
+    <place id="3" posx="0" posy="0">
+      <token>1</token>
+    </place>
+    <place id="4" posx="0" posy="0">
+    </place>
+    <place id="5" posx="0" posy="0">
+    </place>
+  </places>
+  <transitions>
+    <transition id="6" posx="0" posy="0">
+      <constraint type="const" var1="x" op="4" const="1"/>
+      <constraint type="const" var1="s" op="4" const="1"/>
+      <inplace name="x">1</inplace>
+      <inplace name="s">3</inplace>
+      <outplace name="vystup">4</outplace>
+      <operation output="vystup">
+        <plus id="x"/>
+      </operation>
+    </transition>
+    <transition id="7" posx="0" posy="0">
+      <constraint type="const" var1="x" op="4" const="1"/>
+      <constraint type="const" var1="s" op="4" const="1"/>
+      <inplace name="x">2</inplace>
+      <inplace name="s">3</inplace>
+      <outplace name="vystup">5</outplace>
+      <operation output="vystup">
+        <plus id="x"/>
+      </operation>
+    </transition>
+    <transition id="8" posx="0" posy="0">
+      <constraint type="const" var1="x" op="4" const="1"/>
+      <inplace name="x">4</inplace>
+      <outplace name="v">1</outplace>
+      <outplace name="w">3</outplace>
+      <operation output="v">
+        <plus id="x"/>
+      </operation>
+      <operation output="w">
+        <plus id="x"/>
+      </operation>
+    </transition>
+    <transition id="9" posx="0" posy="0">
+      <constraint type="const" var1="x" op="4" const="1"/>
+      <inplace name="x">5</inplace>
+      <outplace name="v">2</outplace>
+      <outplace name="w">3</outplace>
+      <operation output="v">
+        <plus id="x"/>
+      </operation>
+      <operation output="w">
+        <plus id="x"/>
+      </operation>
+    </transition>
+  </transitions>
+</petrinet>

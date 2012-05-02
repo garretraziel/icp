@@ -33,6 +33,10 @@ HEADERS += \
 
 OTHER_FILES += \
     doc/protokol \
-    doc/xml
+    doc/xml \
+    examples/test2.xml \
+    examples/test.xml \
+    examples/semafor.xml
+
 
 

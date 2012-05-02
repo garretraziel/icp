@@ -115,9 +115,14 @@ bool PNTrans::doOperations(unsigned int choice)
                 qCritical() << "Error: bad operation in transition";
                 return false;
             }
-            in_names[op.var]->removeToken(value); //todo: kontrolovat spravne smazani
         }
         out_names[oneout.output]->putToken(result);
+    }
+
+    StringToPntypeMap::iterator remit;
+
+    for (remit = mapping_choice.begin(); remit != mapping_choice.end(); remit++) {
+        in_names[(*remit).first]->removeToken((*remit).second); //todo: kontrolovat mazani, opravdu se maji mazat vsechny?
     }
 
     return true;

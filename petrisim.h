@@ -9,7 +9,7 @@ class PetriSim
 public:
     PetriSim();
     void step();
-    void run(int steps = 1000);
+    void run(int steps = 100);
 
     QString getState(); //vrati stav pro ulozeni nebo prenos
     bool setState(QString xml); // nastavi stav, pro nahrani simulace
