@@ -15,13 +15,21 @@ SOURCES += main.cpp\
     connectdialog.cpp \
     pngui.cpp \
     aboutdialog.cpp \
-    editdialog.cpp
+    editdialog.cpp \
+    ../server/simstate.cpp \
+    ../server/pnplace.cpp \
+    ../server/pntrans.cpp \
+    ../server/constraint.cpp
 
 HEADERS  += mainwindow.h \
     connectdialog.h \
     pngui.h \
     aboutdialog.h \
-    editdialog.h
+    editdialog.h \
+    ../server/simstate.h \
+    ../server/pnplace.h \
+    ../server/pntrans.h \
+    ../server/constraint.h
 
 FORMS    += mainwindow.ui \
     connectdialog.ui \

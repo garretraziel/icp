@@ -8,6 +8,9 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include "aboutdialog.h"
+#include "../server/simstate.h"
+#include "../server/pnplace.h"
+#include "../server/pntrans.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,10 +29,14 @@ private:
     ConnectDialog * cd;
     aboutDialog * ad;
     QGraphicsScene * canvas;
+    pnItem * __addItem(PNPlace * simPlace);
+    pnItem * __addItemRect(PNTrans * simTrans);
 
     std::vector<QWidget *> tabVect;
     std::vector<QGraphicsView *> viewVect;
     std::vector<QGraphicsScene *> canvasVect;
+
+    std::vector<SimState *> simVect;
 
 public slots:
     void showConnectDialog();

@@ -8,14 +8,16 @@
 #include <vector>
 #include <QPointF>
 #include "editdialog.h"
+#include "../server/pnplace.h"
+#include "../server/pntrans.h"
 
 class pnPrimitive {
 public:
     editDialog * editor;
     QGraphicsTextItem * label;
     QGraphicsTextItem * funcLabel;
-protected:
     QGraphicsScene * canvas;
+protected:
     QPointF labelPos;
     //QPointF funcPos;
 public slots:
@@ -29,6 +31,7 @@ private:
 public:
     QRectF boundingRect() const;
     bool isRect;
+    void setPosition(int x, int y);
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -37,13 +40,17 @@ protected:
 };
 
 class pnCircle: public pnItem{
+private:
+    PNPlace * simPlace;
 public:
-    pnCircle(QGraphicsScene * _canvas);
+    pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace = NULL);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 class pnRect: public pnItem{    
+private:
+    PNTrans * simTrans;
 public:
-    pnRect(QGraphicsScene * _canvas);
+    pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans = NULL);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
 };

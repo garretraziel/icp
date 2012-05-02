@@ -14,7 +14,7 @@ std::vector<pnLine*> lineVect; //FIXME!
 bool erase;
 
 
-pnCircle::pnCircle(QGraphicsScene * _canvas){
+pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
@@ -28,11 +28,11 @@ pnCircle::pnCircle(QGraphicsScene * _canvas){
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     funcLabel = NULL;
     editor = new editDialog; //toto se asi neuklizi
-
+    simPlace = _simPlace;
     isRect=false;
 }
 
-pnRect::pnRect(QGraphicsScene * _canvas){
+pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
@@ -48,8 +48,14 @@ pnRect::pnRect(QGraphicsScene * _canvas){
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
     editor = new editDialog;
-
+    simTrans = _simTrans;
     isRect = true;
+}
+
+void pnItem::setPosition(int x, int y){
+    this->setPos(x,y);
+    label->setPos(x+labelPos.x(),y+labelPos.y());
+    if(funcLabel) funcLabel->setPos(x+labelPos.x(),y+labelPos.y()+15);
 }
 
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
