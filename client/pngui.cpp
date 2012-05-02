@@ -152,7 +152,7 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->setBrush(QBrush(QColor(255,255,255)));
     int textLen = label->toPlainText().length()*5;
     int funcLen = funcLabel->toPlainText().length()*5;
-    std::cout << textLen << " " << funcLen << std::endl << ((textLen > funcLen)? textLen : funcLen) << std::endl;
+
     painter->drawRect(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
 }
 

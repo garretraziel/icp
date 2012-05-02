@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QRegExp>
+#include "../server/constraint.h"
 
 editDialog::editDialog(QWidget *parent) :
     QDialog(parent),
@@ -22,13 +23,15 @@ void editDialog::accept(){
     QStringList parts= text.split("&&");
     foreach(QString part, parts){
         //QString rel = (part.split(QRegExp("\\s")))[1];
-        QRegExp rx("\\s*\\S+\\s*(<|>|<=|>=|==|!=)\\s*\\S+\\s*");
+        QRegExp rx("(\\s*)(\\S+)(\\s*)(<|>|<=|>=|==|!=)(\\s*)(\\S+)(\\s*)");
         if(!rx.exactMatch(part)){
             QMessageBox::critical(this,tr("Wrong guard"),tr("Correct the guarding condition"));
             return;
         }
-    }
+        //TODO...
+        ((pnRect *)sender)->simTrans->constraints.push_back(new Constraint(rx.cap(2),0,rx.cap(6)));
 
+    }
     sender->label->setPlainText(text);
     this->hide();
 }

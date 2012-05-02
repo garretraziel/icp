@@ -189,13 +189,13 @@ pnItem * MainWindow::addItem(){
 
 pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
     noTabReturn;
-
     pnItem * item = new pnRect(currentTabScene, simTrans);
     return item;
 }
 
 pnItem * MainWindow::addItemRect(){
     simVect.back()->transits.push_back(new PNTrans());
+    std::cout << simVect.back()->getState().toStdString();
     return __addItemRect(simVect.back()->transits.back());
 }
 

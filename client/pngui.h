@@ -40,16 +40,14 @@ protected:
 };
 
 class pnCircle: public pnItem{
-private:
-    PNPlace * simPlace;
 public:
+    PNPlace * simPlace;
     pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace = NULL);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 class pnRect: public pnItem{    
-private:
-    PNTrans * simTrans;
 public:
+    PNTrans * simTrans;
     pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans = NULL);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
