@@ -19,14 +19,9 @@ public:
     explicit PetriNetServer(QObject *parent = 0, int maxconnections = 50, QString ip = "127.0.0.1", int port = 0);
     ~PetriNetServer();
     bool start();
-    
-signals:
-    
-public slots:
 
-private slots:
-    void handleNewConnection();
-    void communicate();
+protected:
+    void incomingConnection(int socketDescriptor);
 };
 
 #endif // PETRINETSERVER_H
