@@ -78,16 +78,19 @@ void MainWindow::showAboutDialog()
 
 //TOTO KURVA, TOTO JE MOC MOC MOC MOC KREHKY!!!!!!!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ index !!
 #define currentTabScene (((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scene())
-
+#define noTabReturn if(ui->tabWidget->currentWidget() == NULL) return
 //tyhle dve by snad mohly jit sjednotit do jedne
 void MainWindow::addItem(){
+    noTabReturn;
+
     pnItem * item = new pnCircle(currentTabScene);
     Q_UNUSED(item);
-    //toto asi neni moc cisty, no
-    //canvas->addItem(item)
+
 }
 
 void MainWindow::addItemRect(){
+    noTabReturn;
+
     pnItem * item = new pnRect(currentTabScene);
     Q_UNUSED(item);
 }
