@@ -50,6 +50,9 @@ StrPntMapVector PNTrans::chooseValues(StringToTokensMap hash)
     int i;
     for (i = 0, it = hash.begin(); it != hash.end(); it++, i++) {
         maximums[i] = (*it).second.size();
+        if (maximums[i] == 0) {
+            return result;
+        }
     }
 
     while (positions[hashsize] == 0) {
@@ -118,4 +121,9 @@ bool PNTrans::doOperations(unsigned int choice)
     }
 
     return true;
+}
+
+int PNTrans::possibleChoicesCount()
+{
+    return possible_choices.size();
 }

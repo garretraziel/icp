@@ -40,11 +40,7 @@ int main(int argc, char *argv[])
 
     qDebug() << simulace->getState();
 
-    simulace->step();
-
-    qDebug() << simulace->getState();
-
-    simulace->step();
+    simulace->run();
 
     qDebug() << simulace->getState();
 

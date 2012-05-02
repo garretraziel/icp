@@ -53,6 +53,7 @@ public:
     ~PNTrans();
     bool fire();
     bool doOperations(unsigned int choice);
+    int possibleChoicesCount();
 };
 
 #endif // PNTRANS_H
