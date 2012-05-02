@@ -3,6 +3,7 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
+#include "pnsimthread.h"
 
 class QTcpServer;
 class QTcpSocket;

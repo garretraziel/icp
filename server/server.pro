@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     pnplace.cpp \
     pntrans.cpp \
     simstate.cpp \
-    constraint.cpp
+    constraint.cpp \
+    pnsimthread.cpp
 
 HEADERS += \
     petrinetserver.h \
@@ -29,7 +30,8 @@ HEADERS += \
     pnplace.h \
     pntrans.h \
     simstate.h \
-    constraint.h
+    constraint.h \
+    pnsimthread.h
 
 OTHER_FILES += \
     doc/protokol \
@@ -37,6 +39,8 @@ OTHER_FILES += \
     examples/test2.xml \
     examples/test.xml \
     examples/semafor.xml
+
+
 
 
 
