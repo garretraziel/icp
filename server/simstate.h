@@ -14,13 +14,13 @@ typedef std::map<QString,PNTrans*> StringToPntransMap;
 // Pro uchovani aktualniho stavu simulace
 class SimState
 {
-private:
+//private:
+public:
     PlaceVector places;
     TransVector transits;
     StringToPnplaceMap places_id;
     StringToPntransMap transits_id;
 
-public:
     SimState();
     ~SimState();
     bool setState(QString xml);

@@ -9,6 +9,9 @@
 #include "pngui.h"
 #include <QtXml>
 #include <QDomDocument>
+#include <QFile>
+#include <map>
+#include "../server/simstate.h"
 
 MainWindow * mw;
 
@@ -69,102 +72,83 @@ void MainWindow::newTab(){
 
 }
 
+QString fromConstraint(Constraint * cons){
+    QString guard = "";
+    QString ops[] = {"<","<=",">=",">","==","!="};
+    guard += cons->first;
+    guard += ops[cons->op];
+    if(cons->type == TYPEVAR)
+        guard += cons->second_var;
+    else
+    if(cons->type == TYPECONST)
+        guard += QString::number(cons->second_const);
+    else
+        guard += "??";
+    guard += " && ";
+
+    return guard;
+}
+
+QString fromOperation(OneOut oper){
+    QString func = "";
+    func += oper.output + "= 0";
+    foreach(Operation op, oper.operations){
+        func+=((op.op==SUB)? "-":"+")+op.var;
+    }
+    func += " | ";
+
+    return func;
+}
+
+#define loadLines(direction)
+
 void MainWindow::loadSim(){
     newTab();
-    QString xml = "test.xml";
-    QString errorStr;
-    int errorLine;
-    int errorColumn;
+    simVect.push_back(new SimState());
+    QFile xmlfile("test.xml");
+    xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray xml = xmlfile.readAll();
+    xmlfile.close();
+    simVect.back()->setState(xml.data());
 
-    QDomDocument document;
-    if (!document.setContent(xml,&errorStr,&errorLine,&errorColumn)) {
-        qCritical() << "Error during p/arsing xml on line: " << errorLine << ", column: " << errorColumn;
-        qCritical() << errorStr;
-        return;
+    std::map<PNPlace *, pnItem *> placeToGui;
+    foreach(PNPlace * place, simVect.back()->places){
+        pnItem * item = __addItem(place);
+        placeToGui[place] = item;
+        QString id = place->id + ": ";
+        foreach(pntype token, place->getTokens()){
+            id += QString::number(token) + ", ";
+        }
+        item->label->setPlainText(id);
+        item->setPosition(place->x.toInt(),place->y.toInt());
     }
 
-    QDomElement root = document.documentElement();
 
-    if (root.tagName() != "petrinet") {
-        qCritical() << "Error during parsing xml, not valid";
-        return;
-    }
-
-    QDomElement xml_places = root.firstChildElement("places");
-    QDomElement one_place = xml_places.firstChildElement("place");
-
-    while (!one_place.isNull()) {
-        pnItem * place = addItem();
-        place->label->setPlainText(one_place.attribute("id"));
-        place->setPos(one_place.attribute("posx").toInt(), one_place.attribute("posy").toInt());
-        /*
-        QDomElement one_token = one_place.firstChildElement("token");
-        while (!one_token.isNull()) {
-            pntype token = one_token.text().toInt();
-            tokens.push_back(token);
-            one_token = one_token.nextSiblingElement("token");
+    foreach(PNTrans * transit, simVect.back()->transits){
+        pnItem * item = __addItemRect(transit);
+        QString guard = "";
+        foreach(Constraint * cons, transit->constraints){
+            guard += fromConstraint(cons);
         }
-        */
-        one_place = one_place.nextSiblingElement("place");
-    }
+        item->label->setPlainText(guard);
+        QString func = "";
+        foreach(OneOut oper, transit->operations){
+            func += fromOperation(oper);
+        }
+        item->funcLabel->setPlainText(func);
+        item->setPosition(transit->x.toInt(),transit->y.toInt());
 
-    QDomElement xml_trans = root.firstChildElement("transitions");
-    QDomElement one_trans = xml_trans.firstChildElement("transition");
-
-    while (!one_trans.isNull()) {
-        pnItem * place = addItemRect();
-        place->label->setPlainText(one_place.attribute("id"));
-        place->setPos(one_place.attribute("posx").toInt(), one_place.attribute("posy").toInt());
-
-        QDomElement one_element = one_trans.firstChildElement("inplace");
-        while (!one_element.isNull()) {
-
-            one_element = one_element.nextSiblingElement("inplace");
+        StringToPnplaceMap::iterator it;
+        for(it=transit->in_names.begin(); it!=transit->in_names.end(); it++){
+            pnLine * newLine = new pnLine(placeToGui[(*it).second],item, item->canvas);
+            newLine->label->setPlainText((*it).first);
+        }
+        for(it=transit->out_names.begin(); it!=transit->out_names.end(); it++){
+            pnLine * newLine = new pnLine(item,placeToGui[(*it).second], item->canvas);
+            newLine->label->setPlainText((*it).first);
         }
 
-        one_element = one_trans.firstChildElement("outplace");
-        while (!one_element.isNull()) {
-
-            one_element = one_element.nextSiblingElement("outplace");
-        }
-
-        QDomElement one_cond = one_trans.firstChildElement("constraint");
-        while (!one_cond.isNull()) {
-            /*
-            Constraint *cond;
-            if (one_cond.attribute("type") == "const") {
-                cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("const").toInt());
-            } else {
-                cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("var2"));
-            }
-            constraints.push_back(cond);
-            */
-            one_cond = one_cond.nextSiblingElement("constraint");
-        }
-
-        QDomElement one_op = one_trans.firstChildElement("operation");
-        while (!one_op.isNull()){
-            /*
-            OneOut oneout;
-            oneout.output = one_op.attribute("output");
-            QDomElement one_operation = one_op.firstChildElement();
-            while(!one_operation.isNull()) {
-                Operation op;
-                if (one_operation.tagName() == "plus") {
-                    op.op = ADD;
-                } else {
-                    op.op = SUB;
-                }
-                op.var = one_operation.attribute("id");
-                oneout.operations.push_back(op);
-                one_operation = one_operation.nextSiblingElement();
-            }
-            operations.push_back(oneout);
-            */
-            one_op = one_op.nextSiblingElement("operation");
-        }
-
-        one_trans = one_trans.nextSiblingElement("transition");
+        item->canvas->views()[0]->centerOn(item);
     }
 
     return;
@@ -184,20 +168,33 @@ void MainWindow::showAboutDialog()
 //TOTO KURVA, TOTO JE MOC MOC MOC MOC KREHKY!!!!!!!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ index !!
 #define currentTabScene (((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scene())
 #define noTabReturn if(ui->tabWidget->currentWidget() == NULL) return NULL
-//tyhle dve by snad mohly jit sjednotit do jedne
-pnItem * MainWindow::addItem(){
+
+
+pnItem * MainWindow::__addItem(PNPlace * simPlace){
     noTabReturn;
 
-    pnItem * item = new pnCircle(currentTabScene);
+    pnItem * item = new pnCircle(currentTabScene, simPlace);
+    return item;
+}
+
+pnItem * MainWindow::addItem(){
+    //FIXME!!!!! UPRAVIT PRO VICE SCEN
+    simVect.back()->places.push_back(new PNPlace());
+    return __addItem(simVect.back()->places.back());
+}
+
+pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
+    noTabReturn;
+
+    pnItem * item = new pnRect(currentTabScene, simTrans);
     return item;
 }
 
 pnItem * MainWindow::addItemRect(){
-    noTabReturn;
-
-    pnItem * item = new pnRect(currentTabScene);
-    return item;
+    simVect.back()->transits.push_back(new PNTrans());
+    return __addItemRect(simVect.back()->transits.back());
 }
+
 
 void MainWindow::checkErase(){
     erase = ui->deleter->isChecked();
