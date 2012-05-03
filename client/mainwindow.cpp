@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->actionSave_Simulation, SIGNAL(activated()),this, SLOT(saveSim()));
 
     QObject::connect(ui->deleter, SIGNAL(clicked()),this,SLOT(checkErase()));
+
+    QObject::connect(ui->zoomOut, SIGNAL(clicked()),this,SLOT(zoomOut()));
+    QObject::connect(ui->zoomIn, SIGNAL(clicked()),this,SLOT(zoomIn()));
 }
 
 MainWindow::~MainWindow()
@@ -222,3 +225,10 @@ void MainWindow::checkErase(){
     erase = ui->deleter->isChecked();
 }
 
+void MainWindow::zoomOut(){
+    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.8,0.8);
+}
+
+void MainWindow::zoomIn(){
+    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(1/0.8,1/0.8);
+}

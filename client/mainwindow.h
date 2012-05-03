@@ -51,6 +51,9 @@ public slots:
     void checkErase();
     void loadSim();
     void saveSim();
+
+    void zoomOut();
+    void zoomIn();
 };
 
 extern MainWindow * mw;
