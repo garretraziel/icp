@@ -4,29 +4,43 @@
 #include <QtXml>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QDataStream>
 
 PNSimThread::PNSimThread( int socketDescriptor, QObject *parent) :
     QThread(parent), socketDescriptor(socketDescriptor)
 {
+    commSock = new QTcpSocket(this);
+    connect(commSock,SIGNAL(readyRead()),this,SLOT(readCommand()));
+    connect(commSock,SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
 }
 
 void PNSimThread::run()
 {
-    QTcpSocket tcpSocket;
-
-    if (!tcpSocket.setSocketDescriptor(socketDescriptor)) {
-        emit error(tcpSocket.error());
+    if (!commSock->setSocketDescriptor(socketDescriptor)) {
+        emit error(commSock->error());
         return;
     }
+    blockSize = 0;
+}
 
-    QXmlStreamReader client(&tcpSocket);
+void PNSimThread::readCommand()
+{
+    QDataStream in(commSock);
+    in.setVersion(QDataStream::Qt_4_0);
+    if (blockSize == 0) {
+        if (commSock->bytesAvailable() < (int)sizeof(quint16)) return;
+        in >> blockSize;
+    }
 
-    while (!client.atEnd()) {
-        client.readNext();
-        qDebug() << client.name();
-    }
-    if (client.hasError()) {
-        qCritical() << "Something went wrong during reading XML";
-        return;
-    }
+    if (commSock->bytesAvailable() < blockSize) return;
+
+    QString command;
+    in >> command;
+
+    handleCommand(command);
+}
+
+void PNSimThread::handleCommand(QString command)
+{
+    qDebug() << command;
 }

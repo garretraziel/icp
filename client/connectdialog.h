@@ -2,7 +2,6 @@
 #define CONNECTDIALOG_H
 
 #include <QDialog>
-#include <QTcpSocket>
 
 namespace Ui {
 class ConnectDialog;
@@ -18,11 +17,9 @@ public:
     
 private:
     Ui::ConnectDialog *ui;
-    QTcpSocket socket;
 
 public slots:
     virtual void accept();
-    void login();
 };
 
 #endif // CONNECTDIALOG_H
