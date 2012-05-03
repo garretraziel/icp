@@ -1,10 +1,12 @@
 #include "connectdialog.h"
 #include "ui_connectdialog.h"
+#include "communicator.h"
 #include <iostream>
 #include <QString>
 #include <QIODevice>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QDataStream>
 
 ConnectDialog::ConnectDialog(QWidget *parent) :
     QDialog(parent),
@@ -21,31 +23,11 @@ ConnectDialog::~ConnectDialog()
 void ConnectDialog::accept(){
     //toto je fakt moc pekny, priste asi nejakej qstream nebo co
 
-    connect(&commSock, SIGNAL(connected()), this, SLOT(login()));
 
-    commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);
+    /*connect(&commSock, SIGNAL(connected()), this, SLOT(login()));
 
+    commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);*/
+
+    Communicator comm(ui->server->text(),ui->port->text());
     this->hide();
 }
-
-void ConnectDialog::login(){
-    /*
-    QString msg_hi = "OHAI";
-
-    QString msg_login = "LOGIN/" +      \
-            ui->user->text().length() + \
-            "/:" + ui->user->text();
-
-    QString msg_password = "PASS/" +        \
-            ui->password->text().length() + \
-            "/:" + ui->password->text().toStdString();
-
-    socket.write(msg_hi.toStdString().c_str());
-    socket.write(msg_login.toStdString().c_str());
-    socket.write(msg_password.toStdString().c_str());
-*/
-    QXmlStreamWriter server(&commSock);
-    server.writeEmptyElement("login");
-    server.writeAttribute("login","hurr durr");
-    server.writeEndElement();
-  }

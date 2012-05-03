@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     ../server/simstate.cpp \
     ../server/pnplace.cpp \
     ../server/pntrans.cpp \
-    ../server/constraint.cpp
+    ../server/constraint.cpp \
+    communicator.cpp
 
 HEADERS  += mainwindow.h \
     connectdialog.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     ../server/simstate.h \
     ../server/pnplace.h \
     ../server/pntrans.h \
-    ../server/constraint.h
+    ../server/constraint.h \
+    communicator.h
 
 FORMS    += mainwindow.ui \
     connectdialog.ui \
@@ -39,6 +41,8 @@ FORMS    += mainwindow.ui \
 OTHER_FILES += \
     doc/protokol \
     typologo.png
+
+
 
 
 
