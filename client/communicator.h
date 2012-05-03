@@ -11,13 +11,13 @@ public:
     ~Communicator();
 
     bool connect(QString hostname, QString port);
+    bool login(QString name, QString password);
 
 signals:
     void error(QTcpSocket::SocketError socketError);
 
 private:
     QTcpSocket *commSock;
-    void login(QString name, QString password);
 };
 
 static Communicator communicator; // singleton nefunguje

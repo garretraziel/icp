@@ -6,38 +6,40 @@
 #include <QXmlStreamWriter>
 #include <QDataStream>
 
-PNSimThread::PNSimThread( int socketDescriptor, QObject *parent) :
-    QThread(parent), socketDescriptor(socketDescriptor)
+PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
+    QThread(parent),socketDescriptor(socketDescriptor)
 {
-    commSock = new QTcpSocket(this);
-    connect(commSock,SIGNAL(readyRead()),this,SLOT(readCommand()));
-    connect(commSock,SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
 }
 
 void PNSimThread::run()
 {
-    if (!commSock->setSocketDescriptor(socketDescriptor)) {
-        emit error(commSock->error());
+    QTcpSocket commSock;
+    //commSock = new QTcpSocket(this);
+    if (!commSock.setSocketDescriptor(socketDescriptor)) {
+        emit error(commSock.error());
         return;
     }
-    blockSize = 0;
-}
+    commSock.waitForConnected(-1);
 
-void PNSimThread::readCommand()
-{
-    QDataStream in(commSock);
+    bool connected = true;
+
+    quint16 block = 0;
+    QDataStream in(&commSock);
     in.setVersion(QDataStream::Qt_4_0);
-    if (blockSize == 0) {
-        if (commSock->bytesAvailable() < (int)sizeof(quint16)) return;
-        in >> blockSize;
+
+    while (connected) {
+        while (commSock.bytesAvailable() < (int)sizeof(quint16)) {
+            commSock.waitForReadyRead(-1);
+        }
+        in >> block;
+        qDebug() << "velikost: " << block;
+        while (commSock.bytesAvailable() < block) {
+            commSock.waitForReadyRead(-1);
+        }
+        QString command;
+        in >> command;
+        handleCommand(command);
     }
-
-    if (commSock->bytesAvailable() < blockSize) return;
-
-    QString command;
-    in >> command;
-
-    handleCommand(command);
 }
 
 void PNSimThread::handleCommand(QString command)
