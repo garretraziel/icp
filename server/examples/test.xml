@@ -1,33 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <petrinet>
   <places>
-    <place id="1" posx="0" posy="0">
+    <place id="1" posx="100" posy="100">
       <token>1</token>
       <token>2</token>
       <token>3</token>
     </place>
-    <place id="2" posx="1" posy="1">
+    <place id="2" posx="150" posy="80">
       <token>100</token>
       <token>200</token>
     </place>
-    <place id="3" posx="2" posy="2">
+    <place id="3" posx="200" posy="60">
       <token>1000</token>
       <token>2000</token>
       <token>3000</token>
     </place>
-    <place id="4" posx="3" posy="3">
+    <place id="4" posx="250" posy="40">
       <token>501</token>
       <token>401</token>
       <token>101</token>
       <token>201</token>
     </place>
-    <place id="10" posx="5" posy="5">
+    <place id="10" posx="100" posy="500">
     </place>
-    <place id="11" posx="6" posy="6">
+    <place id="11" posx="150" posy="480">
     </place>
   </places>
   <transitions>
-    <transition id="10" posx="5" posy="5">
+    <transition id="10" posx="100" posy="250">
       <constraint type="const" var1="x" op="3" const="1"/>
       <constraint type="var" var1="x" op="0" var2="y"/>
       <constraint type="const" var1="z" op="3" const="1000"/>
