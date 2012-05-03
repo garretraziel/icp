@@ -103,6 +103,14 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     this->setPos(event->scenePos().x(),event->scenePos().y());
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
+    if(primType == PLACE){
+        ((pnCircle *)this)->simPlace->x = QString::number(this->x());
+        ((pnCircle *)this)->simPlace->y = QString::number(this->y());
+    } else
+    if(primType == TRANS){
+        ((pnRect *)this)->simTrans->x = QString::number(this->x());
+        ((pnRect *)this)->simTrans->y = QString::number(this->y());
+    }
     if(funcLabel)
         funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     foreach(pnLine * l,lineVect){
@@ -141,7 +149,10 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 }
 
 QRectF pnRect::boundingRect() const{
-    return QRectF(-67, -27, 134, 54);
+    //TODO
+    int textLen = label->toPlainText().length()*6;
+    int funcLen = funcLabel->toPlainText().length()*6;
+    return QRectF(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
 }
 
 void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -150,9 +161,8 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     painter->setPen(QPen(Qt::black, 1));
     painter->setBrush(QBrush(QColor(255,255,255)));
-    int textLen = label->toPlainText().length()*5;
-    int funcLen = funcLabel->toPlainText().length()*5;
-
+    int textLen = label->toPlainText().length()*6;
+    int funcLen = funcLabel->toPlainText().length()*6;
     painter->drawRect(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
 }
 

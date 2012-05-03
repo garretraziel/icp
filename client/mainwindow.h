@@ -46,6 +46,7 @@ public slots:
     pnItem * addItemRect();
     void checkErase();
     void loadSim();
+    void saveSim();
 };
 
 extern MainWindow * mw;

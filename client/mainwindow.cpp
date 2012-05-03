@@ -27,8 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
     QObject::connect(ui->pushButtonRect, SIGNAL(clicked()),this,SLOT(addItemRect()));
     QObject::connect(ui->actionAbout, SIGNAL(activated()),this,SLOT(showAboutDialog()));
+
     QObject::connect(ui->actionNew_Simulation, SIGNAL(activated()),this,SLOT(newTab()));
     QObject::connect(ui->actionLoad_Simulation, SIGNAL(activated()),this, SLOT(loadSim()));
+    QObject::connect(ui->actionSave_Simulation, SIGNAL(activated()),this, SLOT(saveSim()));
+
     QObject::connect(ui->deleter, SIGNAL(clicked()),this,SLOT(checkErase()));
 }
 
@@ -159,6 +162,10 @@ void MainWindow::loadSim(){
 
 }
 
+void MainWindow::saveSim(){
+    std::cout << ((SimState *)simVect.back())->getState().toStdString();
+}
+
 void MainWindow::showConnectDialog()
 {
     cd->show();
@@ -184,7 +191,13 @@ pnItem * MainWindow::__addItem(PNPlace * simPlace){
 pnItem * MainWindow::addItem(){
     //FIXME!!!!! UPRAVIT PRO VICE SCEN
     simVect.back()->places.push_back(new PNPlace());
-    return __addItem(simVect.back()->places.back());
+
+#define simPlace ((PNPlace *)(simVect.back()->places.back()))
+    simPlace->id = QString::number((long long)simPlace); //FIXME!
+    simPlace->x = QString::number(this->x());
+    simPlace->y = QString::number(this->y());
+    return __addItem(simPlace);
+#undef simPlace
 }
 
 pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
@@ -195,8 +208,12 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
 
 pnItem * MainWindow::addItemRect(){
     simVect.back()->transits.push_back(new PNTrans());
-    std::cout << simVect.back()->getState().toStdString();
-    return __addItemRect(simVect.back()->transits.back());
+#define simTrans ((PNTrans *)(simVect.back()->transits.back()))
+    simTrans->id = QString::number((long long)this);
+    simTrans->x = QString::number(this->x());
+    simTrans->y = QString::number(this->y());
+    return __addItemRect(simTrans);
+#undef simTrans
 }
 
 
