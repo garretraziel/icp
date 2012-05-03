@@ -1,15 +1,19 @@
 #include "pnsimthread.h"
 #include <QDebug>
+#include <QFile>
 #include <QtNetwork>
 #include <QtXml>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QDataStream>
+#include <QTextStream>
 
 PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     QThread(parent),socketDescriptor(socketDescriptor)
 {
     isLogged = false;
+    usersFile = "./users.dat";
+    logFile = "./log.dat";
 }
 
 void PNSimThread::run()
@@ -62,11 +66,32 @@ void PNSimThread::handleCommand(QString command)
         qCritical() << "Error: bad command from client";
         return;
     }
-    if (isLogged) {
-        qDebug() << "hurr!!";
+    QString strcmd = com.name().toString();
+    if (strcmd == "register") {
+        //todo
+    } else if (strcmd == "login") {
+        //todo
+    } else if (!isLogged) {
+        qDebug() << "not logged!";
     }
-    if (com.name() == "login") {
-        qDebug() << "logged";
-        isLogged = true;
+}
+
+bool PNSimThread::logUser(QString login, QString password)
+{
+    QFile users(usersFile);
+
+    if (!users.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCritical("Error: cannot open file with users");
+        return false;
     }
+
+    QTextStream filestream(&users);
+    while (!filestream.atEnd()) {
+        QString line = filestream.readLine();
+        QStringList items = line.split(':');
+        if (items.size() != 2) continue;
+        if (items[0] == login && items[1] == password) return true;
+    }
+
+    return false;
 }

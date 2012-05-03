@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QTcpSocket>
+#include <QString>
 #include <vector>
 #include "petrisim.h"
 
@@ -22,10 +23,13 @@ signals:
 private:
     int socketDescriptor;
     int isLogged;
+    QString usersFile;
+    QString logFile;
 
     SimVector simulations;
 
     void handleCommand(QString command);
+    bool logUser(QString login, QString password);
 };
 
 #endif // PNSIMTHREAD_H
