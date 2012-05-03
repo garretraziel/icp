@@ -11,12 +11,17 @@
 #include "../server/pnplace.h"
 #include "../server/pntrans.h"
 
+#define PLACE 0
+#define TRANS 1
+#define EDGE 3
+
 class pnPrimitive {
 public:
     editDialog * editor;
     QGraphicsTextItem * label;
     QGraphicsTextItem * funcLabel;
     QGraphicsScene * canvas;
+    int primType;
 protected:
     QPointF labelPos;
     //QPointF funcPos;
@@ -30,7 +35,6 @@ private:
     //QGraphicsLineItem * separator;
 public:
     QRectF boundingRect() const;
-    bool isRect;
     void setPosition(int x, int y);
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
