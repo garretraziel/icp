@@ -22,7 +22,7 @@ private:
 
 public slots:
     virtual void accept();
-    void sendSomeShit();
+    void login();
 };
 
 #endif // CONNECTDIALOG_H

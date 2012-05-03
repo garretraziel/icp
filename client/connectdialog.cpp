@@ -3,6 +3,8 @@
 #include <iostream>
 #include <QString>
 #include <QIODevice>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 ConnectDialog::ConnectDialog(QWidget *parent) :
     QDialog(parent),
@@ -24,12 +26,10 @@ void ConnectDialog::accept(){
 
     socket.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);
 
-
-
     this->hide();
 }
 
-void ConnectDialog::sendSomeShit(){
+void ConnectDialog::login(){
     /*
     QString msg_hi = "OHAI";
 

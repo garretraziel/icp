@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     //qDebug() << "trololo";
 
     delete simulace;
-    delete server;
+    //delete server;
 
     return a.exec();
 }
