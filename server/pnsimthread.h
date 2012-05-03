@@ -28,8 +28,9 @@ private:
 
     SimVector simulations;
 
-    void handleCommand(QString command);
+    bool handleCommand(QString command,QString &message);
     bool logUser(QString login, QString password);
+    QByteArray createMessage(QString message);
 };
 
 #endif // PNSIMTHREAD_H
