@@ -3,6 +3,11 @@
 
 #include <QThread>
 #include <QTcpSocket>
+#include <QString>
+#include <vector>
+#include "petrisim.h"
+
+typedef std::vector<PetriSim> SimVector;
 
 class PNSimThread : public QThread
 {
@@ -17,8 +22,15 @@ signals:
 
 private:
     int socketDescriptor;
+    int isLogged;
+    QString usersFile;
+    QString logFile;
 
-    void handleCommand(QString command);
+    SimVector simulations;
+
+    bool handleCommand(QString command,QString &message);
+    bool logUser(QString login, QString password);
+    QByteArray createMessage(QString message);
 };
 
 #endif // PNSIMTHREAD_H
