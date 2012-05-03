@@ -31,14 +31,10 @@ QRegExp * checkExp(QString pattern, QString str, QString errStr){
 }
 
 void editDialog::accept(){
-    ui->label_2->hide(); //WTF, proc toto nejede!
-    ui->funcEdit->hide();
+
     switch(sender->primType){
     case TRANS:
     {
-        ui->label_2->show();
-        ui->funcEdit->show();
-
         std::map<QString,int> toRel;
 
         toRel["<"] = OP_LESS;
@@ -143,6 +139,14 @@ void editDialog::accept(){
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
     ui->labelEdit->setText(sender->label->toPlainText());
-    if(sender->funcLabel)
+    if(!sender->funcLabel)
         ui->funcEdit->setText(sender->funcLabel->toPlainText());
+
+    if(sender->primType == TRANS){
+        ui->label_2->show();
+        ui->funcEdit->show();
+    } else {
+        ui->label_2->hide();
+        ui->funcEdit->hide();
+    }
 }
