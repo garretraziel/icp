@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QRegExp>
 #include "../server/constraint.h"
+#include <map>
 
 editDialog::editDialog(QWidget *parent) :
     QDialog(parent),
@@ -32,6 +33,15 @@ void editDialog::accept(){
     switch(sender->primType){
     case TRANS:
         {
+            std::map<QString,int> toRel;
+
+            toRel["<"] = OP_LESS;
+            toRel["<="] = OP_LESSEQ;
+            toRel[">="] = OP_MOREEQ;
+            toRel[">"] = OP_MORE;
+            toRel["=="] = OP_EQ;
+            toRel["!="] = OP_NOTEQ;
+
             ui->label->setText("Guard");
             QString text = ui->labelEdit->text();
             QStringList parts= text.split("&&");
@@ -45,7 +55,8 @@ void editDialog::accept(){
                     ((pnRect *)sender)->simTrans->constraints = backup;
                     return;
                 }
-                ((pnRect *)sender)->simTrans->constraints.push_back(new Constraint(rx->cap(2),0,rx->cap(6)));
+
+                ((pnRect *)sender)->simTrans->constraints.push_back(new Constraint(rx->cap(2),toRel[rx->cap(4)],rx->cap(6)));
                 delete(rx);
             }
             sender->label->setPlainText(text);
@@ -75,6 +86,24 @@ void editDialog::accept(){
              }
              sender->label->setPlainText(text);
        }
+        break;
+    case EDGE:
+        {
+        ui->label->setText("Variable");
+#define startPoint ((pnLine *)sender)->start
+#define endPoint ((pnLine *)sender)->end
+            if(((pnLine *)sender)->start->primType == TRANS){
+                ((pnRect *)startPoint)->simTrans->out_names[ui->labelEdit->text()]
+                        = ((pnCircle *)(endPoint))->simPlace;
+            }else {
+                ((pnRect *)endPoint)->simTrans->in_names[ui->labelEdit->text()]
+                        = ((pnCircle *)(startPoint))->simPlace;
+            }
+            //TODO, osetrit tvar
+            sender->label->setPlainText(ui->labelEdit->text());
+#undef startPoint
+#undef endPoint
+        }
     }
     this->hide();
 }
