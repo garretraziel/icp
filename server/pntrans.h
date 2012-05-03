@@ -64,6 +64,27 @@ public:
     bool fire();
     bool doOperations(unsigned int choice);
     int possibleChoicesCount();
+
+
+    //TODO, oddelat, predelat
+    void removeOutName(PNPlace * place){
+        StringToPnplaceMap::iterator it;
+        for(it=out_names.begin(); it!=out_names.end(); it++){
+            if((*it).second == place){
+                out_names.erase(it);
+                return;
+            }
+        }
+    }
+    void removeInName(PNPlace * place){
+        StringToPnplaceMap::iterator it;
+        for(it=in_names.begin(); it!=in_names.end(); it++){
+            if((*it).second == place){
+                in_names.erase(it);
+                return;
+            }
+        }
+    }
 };
 
 #endif // PNTRANS_H

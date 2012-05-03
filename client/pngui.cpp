@@ -68,9 +68,11 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
                 if(l->start->primType == TRANS){
                     //smazat z prechodu toto out name
                     //->removeOutName();
+                    ((pnRect *)l->start)->simTrans->removeOutName(((pnCircle *)l->end)->simPlace);
                 } else {
                     //smazat z prechodu toto in name
                     //->removeInName();
+                    ((pnRect *)l->end)->simTrans->removeInName(((pnCircle *)l->start)->simPlace);
                 }
                 delete l;
             }
