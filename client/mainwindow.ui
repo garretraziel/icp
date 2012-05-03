@@ -67,6 +67,20 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QPushButton" name="zoomIn">
+        <property name="text">
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="zoomOut">
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="7" column="0" rowspan="2">
