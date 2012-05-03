@@ -9,6 +9,7 @@
 PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     QThread(parent),socketDescriptor(socketDescriptor)
 {
+    isLogged = false;
 }
 
 void PNSimThread::run()
@@ -51,4 +52,21 @@ void PNSimThread::run()
 void PNSimThread::handleCommand(QString command)
 {
     qDebug() << command;
+    QXmlStreamReader com(command);
+    if (com.readNext() != QXmlStreamReader::StartDocument) {
+        qCritical() << "Error: unknown command from client";
+        return;
+    }
+    com.readNext();
+    if (com.atEnd() || com.hasError()) {
+        qCritical() << "Error: bad command from client";
+        return;
+    }
+    if (isLogged) {
+        qDebug() << "hurr!!";
+    }
+    if (com.name() == "login") {
+        qDebug() << "logged";
+        isLogged = true;
+    }
 }
