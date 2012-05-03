@@ -15,6 +15,11 @@ enum Operations {
 struct Operation {
     Operations op;
     QString var;
+    Operation(){}
+    Operation(Operations _op, QString _var){
+        op = _op;
+        var = _var;
+    }
 };
 
 typedef std::vector<PNPlace*> PlaceVector;
@@ -27,6 +32,11 @@ typedef std::vector<struct Operation> OperationVector;
 struct OneOut {
     OperationVector operations;
     QString output;
+    OneOut(){}
+    OneOut(OperationVector _operations, QString _output){
+        operations = _operations;
+        output = _output;
+    }
 };
 
 typedef std::vector<struct OneOut> OutputOperations;
