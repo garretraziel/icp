@@ -30,7 +30,12 @@ void PNSimThread::run()
     while (connected) {
         while (commSock.bytesAvailable() < (int)sizeof(quint16)) {
             commSock.waitForReadyRead(-1);
+            if (commSock.state() == QTcpSocket::UnconnectedState) {
+                connected = false;
+                break;
+            }
         }
+        if (!connected) break;
         in >> block;
         qDebug() << "velikost: " << block;
         while (commSock.bytesAvailable() < block) {
@@ -40,6 +45,7 @@ void PNSimThread::run()
         in >> command;
         handleCommand(command);
     }
+    qDebug() << "odpojeno";
 }
 
 void PNSimThread::handleCommand(QString command)

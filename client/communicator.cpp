@@ -4,16 +4,22 @@
 
 Communicator::Communicator()
 {
+    commSock = new QTcpSocket;
 }
 
 Communicator::~Communicator()
 {
+    qDebug() << "hurr";
+    if (commSock->state() == QAbstractSocket::ConnectedState) {
+        qDebug() << "odpojuji";
+        commSock->disconnectFromHost();
+        //commSock->waitForDisconnected();
+    }
     delete commSock;
 }
 
 bool Communicator::connect(QString hostname, QString port)
 {
-    commSock = new QTcpSocket;
     commSock->connectToHost(hostname, port.toUInt(),QIODevice::ReadWrite);
     return true;
 }

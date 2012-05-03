@@ -12,6 +12,7 @@
 #include <QFile>
 #include <map>
 #include "../server/simstate.h"
+#include "communicator.h"
 
 MainWindow * mw;
 
