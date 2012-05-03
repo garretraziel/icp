@@ -21,6 +21,6 @@ private:
     QTcpSocket *commSock;
 };
 
-static Communicator communicator; // singleton nefunguje
+extern Communicator communicator;
 
 #endif // COMMUNICATOR_H

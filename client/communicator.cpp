@@ -2,6 +2,8 @@
 #include <QDataStream>
 #include <QByteArray>
 
+Communicator communicator;
+
 Communicator::Communicator()
 {
     commSock = new QTcpSocket;
