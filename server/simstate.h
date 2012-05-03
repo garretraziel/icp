@@ -27,6 +27,28 @@ public:
     QString getState();
     TransVector getTransits() {return transits;}
     //todo: a taky zde bude funkce vracejici XML, neco jako getStaticState a getDynamicState
+
+    //toto pujde jinam, jen ted narychlo...
+    //a pak se taky bude muset *OSETRIT* jestli se na to nekde neodkazujem
+    //a mozna pujdou sjednotit do jedne
+    void removePlace(PNPlace * _place){
+        PlaceVector::iterator it;
+        for(it=places.begin(); it!=places.end(); it++){
+            if((*it)==_place){
+                places.erase(it);
+                return;
+            }
+        }
+    }
+    void removeTrans(PNTrans * _trans){
+        TransVector::iterator it;
+        for(it=transits.begin(); it!=transits.end(); it++){
+            if((*it)==_trans){
+                transits.erase(it);
+                return;
+            }
+        }
+    }
 };
 
 #endif // SIMSTATE_H

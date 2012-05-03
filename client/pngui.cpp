@@ -64,8 +64,16 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         // toto je ovsem ohavne, ale mazat pri iterovani pres vektor se mi nepodarilo
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
-            if(l->start==this || l->end == this)
+            if(l->start==this || l->end == this){
+                if(l->start->primType == TRANS){
+                    //smazat z prechodu toto out name
+                    //->removeOutName();
+                } else {
+                    //smazat z prechodu toto in name
+                    //->removeInName();
+                }
                 delete l;
+            }
             else
                 tmp.push_back(l);
         }
@@ -76,6 +84,22 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 
         delete editor;
         delete label;
+        if(funcLabel) delete funcLabel;
+
+        switch(primType){
+            case PLACE:
+                //smazat z vektoru mist v simstate
+                mw->getCurrentSim()->removePlace(((pnCircle *)this)->simPlace);
+            break;
+            case TRANS:
+                //smazat z vektoru prechodu v simstate
+                mw->getCurrentSim()->removeTrans(((pnRect *)this)->simTrans);
+            break;
+            case EDGE:
+                //tady se nikdy nedostanu
+            break;
+        }
+
         delete this;
         return; //!!! lol suicide
     }
