@@ -21,6 +21,7 @@ private:
     Ui::editDialog *ui;
     pnPrimitive * sender;
 public slots:
+
     virtual void accept();
 };
 

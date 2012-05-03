@@ -18,7 +18,7 @@ ConnectDialog::~ConnectDialog()
 }
 
 void ConnectDialog::accept(){
-    //toto je fakt moc p?kný, priste asi nejakej qstream nebo co
+    //toto je fakt moc pekny, priste asi nejakej qstream nebo co
 
     connect(&socket, SIGNAL(connected()), this, SLOT(sendSomeShit()));
 

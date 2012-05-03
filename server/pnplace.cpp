@@ -29,3 +29,7 @@ bool PNPlace::removeToken(pntype token)
     }
     return false;
 }
+
+void PNPlace::removeTokens(){
+    tokens.clear();
+}

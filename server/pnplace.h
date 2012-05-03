@@ -25,6 +25,7 @@ public:
     TokenVector getTokens();
     void putToken(pntype token);
     bool removeToken(pntype token);
+    void removeTokens();
 };
 
 #endif // PNPLACE_H
