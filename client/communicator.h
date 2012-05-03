@@ -11,6 +11,7 @@ public:
     ~Communicator();
 
     bool connect(QString hostname, QString port);
+    bool sendCommand(QString command);
     bool login(QString name, QString password);
 
 signals:
