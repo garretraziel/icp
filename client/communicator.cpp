@@ -2,6 +2,8 @@
 #include <QDataStream>
 #include <QByteArray>
 
+#include <iostream>
+
 Communicator communicator;
 
 Communicator::Communicator()
@@ -17,6 +19,7 @@ Communicator::~Communicator()
         commSock->disconnectFromHost();
         //commSock->waitForDisconnected();
     }
+
     delete commSock;
 }
 

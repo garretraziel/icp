@@ -91,7 +91,7 @@ void editDialog::accept(){
             delete(rx);
         }
         sender->label->setPlainText(text);
-
+        sender->funcLabel->setPlainText(funcText);
     }
         break;
     case PLACE:
@@ -143,4 +143,6 @@ void editDialog::accept(){
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
     ui->labelEdit->setText(sender->label->toPlainText());
+    if(sender->funcLabel)
+        ui->funcEdit->setText(sender->funcLabel->toPlainText());
 }

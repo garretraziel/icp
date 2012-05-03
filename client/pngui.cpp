@@ -24,7 +24,7 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
     this->setPos(center.x(),center.y());
     label = canvas->addText("?? P");
-    labelPos = QPointF(15,-5);
+    labelPos = QPointF(-15, -10);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     funcLabel = NULL;
     editor = new editDialog; //toto se asi neuklizi
@@ -68,11 +68,11 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
                 if(l->start->primType == TRANS){
                     //smazat z prechodu toto out name
                     //->removeOutName();
-                    ((pnRect *)l->start)->simTrans->removeOutName(((pnCircle *)l->end)->simPlace);
+                    ((pnRect *)l->start)->simTrans->removeConnectedPlace(((pnCircle *)l->end)->simPlace, false);
                 } else {
                     //smazat z prechodu toto in name
                     //->removeInName();
-                    ((pnRect *)l->end)->simTrans->removeInName(((pnCircle *)l->start)->simPlace);
+                    ((pnRect *)l->end)->simTrans->removeConnectedPlace(((pnCircle *)l->start)->simPlace, true);
                 }
                 delete l;
             }
@@ -162,7 +162,7 @@ void pnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
 }
 
 QRectF pnItem::boundingRect() const{
-    return QRectF(-15.5, -15.5, 34, 34);
+    return QRectF(-20.5, -20.5, 41, 41);
 }
 
 void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -171,7 +171,7 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     painter->setPen(QPen(Qt::black, 1));
     painter->setBrush(QBrush(QColor(255,255,255)));
-    painter->drawEllipse(-15, -15, 30, 30);
+    painter->drawEllipse(-20, -20, 40, 40);
 }
 
 QRectF pnRect::boundingRect() const{

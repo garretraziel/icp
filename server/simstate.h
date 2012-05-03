@@ -29,7 +29,6 @@ public:
     //todo: a taky zde bude funkce vracejici XML, neco jako getStaticState a getDynamicState
 
     //toto pujde jinam, jen ted narychlo...
-    //a pak se taky bude muset *OSETRIT* jestli se na to nekde neodkazujem
     //a mozna pujdou sjednotit do jedne
     void removePlace(PNPlace * _place){
         PlaceVector::iterator it;

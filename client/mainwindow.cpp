@@ -90,7 +90,7 @@ QString fromConstraint(Constraint * cons){
     if(cons->type == TYPECONST)
         guard += QString::number(cons->second_const);
     else
-        guard += "??";
+        guard += "??"; //TODO! jeste nefunguje jinde
     guard += " && ";
 
     return guard;
@@ -98,11 +98,11 @@ QString fromConstraint(Constraint * cons){
 
 QString fromOperation(OneOut oper){
     QString func = "";
-    func += oper.output + "= 0";
+    func += oper.output + "= ";
     foreach(Operation op, oper.operations){
-        func+=((op.op==SUB)? "-":"+")+op.var;
+        func+=((op.op==SUB)? "-":"+")+op.var+" ";
     }
-    func += " | ";
+    func += "; ";
 
     return func;
 }
@@ -121,7 +121,8 @@ void MainWindow::loadSim(){
     QByteArray xml = xmlfile.readAll();
     xmlfile.close();
     simVect.back()->setState(xml.data());
-
+    QPointF center(0,0);
+    int centerCnt = 1;
     std::map<PNPlace *, pnItem *> placeToGui;
     foreach(PNPlace * place, simVect.back()->places){
         pnItem * item = __addItem(place);
@@ -130,8 +131,11 @@ void MainWindow::loadSim(){
         foreach(pntype token, place->getTokens()){
             id += QString::number(token) + ", ";
         }
+        id = id.mid(0,id.length()-2);
         item->label->setPlainText(id);
         item->setPosition(place->x.toInt(),place->y.toInt());
+        center += QPointF(item->pos());
+        centerCnt++;
     }
 
 
@@ -141,13 +145,18 @@ void MainWindow::loadSim(){
         foreach(Constraint * cons, transit->constraints){
             guard += fromConstraint(cons);
         }
+        guard = guard.mid(0,guard.length()-4);
         item->label->setPlainText(guard);
         QString func = "";
         foreach(OneOut oper, transit->operations){
             func += fromOperation(oper);
         }
+        func = func.mid(0,func.length()-2);
         item->funcLabel->setPlainText(func);
         item->setPosition(transit->x.toInt(),transit->y.toInt());
+
+        center += QPointF(item->pos());
+        centerCnt++;
 
         StringToPnplaceMap::iterator it;
         for(it=transit->in_names.begin(); it!=transit->in_names.end(); it++){
@@ -159,9 +168,8 @@ void MainWindow::loadSim(){
             newLine->label->setPlainText((*it).first);
         }
 
-        item->canvas->views()[0]->centerOn(item);
     }
-
+    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->centerOn(center/centerCnt);
     return;
 
 }
