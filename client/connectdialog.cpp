@@ -16,15 +16,14 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
 ConnectDialog::~ConnectDialog()
 {
     delete ui;
-    socket.close();
 }
 
 void ConnectDialog::accept(){
     //toto je fakt moc pekny, priste asi nejakej qstream nebo co
 
-    connect(&socket, SIGNAL(connected()), this, SLOT(sendSomeShit()));
+    connect(&commSock, SIGNAL(connected()), this, SLOT(login()));
 
-    socket.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);
+    commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);
 
     this->hide();
 }
@@ -45,4 +44,8 @@ void ConnectDialog::login(){
     socket.write(msg_login.toStdString().c_str());
     socket.write(msg_password.toStdString().c_str());
 */
-}
+    QXmlStreamWriter server(&commSock);
+    server.writeEmptyElement("login");
+    server.writeAttribute("login","hurr durr");
+    server.writeEndElement();
+  }

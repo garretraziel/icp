@@ -39,3 +39,7 @@ FORMS    += mainwindow.ui \
 OTHER_FILES += \
     doc/protokol \
     typologo.png
+
+
+
+

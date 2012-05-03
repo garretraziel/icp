@@ -15,10 +15,10 @@ class ConnectDialog : public QDialog
 public:
     explicit ConnectDialog(QWidget *parent = 0);
     ~ConnectDialog();
+    QTcpSocket commSock;
     
 private:
     Ui::ConnectDialog *ui;
-    QTcpSocket socket;
 
 public slots:
     virtual void accept();

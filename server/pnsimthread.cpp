@@ -19,10 +19,12 @@ void PNSimThread::run()
         return;
     }
 
-    QXmlStreamReader client(&tcpSocket);
+    QString login="<login name=\"hurr\"/>";
+    QXmlStreamReader client(login);
 
     while (!client.atEnd()) {
         client.readNext();
+        qDebug() << "nacitam";
         qDebug() << client.name();
     }
     if (client.hasError()) {
