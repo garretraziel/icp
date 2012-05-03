@@ -112,7 +112,7 @@ void MainWindow::loadSim(){
     //(((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.5,0.5));
 
     simVect.push_back(new SimState());
-    QFile xmlfile("test.xml");
+    QFile xmlfile("semafor.xml");
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray xml = xmlfile.readAll();
     xmlfile.close();
@@ -122,7 +122,7 @@ void MainWindow::loadSim(){
     foreach(PNPlace * place, simVect.back()->places){
         pnItem * item = __addItem(place);
         placeToGui[place] = item;
-        QString id = place->id + ": ";
+        QString id = "";
         foreach(pntype token, place->getTokens()){
             id += QString::number(token) + ", ";
         }

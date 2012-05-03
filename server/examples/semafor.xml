@@ -1,64 +1,62 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0"?>
 <petrinet>
-  <places>
-    <place id="1" posx="0" posy="0">
-      <token>1</token>
-    </place>
-    <place id="2" posx="0" posy="0">
-      <token>1</token>
-    </place>
-    <place id="3" posx="0" posy="0">
-      <token>1</token>
-    </place>
-    <place id="4" posx="0" posy="0">
-    </place>
-    <place id="5" posx="0" posy="0">
-    </place>
-  </places>
-  <transitions>
-    <transition id="6" posx="0" posy="0">
-      <constraint type="const" var1="x" op="4" const="1"/>
-      <constraint type="const" var1="s" op="4" const="1"/>
-      <inplace name="x">1</inplace>
-      <inplace name="s">3</inplace>
-      <outplace name="vystup">4</outplace>
-      <operation output="vystup">
-        <plus id="x"/>
-      </operation>
-    </transition>
-    <transition id="7" posx="0" posy="0">
-      <constraint type="const" var1="x" op="4" const="1"/>
-      <constraint type="const" var1="s" op="4" const="1"/>
-      <inplace name="x">2</inplace>
-      <inplace name="s">3</inplace>
-      <outplace name="vystup">5</outplace>
-      <operation output="vystup">
-        <plus id="x"/>
-      </operation>
-    </transition>
-    <transition id="8" posx="0" posy="0">
-      <constraint type="const" var1="x" op="4" const="1"/>
-      <inplace name="x">4</inplace>
-      <outplace name="v">1</outplace>
-      <outplace name="w">3</outplace>
-      <operation output="v">
-        <plus id="x"/>
-      </operation>
-      <operation output="w">
-        <plus id="x"/>
-      </operation>
-    </transition>
-    <transition id="9" posx="0" posy="0">
-      <constraint type="const" var1="x" op="4" const="1"/>
-      <inplace name="x">5</inplace>
-      <outplace name="v">2</outplace>
-      <outplace name="w">3</outplace>
-      <operation output="v">
-        <plus id="x"/>
-      </operation>
-      <operation output="w">
-        <plus id="x"/>
-      </operation>
-    </transition>
-  </transitions>
+    <places>
+        <place id="1" posx="209" posy="59">
+            <token>1</token>
+        </place>
+        <place id="2" posx="986" posy="49">
+            <token>1</token>
+        </place>
+        <place id="3" posx="597" posy="361">
+            <token>1</token>
+        </place>
+        <place id="4" posx="463" posy="359"/>
+        <place id="5" posx="752" posy="347"/>
+    </places>
+    <transitions>
+        <transition id="6" posx="464" posy="210">
+            <constraint var1="x" op="4" type="const" const="1"/>
+            <constraint var1="s" op="4" type="const" const="1"/>
+            <inplace name="s">3</inplace>
+            <inplace name="x">1</inplace>
+            <outplace name="vystup">4</outplace>
+            <operation output="vystup">
+                <plus id="x"/>
+            </operation>
+        </transition>
+        <transition id="7" posx="750" posy="200">
+            <constraint var1="x" op="4" type="const" const="1"/>
+            <constraint var1="s" op="4" type="const" const="1"/>
+            <inplace name="s">3</inplace>
+            <inplace name="x">2</inplace>
+            <outplace name="vystup">5</outplace>
+            <operation output="vystup">
+                <plus id="x"/>
+            </operation>
+        </transition>
+        <transition id="8" posx="463" posy="477">
+            <constraint var1="x" op="4" type="const" const="1"/>
+            <inplace name="x">4</inplace>
+            <outplace name="v">1</outplace>
+            <outplace name="w">3</outplace>
+            <operation output="v">
+                <plus id="x"/>
+            </operation>
+            <operation output="w">
+                <plus id="x"/>
+            </operation>
+        </transition>
+        <transition id="9" posx="753" posy="476">
+            <constraint var1="x" op="4" type="const" const="1"/>
+            <inplace name="x">5</inplace>
+            <outplace name="v">2</outplace>
+            <outplace name="w">3</outplace>
+            <operation output="v">
+                <plus id="x"/>
+            </operation>
+            <operation output="w">
+                <plus id="x"/>
+            </operation>
+        </transition>
+    </transitions>
 </petrinet>
