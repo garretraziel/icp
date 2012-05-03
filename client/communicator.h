@@ -8,15 +8,18 @@ class Communicator
 {
 public:
     Communicator();
-    Communicator(QString hostname, QString port);
     ~Communicator();
+
+    bool connect(QString hostname, QString port);
 
 signals:
     void error(QTcpSocket::SocketError socketError);
 
 private:
     QTcpSocket *commSock;
-    void login();
+    void login(QString name, QString password);
 };
+
+static Communicator communicator; // singleton nefunguje
 
 #endif // COMMUNICATOR_H

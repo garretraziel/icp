@@ -28,6 +28,6 @@ void ConnectDialog::accept(){
 
     commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);*/
 
-    Communicator comm(ui->server->text(),ui->port->text());
+    communicator.connect(ui->server->text(),ui->port->text());
     this->hide();
 }
