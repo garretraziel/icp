@@ -139,7 +139,7 @@ void editDialog::accept(){
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
     ui->labelEdit->setText(sender->label->toPlainText());
-    if(sender->funcLabel)
+    if(!sender->funcLabel)
         ui->funcEdit->setText(sender->funcLabel->toPlainText());
 
     if(sender->primType == TRANS){
