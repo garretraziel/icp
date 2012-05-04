@@ -171,7 +171,7 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    painter->setPen(QPen(Qt::black, 1));
+    painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(QBrush(QColor(255,255,255)));
     painter->drawEllipse(-20, -20, 40, 40);
 }
@@ -187,7 +187,7 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    painter->setPen(QPen(Qt::black, 1));
+    painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(QBrush(QColor(255,255,255)));
     int textLen = label->toPlainText().length()*6;
     int funcLen = funcLabel->toPlainText().length()*6;
@@ -227,7 +227,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    end = _end;
    canvas = _canvas;
 
-   line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
+   line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 2));
    line->setZValue(-1);
    if(start->primType == PLACE)
        line->setPen(QPen(Qt::green, 1));

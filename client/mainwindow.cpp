@@ -176,7 +176,7 @@ void MainWindow::loadSim(){
 }
 
 void MainWindow::saveSim(){
-    if(getCurrentSim()->checkConfiguration())
+    if(!getCurrentSim()->checkConfiguration())
         QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
     else{
         std::cout << getCurrentSim()->getState().toStdString();

@@ -54,7 +54,7 @@ bool Communicator::sendCommand(QString command)
 
 bool Communicator::recvCommand(QString &command)
 {
-    return false;
+    return true;
 }
 
 bool Communicator::login(QString name, QString password, QString &message)
@@ -74,6 +74,8 @@ bool Communicator::login(QString name, QString password, QString &message)
         message = "Error: server didn't response";
         return false;
     }
+
+    return true;
 }
 
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
