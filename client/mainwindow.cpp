@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     cd = new ConnectDialog(this);
     ad = new aboutDialog(this);
+    editor = new editDialog(this);
     mw = this;
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
@@ -255,4 +256,8 @@ SimState * MainWindow::getCurrentSim(){
         return NULL;
     else
         return simVect[ui->tabWidget->currentIndex()];
+}
+
+editDialog * MainWindow::getEditor(){
+    return editor;
 }
