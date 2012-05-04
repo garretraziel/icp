@@ -27,7 +27,8 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     labelPos = QPointF(-15, -10);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     funcLabel = NULL;
-    editor = new editDialog; //toto se asi neuklizi
+    //editor = new editDialog; //toto se asi neuklizi
+    editor = mw->getEditor();
     simPlace = _simPlace;
     primType = PLACE;
 }
@@ -47,7 +48,8 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     funcLabel = canvas->addText("a = x + y + z");
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
-    editor = new editDialog;
+    //editor = new editDialog;
+    editor = mw->getEditor();
     simTrans = _simTrans;
     primType = TRANS;
 }
@@ -235,7 +237,8 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    label->setAcceptedMouseButtons(Qt::LeftButton);   
    canvas->addItem(label);
    primType = EDGE;
-   editor = new editDialog;
+   //editor = new editDialog;
+   editor = mw->getEditor();
    funcLabel = NULL;
 }
 

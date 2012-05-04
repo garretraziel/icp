@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "connectdialog.h"
+#include "editdialog.h"
 #include "pngui.h"
 #include <vector>
 #include <QGraphicsView>
@@ -23,11 +24,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    SimState * getCurrentSim(){
-        //TODO!!!!
-        return simVect.back();
-    }
-    
+
+    editDialog * getEditor();
+    SimState * getCurrentSim();
+
 private:
     Ui::MainWindow *ui;
     ConnectDialog * cd;
@@ -41,6 +41,8 @@ private:
     std::vector<QGraphicsScene *> canvasVect;
 
     std::vector<SimState *> simVect;
+
+    editDialog * editor;
 
 public slots:
     void showConnectDialog();
