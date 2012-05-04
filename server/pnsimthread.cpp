@@ -28,12 +28,12 @@ void PNSimThread::run()
 
     bool connected = true;
 
-    quint16 block = 0;
+    qint64 block = 0;
     QDataStream in(&commSock);
     in.setVersion(QDataStream::Qt_4_0);
 
     while (connected) {
-        while (commSock.bytesAvailable() < (int)sizeof(quint16)) {
+        while (commSock.bytesAvailable() < (int)sizeof(qint64)) {
             commSock.waitForReadyRead(-1);
             if (commSock.state() == QTcpSocket::UnconnectedState) {
                 connected = false;
@@ -167,10 +167,10 @@ QByteArray PNSimThread::createMessage(QString message)
     QByteArray block;
     QDataStream out(&block,QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
+    out << (qint64)0;
     out << message;
     out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
+    out << (qint64)(block.size() - sizeof(qint64));
     return block;
 }
 

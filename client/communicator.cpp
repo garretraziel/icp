@@ -43,10 +43,10 @@ bool Communicator::sendCommand(QString command)
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
+    out << (qint64)0;
     out << command;
     out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
+    out << (qint64)(block.size() - sizeof(qint64));
     commSock->write(block);
     return true;
 }
@@ -57,8 +57,8 @@ bool Communicator::sendCommand(QString command)
 
 bool Communicator::recvCommand(QString &command)
 {
-    quint16 block;
-    while (commSock->bytesAvailable() < (int)sizeof(quint16)) {
+    qint64 block;
+    while (commSock->bytesAvailable() < (int)sizeof(qint64)) {
         returnWhenTimeout false;
     }
     QDataStream in(commSock);
