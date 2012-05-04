@@ -80,10 +80,26 @@ bool PNSimThread::handleCommand(QString command, QString &message)
     } else if (strcmd == "login") {
         QString name = com.attributes().value("name").toString();
         QString password = com.attributes().value("password").toString();
-        if (name == "" || password == "" || !logUser(name, password)) {
+        if (name == "" || password == "") {
             qDebug() << "nemuzu lognout";
-            message = "<err info=\"Bad password or user doesn't exist\"/>";
+            message = "<err info=\"Password and name cannot be blank\"/>";
             return false;
+        }
+        int result = logUser(name, password);
+        if (result != 0) {
+            if (result == 1) {
+                qDebug() << "doesn't exists";
+                message = "<err info=\"User doesn't exists\"/>";
+                return false;
+            } else if (result == 2) {
+                qDebug() << "bad password";
+                message = "<err info=\"Bad password\"/>";
+                return false;
+            } else {
+                qDebug() << "file with users doesn't exists";
+                message = "<err info=\"User file doesn't exists\"/>";
+                return false;
+            }
         } else {
             isLogged = true;
             message = "<ok/>";
@@ -93,17 +109,19 @@ bool PNSimThread::handleCommand(QString command, QString &message)
         message = "<err info=\"Not logged on\"/>";
         qDebug() << "not logged!";
         return false;
+    } else {
+
     }
     return true;
 }
 
-bool PNSimThread::logUser(QString login, QString password)
+int PNSimThread::logUser(QString login, QString password)
 {
     QFile users(usersFile);
 
     if (!users.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCritical("Error: cannot open file with users");
-        return false;
+        return 3;
     }
 
     QTextStream filestream(&users);
@@ -111,10 +129,11 @@ bool PNSimThread::logUser(QString login, QString password)
         QString line = filestream.readLine();
         QStringList items = line.split(':');
         if (items.size() != 2) continue;
-        if (items[0] == login && items[1] == password) return true;
+        if (items[0] == login && items[1] == password) return 0;
+        if (items[0] == login) return 2;
     }
 
-    return false;
+    return 1;
 }
 
 QByteArray PNSimThread::createMessage(QString message)
