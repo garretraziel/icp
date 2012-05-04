@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     
-    PetriNetServer *server = new PetriNetServer(0,50,"127.0.0.1",11899);
+    PetriNetServer *server = new PetriNetServer(0,50,11899);
 
     bool is_running = server->start();
 

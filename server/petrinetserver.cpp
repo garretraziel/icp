@@ -2,16 +2,23 @@
 #include <QNetworkProxy>
 #include <iostream>
 #include <QByteArray>
+#include <QtNetwork>
 
-PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, QString ip, int port) :
+PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     QTcpServer(parent)
 {
     setProxy(QNetworkProxy::NoProxy);
     setMaxPendingConnections(maxconnections);
 
-    if (!my_ip.setAddress(ip)) {
-        qCritical() << "Cannot set ip: " << ip;
-    }
+    /*QString ip;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    foreach (QHostAddress address, ipAddressesList) {
+        if (address != QHostAddress::LocalHost && address.toIPv4Address()) {
+            ip = address.toString();
+            break;
+        }
+    }*/
+    my_ip = QHostAddress::Any;
 
     this -> port = port; //pokud je port 0, automaticky vyber portu. Asi to neni spravne.
 
@@ -31,7 +38,8 @@ bool PetriNetServer::start()
         qCritical() << "Cannot listen on: " << port;
         return false;
     } else {
-        qDebug() << "listening on: " << serverPort();
+        qDebug() << "listening on port: " << serverPort();
+        qDebug() << "and ip:" << my_ip.toString();
     }
     return true;
 }

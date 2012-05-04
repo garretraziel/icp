@@ -37,6 +37,7 @@ bool Communicator::connected()
 bool Communicator::connect(QString hostname, QString port)
 {
     commSock->connectToHost(hostname, port.toUInt(),QIODevice::ReadWrite);
+    commSock->waitForConnected(-1);
     return connected();
 }
 
