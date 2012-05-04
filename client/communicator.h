@@ -15,6 +15,9 @@ public:
     bool login(QString name, QString password, QString &message);
     bool registerUser(QString name, QString password, QString &message);
 
+    //jen testovaci
+    void sendSimState(QString xmlSimState);
+
 signals:
     void error(QTcpSocket::SocketError socketError);
 

@@ -111,3 +111,13 @@ bool Communicator::registerUser(QString name, QString password, QString &message
         return false;
     }
 }
+
+void Communicator::sendSimState(QString xmlSimState){
+    //TODO!!
+    QString sendMessage = "<xml hurr durr>\n"+xmlSimState+"</xml hurr durr>";
+    sendCommand(sendMessage);
+
+
+}
+
+
