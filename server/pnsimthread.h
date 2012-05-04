@@ -25,6 +25,7 @@ private:
     int isLogged;
     QString usersFile;
     QString logFile;
+    QString simDirectory;
 
     SimVector simulations;
 
@@ -32,6 +33,8 @@ private:
     int logUser(QString login, QString password);
     QByteArray createMessage(QString message);
     int registerUser(QString login, QString password);
+    QString getSimulations();
+    QString getCommand(QString xml);
 };
 
 #endif // PNSIMTHREAD_H

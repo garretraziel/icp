@@ -1,6 +1,7 @@
 #include "pnsimthread.h"
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include <QtNetwork>
 #include <QtXml>
 #include <QXmlStreamReader>
@@ -14,6 +15,7 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     isLogged = false;
     usersFile = "./users.dat";
     logFile = "./log.dat";
+    simDirectory = "./sims";
 }
 
 void PNSimThread::run()
@@ -28,12 +30,12 @@ void PNSimThread::run()
 
     bool connected = true;
 
-    quint16 block = 0;
+    qint64 block = 0;
     QDataStream in(&commSock);
     in.setVersion(QDataStream::Qt_4_0);
 
     while (connected) {
-        while (commSock.bytesAvailable() < (int)sizeof(quint16)) {
+        while (commSock.bytesAvailable() < (int)sizeof(qint64)) {
             commSock.waitForReadyRead(-1);
             if (commSock.state() == QTcpSocket::UnconnectedState) {
                 connected = false;
@@ -167,10 +169,10 @@ QByteArray PNSimThread::createMessage(QString message)
     QByteArray block;
     QDataStream out(&block,QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
+    out << (qint64)0;
     out << message;
     out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
+    out << (qint64)(block.size() - sizeof(qint64));
     return block;
 }
 
@@ -196,4 +198,46 @@ int PNSimThread::registerUser(QString login, QString password)
     }
     filestream << login << ":" << password << endl;
     return 0;
+}
+
+QString PNSimThread::getSimulations()
+{
+    if (!QDir(simDirectory).exists()) {
+        QDir().mkdir(simDirectory);
+    }
+    QDir dir(simDirectory);
+
+    dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
+
+    QString result;
+    QXmlStreamWriter xml(&result);
+    xml.writeStartDocument();
+
+    QFileInfoList files = dir.entryInfoList();
+
+    foreach(QFileInfo info, files) {
+        QFile soubor(info.absoluteFilePath());
+        if (!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "Error: cannot open file";
+            continue;
+        }
+        QXmlStreamReader inxml(&soubor);
+        inxml.readNext();
+        inxml.readNext();
+        if (inxml.atEnd() || inxml.hasError()) {
+            continue;
+        }
+        xml.writeEmptyElement("simul-item");
+        xml.writeAttribute("autor",inxml.attributes().value("autor").toString());
+        xml.writeAttribute("name",inxml.attributes().value("name").toString());
+        xml.writeAttribute("version",inxml.attributes().value("version").toString());
+        xml.writeAttribute("info",inxml.attributes().value("info").toString());
+    }
+    xml.writeEndDocument();
+    return result;
+}
+
+QString PNSimThread::getCommand(QString xml)
+{
+
 }
