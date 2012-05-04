@@ -77,6 +77,7 @@ void MainWindow::newTab(){
     ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
     ui->tabWidget->setCurrentWidget(tabVect.back());
 
+    simVect.push_back(new SimState());
 }
 
 QString fromConstraint(Constraint * cons){
@@ -111,20 +112,19 @@ QString fromOperation(OneOut oper){
 
 void MainWindow::loadSim(){
     newTab();
-
+    SimState * currentSim = getCurrentSim();
     //TOO DOO
     //(((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.5,0.5));
 
-    simVect.push_back(new SimState());
     QFile xmlfile("semafor.xml");
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray xml = xmlfile.readAll();
     xmlfile.close();
-    simVect.back()->setState(xml.data());
+    currentSim->setState(xml.data());
     QPointF center(0,0);
     int centerCnt = 1;
     std::map<PNPlace *, pnItem *> placeToGui;
-    foreach(PNPlace * place, simVect.back()->places){
+    foreach(PNPlace * place, currentSim->places){
         pnItem * item = __addItem(place);
         placeToGui[place] = item;
         QString id = "";
@@ -139,7 +139,7 @@ void MainWindow::loadSim(){
     }
 
 
-    foreach(PNTrans * transit, simVect.back()->transits){
+    foreach(PNTrans * transit, currentSim->transits){
         pnItem * item = __addItemRect(transit);
         QString guard = "";
         foreach(Constraint * cons, transit->constraints){
@@ -201,10 +201,13 @@ pnItem * MainWindow::__addItem(PNPlace * simPlace){
 }
 
 pnItem * MainWindow::addItem(){
-    //FIXME!!!!! UPRAVIT PRO VICE SCEN
-    simVect.back()->places.push_back(new PNPlace());
+    SimState * currentSim = getCurrentSim();
+    if(!currentSim)
+        return NULL;
 
-#define simPlace ((PNPlace *)(simVect.back()->places.back()))
+    currentSim->places.push_back(new PNPlace());
+
+#define simPlace ((PNPlace *)(currentSim->places.back()))
     simPlace->id = QString::number((long long)simPlace); //FIXME!
     simPlace->x = QString::number(this->x());
     simPlace->y = QString::number(this->y());
@@ -219,8 +222,12 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
 }
 
 pnItem * MainWindow::addItemRect(){
-    simVect.back()->transits.push_back(new PNTrans());
-#define simTrans ((PNTrans *)(simVect.back()->transits.back()))
+    SimState * currentSim = getCurrentSim();
+    if(!currentSim)
+        return NULL;
+
+    currentSim->transits.push_back(new PNTrans());
+#define simTrans ((PNTrans *)(currentSim->transits.back()))
     simTrans->id = QString::number((long long)this);
     simTrans->x = QString::number(this->x());
     simTrans->y = QString::number(this->y());
@@ -239,4 +246,13 @@ void MainWindow::zoomOut(){
 
 void MainWindow::zoomIn(){
     ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(1/0.8,1/0.8);
+}
+
+
+SimState * MainWindow::getCurrentSim(){
+    int cnt = ui->tabWidget->count();
+    if(!cnt)
+        return NULL;
+    else
+        return simVect[ui->tabWidget->currentIndex()];
 }
