@@ -7,6 +7,7 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QDataStream>
+#include <QMessageBox>
 
 ConnectDialog::ConnectDialog(QWidget *parent) :
     QDialog(parent),
@@ -30,5 +31,8 @@ void ConnectDialog::accept(){
 
     communicator.connect(ui->server->text(),ui->port->text());
     communicator.login(ui->user->text(),ui->password->text());
-    this->hide();
+    if (communicator.connected())
+        this->hide();
+    else
+        QMessageBox::critical(this, "Error", "Error occured during connecting to server.");
 }
