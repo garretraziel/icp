@@ -25,6 +25,11 @@ bool SimState::setState(QString xml)
         return false;
     }
 
+    autor = root.attribute("autor");
+    name = root.attribute("name");
+    version = root.attribute("version").toInt();
+    info = root.attribute("info");
+
     QDomElement xml_places = root.firstChildElement("places");
     QDomElement one_place = xml_places.firstChildElement("place");
 
@@ -132,6 +137,11 @@ QString SimState::getState()
     doc.writeStartDocument();
 
     doc.writeStartElement("petrinet");
+
+    doc.writeAttribute("autor",autor);
+    doc.writeAttribute("name",name);
+    doc.writeAttribute("version",QString::number(version));
+    doc.writeAttribute("info",info);
 
     doc.writeStartElement("places");
 

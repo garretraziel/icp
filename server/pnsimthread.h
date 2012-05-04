@@ -33,7 +33,8 @@ private:
     int logUser(QString login, QString password);
     QByteArray createMessage(QString message);
     int registerUser(QString login, QString password);
-    QStringList getSimulations();
+    QString getSimulations();
+    QString getCommand(QString xml);
 };
 
 #endif // PNSIMTHREAD_H

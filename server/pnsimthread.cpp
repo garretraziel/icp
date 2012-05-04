@@ -200,7 +200,7 @@ int PNSimThread::registerUser(QString login, QString password)
     return 0;
 }
 
-QStringList PNSimThread::getSimulations()
+QString PNSimThread::getSimulations()
 {
     if (!QDir(simDirectory).exists()) {
         QDir().mkdir(simDirectory);
@@ -228,6 +228,16 @@ QStringList PNSimThread::getSimulations()
             continue;
         }
         xml.writeEmptyElement("simul-item");
-        //xml.writeAttribute("name",);
+        xml.writeAttribute("autor",inxml.attributes().value("autor").toString());
+        xml.writeAttribute("name",inxml.attributes().value("name").toString());
+        xml.writeAttribute("version",inxml.attributes().value("version").toString());
+        xml.writeAttribute("info",inxml.attributes().value("info").toString());
     }
+    xml.writeEndDocument();
+    return result;
+}
+
+QString PNSimThread::getCommand(QString xml)
+{
+
 }
