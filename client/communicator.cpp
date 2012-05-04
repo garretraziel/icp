@@ -3,8 +3,7 @@
 #include <QByteArray>
 #include <QMessageBox>
 #include <QDebug>
-
-#include <iostream>
+#include <QXmlStreamReader>
 
 Communicator communicator;
 
@@ -76,9 +75,11 @@ bool Communicator::recvCommand(QString &command)
     return true;
 }
 
-bool Communicator::login(QString name, QString password, QString &message)
+inline bool Communicator::login_or_register(QString what, QString name, QString password, QString &message)
 {
-    QString sendMessage = "<login name=\"";
+    QString sendMessage = "<";
+    sendMessage += what;
+    sendMessage += " name=\"";
     sendMessage += name;
     sendMessage += "\" password=\"";
     sendMessage += password;
@@ -94,7 +95,26 @@ bool Communicator::login(QString name, QString password, QString &message)
         return false;
     }
 
-    return (recMessage == "<ok/>");
+    QXmlStreamReader xml(recMessage);
+
+    xml.readNext();
+    xml.readNext();
+    if (xml.name() == "err") {
+        message = xml.attributes().value("info").toString();
+        return false;
+    }
+
+    return true;
+}
+
+bool Communicator::login(QString name, QString password, QString &message)
+{
+    return login_or_register("login",name,password,message);
+}
+
+bool Communicator::registerUser(QString name, QString password, QString &message)
+{
+    return login_or_register("register",name,password,message);
 }
 
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
@@ -112,27 +132,6 @@ void Communicator::displayError(QAbstractSocket::SocketError socketError)
         QMessageBox::information(NULL, "Error", "Error occured during connecting to server.");
         break;
     }
-}
-
-bool Communicator::registerUser(QString name, QString password, QString &message)
-{
-    QString sendMessage = "<register name=\"";
-    sendMessage += name;
-    sendMessage += "\" password=\"";
-    sendMessage += password;
-    sendMessage += "\"/>";
-
-    if (!sendCommand(sendMessage)) {
-        message = "Error: cannot connect or send message";
-        return false;
-    }
-    QString recMessage;
-    if (!recvCommand(recMessage)) {
-        message = "Error: server didn't response";
-        return false;
-    }
-
-    return (recMessage == "<ok/>");
 }
 
 void Communicator::sendSimState(QString xmlSimState){

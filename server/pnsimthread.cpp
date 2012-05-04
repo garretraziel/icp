@@ -115,7 +115,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
         if (result != 0) {
             if (result == 1) {
                 qDebug() << "doesn't exists";
-                message = "<err info=\"User doesn't exists\"/>";
+                message = "<err info=\"User doesn't exist\"/>";
                 return false;
             } else if (result == 2) {
                 qDebug() << "bad password";
@@ -123,7 +123,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
                 return false;
             } else {
                 qDebug() << "file with users doesn't exists";
-                message = "<err info=\"User file doesn't exists\"/>";
+                message = "<err info=\"User file doesn't exist\"/>";
                 return false;
             }
         } else {
