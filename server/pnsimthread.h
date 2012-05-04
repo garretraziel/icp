@@ -5,9 +5,11 @@
 #include <QTcpSocket>
 #include <QString>
 #include <vector>
+#include <map>
 #include "petrisim.h"
 
 typedef std::vector<PetriSim> SimVector;
+typedef std::map<QString, QString> StrToStrMap;
 
 class PNSimThread : public QThread
 {
@@ -34,7 +36,7 @@ private:
     QByteArray createMessage(QString message);
     int registerUser(QString login, QString password);
     QString getSimulations();
-    QString getCommand(QString xml);
+    bool getCommand(QString xml, QString &result, StrToStrMap &args);
 };
 
 #endif // PNSIMTHREAD_H
