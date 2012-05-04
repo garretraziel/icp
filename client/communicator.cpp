@@ -52,15 +52,28 @@ bool Communicator::sendCommand(QString command)
     return true;
 }
 
-bool Communicator::login(QString name, QString password)
+bool Communicator::recvCommand(QString &command)
 {
-    QString message = "<login name=\"";
-    message += name;
-    message += "\" password=\"";
-    message += password;
-    message += "\"/>";
+    return false;
+}
 
-    return sendCommand(message);
+bool Communicator::login(QString name, QString password, QString &message)
+{
+    QString sendMessage = "<login name=\"";
+    sendMessage += name;
+    sendMessage += "\" password=\"";
+    sendMessage += password;
+    sendMessage += "\"/>";
+
+    if (!sendCommand(sendMessage)) {
+        message = "Error: cannot send message to server";
+        return false;
+    }
+    QString recMessage;
+    if (!recvCommand(recMessage)) {
+        message = "Error: server didn't response";
+        return false;
+    }
 }
 
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
@@ -77,5 +90,24 @@ void Communicator::displayError(QAbstractSocket::SocketError socketError)
     default:
         QMessageBox::information(NULL, "Error", "Error occured during connecting to server.");
         break;
+    }
+}
+
+bool Communicator::registerUser(QString name, QString password, QString &message)
+{
+    QString sendMessage = "<register name=\"";
+    sendMessage += name;
+    sendMessage += "\" password\"";
+    sendMessage += password;
+    sendMessage += "\"/>";
+
+    if (!sendCommand(sendMessage)) {
+        message = "Error: cannot connect or send message";
+        return false;
+    }
+    QString recMessage;
+    if (!recvCommand(recMessage)) {
+        message = "Error: server didn't response";
+        return false;
     }
 }

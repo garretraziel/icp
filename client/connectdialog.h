@@ -20,6 +20,8 @@ private:
 
 public slots:
     virtual void accept();
+private slots:
+    void registerUser();
 };
 
 #endif // CONNECTDIALOG_H

@@ -14,6 +14,8 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
     ui(new Ui::ConnectDialog)
 {
     ui->setupUi(this);
+
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(registerUser()));
 }
 
 ConnectDialog::~ConnectDialog()
@@ -30,9 +32,20 @@ void ConnectDialog::accept(){
     commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);*/
 
     communicator.connect(ui->server->text(),ui->port->text());
-    communicator.login(ui->user->text(),ui->password->text());
-    if (communicator.connected())
+    QString message;
+    if (communicator.login(ui->user->text(),ui->password->text(),message))
         this->hide();
     else
-        QMessageBox::critical(this, "Error", "Error occured during connecting to server.");
+        QMessageBox::critical(this, "Error", message);
+}
+
+void ConnectDialog::registerUser()
+{
+    communicator.connect(ui->server->text(),ui->port->text());
+    QString message;
+
+    if (communicator.registerUser(ui->user->text(),ui->password->text(),message))
+        this->hide();
+    else
+        QMessageBox::critical(this, "Error", message);
 }
