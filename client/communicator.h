@@ -25,6 +25,7 @@ private:
     QTcpSocket *commSock;
     bool sendCommand(QString command);
     bool recvCommand(QString &command);
+    inline bool login_or_register(QString what, QString name, QString password, QString &message);
 
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
