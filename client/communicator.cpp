@@ -52,8 +52,27 @@ bool Communicator::sendCommand(QString command)
     return true;
 }
 
+#define returnWhenTimeout commSock->waitForReadyRead(); \
+                          if (commSock->state() == QTcpSocket::UnconnectedState) \
+                            return
+
 bool Communicator::recvCommand(QString &command)
 {
+    quint16 block;
+    while (commSock->bytesAvailable() < (int)sizeof(quint16)) {
+        returnWhenTimeout false;
+    }
+    QDataStream in(commSock);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    in >> block;
+    qDebug() << "velikost: " << block;
+
+    while (commSock->bytesAvailable() < block) {
+        returnWhenTimeout false;
+    }
+    in >> command;
+
     return true;
 }
 
@@ -75,7 +94,7 @@ bool Communicator::login(QString name, QString password, QString &message)
         return false;
     }
 
-    return true;
+    return (recMessage == "<ok/>");
 }
 
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
@@ -99,7 +118,7 @@ bool Communicator::registerUser(QString name, QString password, QString &message
 {
     QString sendMessage = "<register name=\"";
     sendMessage += name;
-    sendMessage += "\" password\"";
+    sendMessage += "\" password=\"";
     sendMessage += password;
     sendMessage += "\"/>";
 
@@ -112,6 +131,8 @@ bool Communicator::registerUser(QString name, QString password, QString &message
         message = "Error: server didn't response";
         return false;
     }
+
+    return (recMessage == "<ok/>");
 }
 
 void Communicator::sendSimState(QString xmlSimState){
