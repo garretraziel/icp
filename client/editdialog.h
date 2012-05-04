@@ -2,6 +2,7 @@
 #define EDITDIALOG_H
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
 class editDialog;

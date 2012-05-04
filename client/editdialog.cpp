@@ -8,6 +8,8 @@
 #include <map>
 #include <iostream>
 
+#include "mainwindow.h"
+
 editDialog::editDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::editDialog)
@@ -31,7 +33,6 @@ QRegExp * checkExp(QString pattern, QString str, QString errStr){
 }
 
 void editDialog::accept(){
-
     switch(sender->primType){
     case TRANS:
     {
@@ -44,7 +45,6 @@ void editDialog::accept(){
         toRel["=="] = OP_EQ;
         toRel["!="] = OP_NOTEQ;
 
-        ui->label->setText("Guard");
         QString text = ui->labelEdit->text();
         QStringList parts= text.split("&&");
         ConstraintVector backup =   ((pnRect *)sender)->simTrans->constraints;
@@ -58,7 +58,16 @@ void editDialog::accept(){
                 return;
             }
 
-            ((pnRect *)sender)->simTrans->constraints.push_back(new Constraint(rx->cap(2),toRel[rx->cap(4)],rx->cap(6)));
+            bool isDigit;
+            int constant = rx->cap(6).toInt(&isDigit);
+
+            Constraint * newConstraint;
+            if(isDigit)
+                newConstraint = new Constraint(rx->cap(2),toRel[rx->cap(4)],constant);
+            else
+                newConstraint = new Constraint(rx->cap(2),toRel[rx->cap(4)],rx->cap(6));
+
+            ((pnRect *)sender)->simTrans->constraints.push_back(newConstraint);
             delete(rx);
         }
         QString funcText = ui->funcEdit->text();
@@ -92,7 +101,6 @@ void editDialog::accept(){
         break;
     case PLACE:
     {
-        ui->label->setText("Tokens");
         QString text = ui->labelEdit->text();
         QStringList parts = text.split(",");
         TokenVector backup = ((pnCircle *)sender)->simPlace->getTokens();
@@ -117,7 +125,6 @@ void editDialog::accept(){
         break;
     case EDGE:
     {
-        ui->label->setText("Variable");
 #define startPoint ((pnLine *)sender)->start
 #define endPoint ((pnLine *)sender)->end
         if(((pnLine *)sender)->start->primType == TRANS){
@@ -133,20 +140,34 @@ void editDialog::accept(){
 #undef endPoint
     }
     }
+
+
     this->hide();
 }
 
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
     ui->labelEdit->setText(sender->label->toPlainText());
-    if(sender->funcLabel)
-        ui->funcEdit->setText(sender->funcLabel->toPlainText());
 
-    if(sender->primType == TRANS){
+    if(sender->funcLabel){
+        ui->funcEdit->setText(sender->funcLabel->toPlainText());
+    }
+
+    ui->label_2->hide();
+    ui->funcEdit->hide();
+
+    switch(sender->primType){
+        case TRANS:
+        ui->label->setText("Guard");
         ui->label_2->show();
         ui->funcEdit->show();
-    } else {
-        ui->label_2->hide();
-        ui->funcEdit->hide();
+        break;
+        case PLACE:
+        ui->label->setText("Tokens");
+        break;
+        case EDGE:
+        ui->label->setText("Variable");
+        break;
     }
+
 }

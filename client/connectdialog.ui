@@ -81,10 +81,18 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="server"/>
+     <widget class="QLineEdit" name="server">
+      <property name="text">
+       <string>localhost</string>
+      </property>
+     </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="port"/>
+     <widget class="QLineEdit" name="port">
+      <property name="text">
+       <string>11899</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

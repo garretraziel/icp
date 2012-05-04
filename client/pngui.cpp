@@ -229,6 +229,10 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
 
    line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 1));
    line->setZValue(-1);
+   if(start->primType == PLACE)
+       line->setPen(QPen(Qt::green, 1));
+   else
+       line->setPen(QPen(Qt::red, 1));
    lineVect.push_back(this);
 
    label = new dClickLabel(this);
@@ -237,7 +241,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    label->setAcceptedMouseButtons(Qt::LeftButton);   
    canvas->addItem(label);
    primType = EDGE;
-   //editor = new editDialog;
+
    editor = mw->getEditor();
    funcLabel = NULL;
 }

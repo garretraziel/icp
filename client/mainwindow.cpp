@@ -176,7 +176,10 @@ void MainWindow::loadSim(){
 }
 
 void MainWindow::saveSim(){
-    std::cout << ((SimState *)simVect.back())->getState().toStdString();
+    if(getCurrentSim()->checkConfiguration())
+        QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
+    else
+        std::cout << ((SimState *)simVect.back())->getState().toStdString();
 }
 
 void MainWindow::showConnectDialog()
