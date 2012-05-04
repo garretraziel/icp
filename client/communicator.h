@@ -11,6 +11,7 @@ public:
     ~Communicator();
 
     bool connect(QString hostname, QString port);
+    bool connected();
     bool sendCommand(QString command);
     bool login(QString name, QString password);
 
@@ -19,6 +20,9 @@ signals:
 
 private:
     QTcpSocket *commSock;
+
+private slots:
+    void displayError(QAbstractSocket::SocketError socketError);
 };
 
 extern Communicator communicator;

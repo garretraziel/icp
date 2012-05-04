@@ -29,7 +29,7 @@ private:
     SimVector simulations;
 
     bool handleCommand(QString command,QString &message);
-    bool logUser(QString login, QString password);
+    int logUser(QString login, QString password);
     QByteArray createMessage(QString message);
 };
 
