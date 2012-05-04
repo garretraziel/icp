@@ -31,6 +31,7 @@ private:
     bool handleCommand(QString command,QString &message);
     int logUser(QString login, QString password);
     QByteArray createMessage(QString message);
+    int registerUser(QString login, QString password);
 };
 
 #endif // PNSIMTHREAD_H

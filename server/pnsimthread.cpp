@@ -76,7 +76,33 @@ bool PNSimThread::handleCommand(QString command, QString &message)
     }
     QString strcmd = com.name().toString();
     if (strcmd == "register") {
-        //todo
+        QString name = com.attributes().value("name").toString();
+        QString password = com.attributes().value("password").toString();
+        if (name == "" || password == "") {
+            qDebug() << "nemuzu lognout";
+            message = "<err info=\"Password and name cannot be blank\"/>";
+            return false;
+        }
+        int result = registerUser(name,password);
+        if (result != 0) {
+            if (result == 1) {
+                qDebug() << "already registere";
+                message = "<err info=\"User is already registered\"/>";
+                return false;
+            } else if (result == 2) {
+                qDebug() << "spatny soubor";
+                message = "<err info=\"Cannot read usersfile, probably server's problem\"/>";
+                return false;
+            } else {
+                qDebug() << "asi obsahuje dvojtecku";
+                message = "<err info=\"Bad login or password\"/>";
+                return false;
+            }
+        } else {
+            isLogged = true;
+            message = "<ok/>";
+            qDebug() << "zalogovat, zaregistrovan";
+        }
     } else if (strcmd == "login") {
         QString name = com.attributes().value("name").toString();
         QString password = com.attributes().value("password").toString();
@@ -146,4 +172,28 @@ QByteArray PNSimThread::createMessage(QString message)
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
     return block;
+}
+
+int PNSimThread::registerUser(QString login, QString password)
+{
+    if (login == "" || password == "" || login.count(':') != 0 || password.count(':') != 0) {
+        return 3;
+    }
+
+    QFile users(usersFile);
+
+    if (!users.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        qCritical("Error: cannot open file with users");
+        return 2;
+    }
+
+    QTextStream filestream(&users);
+    while (!filestream.atEnd()) {
+        QString line = filestream.readLine();
+        QStringList items = line.split(':');
+        if (items.size() != 2) continue;
+        if (items[0] == login) return 1;
+    }
+    filestream << login << ":" << password << endl;
+    return 0;
 }

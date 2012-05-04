@@ -15,11 +15,8 @@ Communicator::Communicator()
 
 Communicator::~Communicator()
 {
-    qDebug() << "hurr";
     if (connected()) {
-        qDebug() << "odpojuji";
         commSock->disconnectFromHost();
-        //commSock->waitForDisconnected();
     }
 
     delete commSock;
@@ -51,7 +48,6 @@ bool Communicator::sendCommand(QString command)
     out << command;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    qDebug() << "velikost: " << (quint16)(block.size() - sizeof(quint16));
     commSock->write(block);
     return true;
 }
@@ -69,7 +65,6 @@ bool Communicator::login(QString name, QString password)
 
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
 {
-    qDebug() << "vyhozen error";
     switch (socketError) {
     case QAbstractSocket::RemoteHostClosedError:
         break;
