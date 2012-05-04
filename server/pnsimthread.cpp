@@ -1,6 +1,7 @@
 #include "pnsimthread.h"
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include <QtNetwork>
 #include <QtXml>
 #include <QXmlStreamReader>
@@ -14,6 +15,7 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     isLogged = false;
     usersFile = "./users.dat";
     logFile = "./log.dat";
+    simDirectory = "./sims";
 }
 
 void PNSimThread::run()
@@ -196,4 +198,36 @@ int PNSimThread::registerUser(QString login, QString password)
     }
     filestream << login << ":" << password << endl;
     return 0;
+}
+
+QStringList PNSimThread::getSimulations()
+{
+    if (!QDir(simDirectory).exists()) {
+        QDir().mkdir(simDirectory);
+    }
+    QDir dir(simDirectory);
+
+    dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
+
+    QString result;
+    QXmlStreamWriter xml(&result);
+    xml.writeStartDocument();
+
+    QFileInfoList files = dir.entryInfoList();
+
+    foreach(QFileInfo info, files) {
+        QFile soubor(info.absoluteFilePath());
+        if (!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "Error: cannot open file";
+            continue;
+        }
+        QXmlStreamReader inxml(&soubor);
+        inxml.readNext();
+        inxml.readNext();
+        if (inxml.atEnd() || inxml.hasError()) {
+            continue;
+        }
+        xml.writeEmptyElement("simul-item");
+        //xml.writeAttribute("name",);
+    }
 }
