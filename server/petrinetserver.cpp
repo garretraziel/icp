@@ -27,7 +27,7 @@ bool PetriNetServer::start()
 {
     bool listening = listen(my_ip, port);
 
-    if (not listening) {
+    if (!listening) {
         qCritical() << "Cannot listen on: " << port;
         return false;
     } else {
