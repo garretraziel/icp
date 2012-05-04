@@ -13,6 +13,7 @@ bool line;
 std::vector<pnLine*> lineVect; //FIXME!
 bool erase;
 
+#define PI 3.1415927537
 
 pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     setCursor(Qt::OpenHandCursor);
@@ -178,7 +179,7 @@ QRectF pnRect::boundingRect() const{
     //TODO
     int textLen = label->toPlainText().length()*6;
     int funcLen = funcLabel->toPlainText().length()*6;
-    return QRectF(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
+    return QRectF(-66, -26, 66 + ((textLen > funcLen)? textLen : funcLen), 51);
 }
 
 void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -205,6 +206,7 @@ protected:
         sender->editor->loadData(sender);
         sender->editor->show();
     }
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event){
         Q_UNUSED(event);
         if(erase){
@@ -217,26 +219,82 @@ protected:
             }
         }
     }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+        Q_UNUSED(widget);
+        painter->setBrush(QBrush(QColor(128,128,128)));
+        painter->setPen(QPen(QColor(128,128,128), 1));
+        painter->drawRoundedRect(QRectF(this->boundingRect().left()+2,this->boundingRect().top()+2,
+                                        this->boundingRect().width(),this->boundingRect().height()),6,6);
+        painter->setBrush(QBrush(QColor(255,255,255)));
+        painter->setPen(QPen(Qt::black, 1));
+        painter->drawRoundedRect(this->boundingRect(),6,6);
+        painter->drawText(this->boundingRect()," "+this->toPlainText());
+    }
 };
 
+class arrow: public QGraphicsLineItem {
+    pnItem * colider;
+public:
+    void setColider(pnItem * _colider){
+        colider = _colider;
+    }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+        Q_UNUSED(widget);
+
+        std::vector<QLineF> boundingLines;
+#define bndRct colider->boundingRect()
+#define bPos colider->pos()
+        boundingLines.push_back(QLineF(bndRct.topLeft()+bPos, bndRct.topRight()+bPos));
+        boundingLines.push_back(QLineF(bndRct.bottomLeft()+bPos, bndRct.bottomRight()+bPos));
+        boundingLines.push_back(QLineF(bndRct.topLeft()+bPos, bndRct.bottomLeft()+bPos));
+        boundingLines.push_back(QLineF(bndRct.topRight()+bPos, bndRct.bottomRight()+bPos));
+#undef bndRct
+
+        painter->setPen(QPen(Qt::black, 2));
+
+        QPointF intersectPoint;
+        foreach(QLineF boundingLine, boundingLines){
+            QLineF::IntersectType intersectType =
+                    this->line().intersect(boundingLine, &intersectPoint);
+            if (intersectType == QLineF::BoundedIntersection) break;
+        }
+        painter->drawLine(this->line().p1(),intersectPoint);
+
+        double alfa = ::acos(this->line().dx()/this->line().length());
+        if(this->line().dy() >= 0) alfa = (2*PI)-alfa;
+
+        painter->drawLine(QLineF(intersectPoint, intersectPoint+QPointF(sin(alfa-PI/3)*10,cos(alfa-PI/3)*10)));
+        painter->drawLine(QLineF(intersectPoint, intersectPoint+QPointF(sin(alfa+PI+PI/3)*10,cos(alfa+PI+PI/3)*10)));
+
+    }
+};
 
 pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    start = _start;
    end = _end;
    canvas = _canvas;
+   line = new arrow;
+   //TODO
+   ((arrow *)line)->setColider(end);
+   line->setLine(start->x(),start->y(),end->x(),end->y());
+   canvas->addItem(line);
 
-   line = canvas->addLine(start->x(),start->y(),end->x(),end->y(),QPen(Qt::black, 2));
    line->setZValue(-1);
    if(start->primType == PLACE)
-       line->setPen(QPen(Qt::green, 1));
+       line->setPen(QPen(Qt::green, 2));
    else
-       line->setPen(QPen(Qt::red, 1));
+       line->setPen(QPen(Qt::red, 2));
    lineVect.push_back(this);
 
+
    label = new dClickLabel(this);
-   label->setPlainText("?? L");
    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
-   label->setAcceptedMouseButtons(Qt::LeftButton);   
+   label->setPlainText("?? L");
+   label->setZValue(1000);
+   label->setAcceptedMouseButtons(Qt::LeftButton);
+
    canvas->addItem(label);
    primType = EDGE;
 
