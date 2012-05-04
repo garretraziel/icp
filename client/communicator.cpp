@@ -137,10 +137,11 @@ bool Communicator::registerUser(QString name, QString password, QString &message
 
 void Communicator::sendSimState(QString xmlSimState){
     //TODO!!
-    QString sendMessage = "<xml hurr durr>\n"+xmlSimState+"</xml hurr durr>";
+    QString sendMessage =
+            "<save-simul name=\"jmeno\" version=\"-1\">\n"
+            +xmlSimState+
+            "</save-simul>";
     sendCommand(sendMessage);
-
-
 }
 
 

@@ -68,12 +68,8 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         foreach(pnLine * l, lineVect){
             if(l->start==this || l->end == this){
                 if(l->start->primType == TRANS){
-                    //smazat z prechodu toto out name
-                    //->removeOutName();
                     ((pnRect *)l->start)->simTrans->removeConnectedPlace(((pnCircle *)l->end)->simPlace, false);
                 } else {
-                    //smazat z prechodu toto in name
-                    //->removeInName();
                     ((pnRect *)l->end)->simTrans->removeConnectedPlace(((pnCircle *)l->start)->simPlace, true);
                 }
                 delete l;
@@ -101,6 +97,8 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
             break;
             case EDGE:
                 //tady se nikdy nedostanu
+                //nicmene:
+                QMessageBox::critical(NULL, "Unhandled shit", "Imposiblu has happened!");
             break;
         }
 
