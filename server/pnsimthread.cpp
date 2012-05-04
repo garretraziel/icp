@@ -239,7 +239,7 @@ QString PNSimThread::getSimulations()
 
 bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
 {
-    QXmlStreamReader input(&xml);
+    QXmlStreamReader input(xml);
 
 
 }
