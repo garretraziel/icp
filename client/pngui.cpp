@@ -236,6 +236,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    canvas->addItem(label);
    primType = EDGE;
    editor = new editDialog;
+   funcLabel = NULL;
 }
 
 pnLine::~pnLine(){
