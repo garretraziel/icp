@@ -95,23 +95,7 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
         return false;
     }
 
-    QXmlStreamReader xml(recMessage);
-
-    if (xml.readNext() != QXmlStreamReader::StartDocument) {
-        message = "Server talks rubbishly.";
-        return false;
-    }
-    xml.readNext();
-    if (xml.atEnd() || xml.hasError()) {
-        message = "Server talks rubbishly.";
-        return false;
-    }
-    if (xml.name() == "err") {
-        message = xml.attributes().value("info").toString();
-        return false;
-    }
-
-    return true;
+    return isNotError(recMessage, message);
 }
 
 bool Communicator::login(QString name, QString password, QString &message)
@@ -141,13 +125,43 @@ void Communicator::displayError(QAbstractSocket::SocketError socketError)
     }
 }
 
-void Communicator::sendSimState(QString xmlSimState){
+bool Communicator::isNotError(QString & recMessage, QString & message){
+    QXmlStreamReader xml(recMessage);
+
+    if (xml.readNext() != QXmlStreamReader::StartDocument) {
+        message = "Server talks rubbishly.";
+        return false;
+    }
+    xml.readNext();
+    if (xml.atEnd() || xml.hasError()) {
+        message = "Server talks rubbishly.";
+        return false;
+    }
+    if (xml.name() == "err") {
+        message = xml.attributes().value("info").toString();
+        return false;
+    }
+
+    return true;
+
+}
+
+bool Communicator::saveSimState(QString xmlSimState, QString & message){
     //TODO!!
     QString sendMessage =
             "<save-simul name=\"jmeno\" version=\"-1\">\n"
             +xmlSimState+
             "</save-simul>";
     sendCommand(sendMessage);
+
+    QString recMessage;
+    if (!recvCommand(recMessage)) {
+        message = "Error: server didn't response";
+        return false;
+    }
+
+    return isNotError(recMessage, message);
+
 }
 
 

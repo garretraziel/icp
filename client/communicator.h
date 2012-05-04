@@ -15,8 +15,7 @@ public:
     bool login(QString name, QString password, QString &message);
     bool registerUser(QString name, QString password, QString &message);
 
-    //jen testovaci
-    void sendSimState(QString xmlSimState);
+    bool saveSimState(QString xmlSimState, QString &message);
 
 signals:
     void error(QTcpSocket::SocketError socketError);
@@ -26,6 +25,8 @@ private:
     bool sendCommand(QString command);
     bool recvCommand(QString &command);
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
+
+    bool isNotError(QString & recMessage, QString & message);
 
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
