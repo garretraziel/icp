@@ -242,3 +242,32 @@ QString SimState::getState()
 
     return result;
 }
+
+
+bool SimState::checkConfiguration(){
+    foreach(PNTrans * trans, transits){
+        foreach(Constraint * constraint, trans->constraints){
+
+            if((trans->in_names.find(constraint->first) == trans->in_names.end()) ||
+               (constraint->type == TYPEVAR && trans->in_names.find(constraint->second_var) == trans->in_names.end()))
+                /*
+                  hurr durr
+                  */
+                    return false;
+        }
+
+        foreach(OneOut operation, trans->operations){
+            if(trans->out_names.find(operation.output) == trans->out_names.end())
+                return false;
+
+            foreach(Operation op, operation.operations){
+                //TODOOO ted to funguje jen pro promenny!!
+                if(trans->in_names.find(op.var) == trans->in_names.end())
+                    return false;
+            }
+
+        }
+    }
+
+    return true; //nigga wrote da shit well!
+}

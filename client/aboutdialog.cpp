@@ -9,7 +9,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     ui->setupUi(this);
     //ui->graphicsView->setScene(scene);
     //scene->addPixmap(QPixmap("typologo.png"));
-    QWidget * img = new QWidget(this);
+    //  QWidget * img = new QWidget(this);
 }
 
 aboutDialog::~aboutDialog()

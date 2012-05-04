@@ -26,6 +26,8 @@ public:
     bool setState(QString xml);
     QString getState();
     TransVector getTransits() {return transits;}
+
+    bool checkConfiguration();
     //todo: a taky zde bude funkce vracejici XML, neco jako getStaticState a getDynamicState
 
     //toto pujde jinam, jen ted narychlo...
