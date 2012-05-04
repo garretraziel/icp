@@ -97,8 +97,15 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
 
     QXmlStreamReader xml(recMessage);
 
+    if (xml.readNext() != QXmlStreamReader::StartDocument) {
+        message = "Server talks rubbishly.";
+        return false;
+    }
     xml.readNext();
-    xml.readNext();
+    if (xml.atEnd() || xml.hasError()) {
+        message = "Server talks rubbishly.";
+        return false;
+    }
     if (xml.name() == "err") {
         message = xml.attributes().value("info").toString();
         return false;
