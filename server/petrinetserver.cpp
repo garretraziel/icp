@@ -48,6 +48,5 @@ void PetriNetServer::incomingConnection(int socketDescriptor)
 {
     PNSimThread *thread = new PNSimThread(socketDescriptor, this);
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
-
     thread->start();
 }

@@ -53,8 +53,8 @@ void PNSimThread::handleDisconnection(){
 void PNSimThread::run()
 {
 
-    commSock = new QTcpSocket();
-    connect(commSock, SIGNAL(readyRead()), this, SLOT(readIncoming()));
+    commSock = new QTcpSocket;
+    connect(commSock, SIGNAL(readyRead()), this, SLOT(readIncoming()),Qt::DirectConnection);
     connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()));
 
     if (!commSock->setSocketDescriptor(socketDescriptor)) {
