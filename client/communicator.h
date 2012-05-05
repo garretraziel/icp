@@ -1,14 +1,20 @@
 #ifndef COMMUNICATOR_H
 #define COMMUNICATOR_H
 
+#include <QObject>
 #include <QTcpSocket>
 #include <QString>
 #include <QStringList>
+#include <vector>
 
-class Communicator
+typedef std::vector<QString> StringVector;
+typedef std::vector<StringVector> simList;
+
+class Communicator : public QObject
 {
+    Q_OBJECT
 public:
-    Communicator();
+    explicit Communicator(QWidget *parent = 0);
     ~Communicator();
 
     bool connect(QString hostname, QString port);
@@ -20,7 +26,10 @@ public:
 
     QString userLoggedIn() {return loginName;}
 
-    bool getSimulations(QStringList & sims);
+    //bool getSimulations(QStringList & sims);
+    bool getSimulations(simList & sims);
+    bool loadThis(QString name, QString version);
+
 
 signals:
     void error(QTcpSocket::SocketError socketError);
@@ -30,13 +39,14 @@ private:
     bool sendCommand(QString command);
     bool recvCommand(QString &command);
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
-
+    qint64 block;
     bool isNotError(QString & recMessage, QString & message);
 
     QString loginName;
 
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
+    void handleIncomming();
 };
 
 extern Communicator communicator;

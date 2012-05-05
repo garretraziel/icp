@@ -4,12 +4,14 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QXmlStreamReader>
+#include <QDataStream>
 
 Communicator communicator;
 
-Communicator::Communicator()
+Communicator::Communicator(QWidget *parent):QObject(parent)
 {
     commSock = new QTcpSocket;
+
 }
 
 Communicator::~Communicator()
@@ -97,6 +99,8 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
 
     if(isNotError(recMessage, message)){
         loginName = name;
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        block = 0;
         return true;
     }
     else {
@@ -172,47 +176,73 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
     return isNotError(recMessage, message);
 }
 
-bool Communicator::getSimulations(QStringList &sims){
+bool Communicator::getSimulations(simList &sims){
     QString message = "<list-simuls/>";
 
     if(!sendCommand(message)){
         return false;
     }
-    qDebug() << "1";
     QString recMessage;
 
     if (!recvCommand(recMessage)) {
         return false;
     }
-    qDebug() << "2";
     QXmlStreamReader xml(recMessage);
-    qDebug() << recMessage;
     if (xml.readNext() != QXmlStreamReader::StartDocument) {
         return false;
     }
-    qDebug() << "3";
     xml.readNext();
     if (xml.atEnd() || xml.hasError()) {
         return false;
     }
-    qDebug() << "4";
     if (xml.name() != "simul-list") return false;
 
-    qDebug() << "5";
     while (!xml.atEnd()) {
-        xml.readNext();
-        QString result = xml.attributes().value("name").toString() +"\tv"+
-                xml.attributes().value("version").toString() +"\tby "+
-                xml.attributes().value("author").toString()+"\t("+
-                xml.attributes().value("info").toString()+")";
-        qDebug() << result;
-        sims.push_back(result);
+        if (xml.readNextStartElement()) {
+            StringVector list;
+            list.push_back(xml.attributes().value("name").toString());
+            list.push_back(xml.attributes().value("version").toString());
+            list.push_back(xml.attributes().value("author").toString());
+            list.push_back(xml.attributes().value("info").toString());
+
+
+            sims.push_back(list);
+        }
     }
 
     return true;
 }
 
+bool Communicator::loadThis(QString name, QString version){
+    QString command;
+    QXmlStreamWriter xml(&command);
+    xml.writeStartDocument();
+    xml.writeEmptyElement("simul-that");
+    xml.writeAttribute("name",name);
+    xml.writeAttribute("version",version);
+    xml.writeEndDocument();
+    return sendCommand(command);
+}
 
 
 
+void Communicator::handleIncomming(){
+    if(commSock->bytesAvailable() < (int)sizeof(qint64))
+        return;
 
+    QDataStream in(commSock);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    in >> block;
+
+    if(commSock->bytesAvailable() < block) return;
+
+    QString command;
+    in >> command;
+
+    block = 0;
+    if (!handleCommand(command)) {
+
+        return;
+    }
+}

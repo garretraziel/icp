@@ -188,13 +188,13 @@ void MainWindow::__loadSim(QString fileName){
 
 void MainWindow::loadSim(){
 
-    QStringList simulations;
+    simList simulations;
     if(!communicator.getSimulations(simulations)){
         QMessageBox::critical(this,"Error","Server didn't response");
         return;
     }
 
-    foreach(QString sim, simulations)
+    foreach(StringVector sim, simulations)
         ld->pushSim(sim);
 
     ld->updateList();

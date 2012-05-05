@@ -34,6 +34,7 @@ void PNSimThread::readIncoming(){
     QString command;
     in >> command;
     QString message = "";
+    block = 0;
     if (!handleCommand(command,message)) {
         commSock->write(createMessage(message));
         commSock->disconnectFromHost();
@@ -42,7 +43,7 @@ void PNSimThread::readIncoming(){
     if (message != "")
         commSock->write(createMessage(message));
 
-    block = 0;
+
 }
 
 void PNSimThread::handleDisconnection(){
