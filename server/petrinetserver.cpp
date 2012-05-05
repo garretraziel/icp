@@ -21,12 +21,13 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     my_ip = QHostAddress::Any;
 
     this -> port = port; //pokud je port 0, automaticky vyber portu. Asi to neni spravne.
-
+    iomutex = new QMutex;
 }
 
 PetriNetServer::~PetriNetServer()
 { //todo: mozna odchytavat signal?
     qDebug() << "Ending server";
+    delete iomutex;
     close();
 }
 
@@ -46,7 +47,7 @@ bool PetriNetServer::start()
 
 void PetriNetServer::incomingConnection(int socketDescriptor)
 {
-    PNSimThread *thread = new PNSimThread(socketDescriptor, this);
+    PNSimThread *thread = new PNSimThread(socketDescriptor, iomutex, this);
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
     thread->start();
 }

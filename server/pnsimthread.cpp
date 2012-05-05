@@ -12,10 +12,8 @@
 #include <QRegExp>
 #include "runsimthread.h"
 
-QMutex iomutex;
-
-PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
-    QThread(parent),socketDescriptor(socketDescriptor)
+PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent) :
+    QThread(parent),iomutex(iomutex),socketDescriptor(socketDescriptor)
 {
     isLogged = false;
     usersFile = "./users.dat";
@@ -195,11 +193,11 @@ bool PNSimThread::handleCommand(QString command, QString &message)
 
 int PNSimThread::logUser(QString login, QString password)
 {
-    iomutex.lock();
+    iomutex->lock();
     QFile users(usersFile);
 
     if (!users.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        iomutex.unlock();
+        iomutex->unlock();
         qCritical("Error: cannot open file with users");
         return 3;
     }
@@ -210,16 +208,16 @@ int PNSimThread::logUser(QString login, QString password)
         QStringList items = line.split(':');
         if (items.size() != 2) continue;
         if (items[0] == login && items[1] == password) {
-            iomutex.unlock();
+            iomutex->unlock();
             return 0;
         }
         if (items[0] == login) {
-            iomutex.unlock();
+            iomutex->unlock();
             return 2;
         }
     }
 
-    iomutex.unlock();
+    iomutex->unlock();
     return 1;
 }
 
@@ -240,11 +238,11 @@ int PNSimThread::registerUser(QString login, QString password)
     if (login == "" || password == "" || login.count(':') != 0 || password.count(':') != 0) {
         return 3;
     }
-    iomutex.lock();
+    iomutex->lock();
     QFile users(usersFile);
 
     if (!users.open(QIODevice::ReadWrite | QIODevice::Text)) {
-        iomutex.unlock();
+        iomutex->unlock();
         qCritical("Error: cannot open file with users");
         return 2;
     }
@@ -255,18 +253,18 @@ int PNSimThread::registerUser(QString login, QString password)
         QStringList items = line.split(':');
         if (items.size() != 2) continue;
         if (items[0] == login) {
-            iomutex.unlock();
+            iomutex->unlock();
             return 1;
         }
     }
     filestream << login << ":" << password << endl;
-    iomutex.unlock();
+    iomutex->unlock();
     return 0;
 }
 
 QString PNSimThread::getSimulations()
 {
-    iomutex.lock();
+    iomutex->lock();
     if (!QDir(simDirectory).exists()) {
         QDir().mkdir(simDirectory);
     }
@@ -302,7 +300,7 @@ QString PNSimThread::getSimulations()
     xml.writeEndElement();
     xml.writeEndDocument();
     qDebug() << result;
-    iomutex.unlock();
+    iomutex->unlock();
     return result;
 }
 
@@ -327,9 +325,9 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
 
 QString PNSimThread::loadSim(QString name, QString version)
 {
-    iomutex.lock();
+    iomutex->lock();
     if (!QDir(simDirectory).exists()) {
-        iomutex.unlock();
+        iomutex->unlock();
         return "false";
     }
     QDir dir(simDirectory);
@@ -353,7 +351,7 @@ QString PNSimThread::loadSim(QString name, QString version)
             file.close();
 
             if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                iomutex.unlock();
+                iomutex->unlock();
                 qCritical("Cannot open file.");
                 return "false";
             }
@@ -371,12 +369,12 @@ QString PNSimThread::loadSim(QString name, QString version)
 
             simulations[maxid++] = simulation;
 
-            iomutex.unlock();
+            iomutex->unlock();
             return simulation->getState();
         }
     }
 
-    iomutex.unlock();
+    iomutex->unlock();
     return "false";
 }
 
@@ -389,7 +387,7 @@ PNSimThread::~PNSimThread()
 
 bool PNSimThread::saveSimulation(QString xml)
 {
-    iomutex.lock();
+    iomutex->lock();
 
     QDir dir(simDirectory);
     dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
@@ -399,7 +397,7 @@ bool PNSimThread::saveSimulation(QString xml)
     simXml.readNext();
     if(simXml.atEnd() || simXml.hasError()) {
         qCritical() << "Error: bad simulation file";
-        iomutex.unlock();
+        iomutex->unlock();
         return false;
     }
 
@@ -432,13 +430,13 @@ bool PNSimThread::saveSimulation(QString xml)
     QFile output(fileName);
     if (output.exists()) {
         qCritical() << "Error: file exists";
-        iomutex.unlock();
+        iomutex->unlock();
         return false;
     }
 
     if (!output.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qCritical() << "Error: cannot open file";
-        iomutex.unlock();
+        iomutex->unlock();
         return false;
     }
 
@@ -446,7 +444,7 @@ bool PNSimThread::saveSimulation(QString xml)
     stream << state.getState();
 
     qDebug() << "zapsano";
-    iomutex.unlock();
+    iomutex->unlock();
     return true;
 }
 

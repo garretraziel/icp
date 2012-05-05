@@ -15,13 +15,14 @@ class PNSimThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit PNSimThread(int socketDescriptor, QObject *parent = 0);
+    explicit PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent = 0);
     ~PNSimThread();
 
     void run();
 
     QMutex *simmutex;
     QString *outid;
+    QMutex *iomutex;
 
 
 signals:

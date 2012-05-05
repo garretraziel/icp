@@ -3,6 +3,7 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QMutex>
 #include "pnsimthread.h"
 
 class QTcpServer;
@@ -14,6 +15,7 @@ class PetriNetServer : public QTcpServer
 private:
     QHostAddress my_ip;
     int port;
+    QMutex *iomutex;
 
 public:
     explicit PetriNetServer(QObject *parent = 0, int maxconnections = 50, int port = 0);
