@@ -10,8 +10,6 @@ void RunSimThread::run()
 {
     qDebug() << "spoustim: " << myid;
     sim->run();
-    qDebug() << "kanec1";
     outmutex->lock();
-    qDebug() << "kanec";
     (*outid) = myid;
 }

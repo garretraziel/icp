@@ -452,14 +452,10 @@ bool PNSimThread::saveSimulation(QString xml)
 
 void PNSimThread::runSimulation(QString id)
 {
-    qDebug() << "purr";
     RunSimThread *thread = new RunSimThread(id,simulations[id.toInt()],simmutex,outid);
-    qDebug() << "hurr";
     connect(thread,SIGNAL(finished()),this,SLOT(handleSimuled()),Qt::DirectConnection);
-    qDebug() << "durr";
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
-    qDebug() << "spawnuju thread";
-    thread->run();
+    thread->start();
 }
 
 void PNSimThread::handleSimuled()
