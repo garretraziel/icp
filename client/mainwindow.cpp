@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(ui->actionEdit_Properties, SIGNAL(activated()),this, SLOT(editProperties()));
 
-    QObject::connect(communicator, SIGNAL(simOk()), this, SLOT(simOk()));
+    QObject::connect(&communicator, SIGNAL(simOk()), this, SLOT(simOk()));
 }
 
 MainWindow::~MainWindow()
@@ -353,7 +353,7 @@ void MainWindow::setSimName(QString name){
 }
 
 void MainWindow::simOk(){
-    std::cout << communicator.sim << std::endl;
+    std::cout << communicator.sim.toStdString() << std::endl;
 }
 
 
