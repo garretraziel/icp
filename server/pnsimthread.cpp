@@ -16,6 +16,7 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     usersFile = "./users.dat";
     logFile = "./log.dat";
     simDirectory = "./sims";
+    maxid = 0;
 
 }
 
@@ -145,7 +146,14 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             return true;
         } else if (strcmd == "simul-that") {
             qDebug() << "loaduju";
-            message = loadSim(args["name"],args["version"]);
+            QString net = loadSim(args["name"],args["version"]);
+            if (net == "false") {
+                message = "<err info=\"Cannot load petrinet\"/>";
+                return true;
+            }
+            message = "<simul id=\""+QString::number(maxid-1)+"\">";
+            message = net;
+            message = "</simul>";
             return true;
         }
     }
@@ -309,7 +317,7 @@ QString PNSimThread::loadSim(QString name, QString version)
 
             simulation->setState(str);
 
-            simulations.push_back(simulation);
+            simulations[maxid++] = simulation;
 
             return simulation->getState();
         }
