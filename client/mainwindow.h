@@ -12,6 +12,7 @@
 #include "../server/simstate.h"
 #include "../server/pnplace.h"
 #include "../server/pntrans.h"
+#include <QFileDialog>
 
 namespace Ui {
 class MainWindow;
@@ -32,7 +33,12 @@ private:
     Ui::MainWindow *ui;
     ConnectDialog * cd;
     aboutDialog * ad;
+
+    QFileDialog * ld;
+
     QGraphicsScene * canvas;
+
+
     pnItem * __addItem(PNPlace * simPlace);
     pnItem * __addItemRect(PNTrans * simTrans);
 
@@ -53,6 +59,8 @@ public slots:
     void checkErase();
     void loadSim();
     void saveSim();
+
+    void loadLocalSim();
 
     void zoomOut();
     void zoomIn();
