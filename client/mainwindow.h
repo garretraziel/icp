@@ -50,6 +50,8 @@ private:
 
     editDialog * editor;
 
+    void __loadSim(QString fileName);
+
 public slots:
     void showConnectDialog();
     void showAboutDialog();
@@ -61,9 +63,12 @@ public slots:
     void saveSim();
 
     void loadLocalSim();
+    void saveLocalSim();
 
     void zoomOut();
     void zoomIn();
+
+    void editProperties();
 };
 
 extern MainWindow * mw;

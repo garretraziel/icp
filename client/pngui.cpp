@@ -82,8 +82,6 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         foreach(pnLine * l, tmp)
             lineVect.push_back(l);
 
-
-        delete editor;
         delete label;
         if(funcLabel) delete funcLabel;
 

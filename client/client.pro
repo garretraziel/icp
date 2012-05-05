@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     ../server/pnplace.cpp \
     ../server/pntrans.cpp \
     ../server/constraint.cpp \
-    communicator.cpp
+    communicator.cpp \
+    propertiesdialog.cpp
 
 HEADERS  += mainwindow.h \
     connectdialog.h \
@@ -31,12 +32,14 @@ HEADERS  += mainwindow.h \
     ../server/pnplace.h \
     ../server/pntrans.h \
     ../server/constraint.h \
-    communicator.h
+    communicator.h \
+    propertiesdialog.h
 
 FORMS    += mainwindow.ui \
     connectdialog.ui \
     aboutdialog.ui \
-    editdialog.ui
+    editdialog.ui \
+    propertiesdialog.ui
 
 OTHER_FILES += \
     doc/protokol \

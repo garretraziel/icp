@@ -129,7 +129,7 @@
      <x>0</x>
      <y>0</y>
      <width>673</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -139,9 +139,10 @@
     <addaction name="actionConnect_to_server"/>
     <addaction name="actionNew_Simulation"/>
     <addaction name="actionLoad_Simulation"/>
-    <addaction name="actionSave_Simulation"/>
-    <addaction name="actionExit"/>
     <addaction name="actionLoad_Local_Sim"/>
+    <addaction name="actionSave_Simulation"/>
+    <addaction name="actionSave_Local_Sim"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -149,7 +150,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>Simulation</string>
+    </property>
+    <addaction name="actionEdit_Properties"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuSimulation"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -221,6 +229,16 @@
   <action name="actionLoad_Local_Sim">
    <property name="text">
     <string>Load Local Sim</string>
+   </property>
+  </action>
+  <action name="actionSave_Local_Sim">
+   <property name="text">
+    <string>Save Local Sim</string>
+   </property>
+  </action>
+  <action name="actionEdit_Properties">
+   <property name="text">
+    <string>Edit Properties</string>
    </property>
   </action>
  </widget>

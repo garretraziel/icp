@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ad = new aboutDialog(this);
     editor = new editDialog(this);
 
-    ld = new QFileDialog(this);
-
     mw = this;
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
@@ -43,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->zoomIn, SIGNAL(clicked()),this,SLOT(zoomIn()));
 
     QObject::connect(ui->actionLoad_Local_Sim, SIGNAL(activated()), this, SLOT(loadLocalSim()));
+
+    QObject::connect(ui->actionSave_Local_Sim, SIGNAL(activated()), this, SLOT(saveLocalSim()));
+
+    QObject::connect(ui->actionEdit_Properties, SIGNAL(activated()),this, SLOT(editProperties()));
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +85,7 @@ void MainWindow::newTab(){
     ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
     ui->tabWidget->setCurrentWidget(tabVect.back());
 
+
     simVect.push_back(new SimState());
 }
 
@@ -116,13 +119,14 @@ QString fromOperation(OneOut oper){
 
 #define loadLines(direction)
 
-void MainWindow::loadSim(){
+void MainWindow::__loadSim(QString fileName){
+
     newTab();
     SimState * currentSim = getCurrentSim();
     //TOO DOO
     //(((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.5,0.5));
 
-    QFile xmlfile("semafor.xml");
+    QFile xmlfile(fileName);
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray xml = xmlfile.readAll();
     xmlfile.close();
@@ -180,6 +184,16 @@ void MainWindow::loadSim(){
 
 }
 
+void MainWindow::loadSim(){
+
+    __loadSim("");
+
+
+}
+
+// TODO:
+// tyto dve mozna pujdou prepracovat do jedne
+
 void MainWindow::saveSim(){
     if(!getCurrentSim()->checkConfiguration())
         QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
@@ -189,6 +203,31 @@ void MainWindow::saveSim(){
             QMessageBox::critical(this, "Error", message);
         }
     }
+}
+
+void MainWindow::saveLocalSim(){
+    if(!getCurrentSim()->checkConfiguration())
+        QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
+    else{
+        QString xmlOut = getCurrentSim()->getState();
+        QString fileName = QFileDialog::getSaveFileName(this,
+                                                        "Save Local Simulation",
+                                                        "./",
+                                                        "XML Sim File (*.xml)");
+
+        QFile fileOut(fileName);
+        if(!fileOut.open(QIODevice::WriteOnly | QIODevice::Text)){
+            QMessageBox::critical(this,"Error", "Unable to open file "+fileName+" for writing");
+            return;
+        }
+
+        //fileOut.write(xmlOut.toStdString().data());
+        QTextStream out(&fileOut);
+        out << xmlOut;
+
+        //destruktor sam vola .close(), wheee!
+    }
+
 }
 
 void MainWindow::showConnectDialog()
@@ -275,5 +314,21 @@ editDialog * MainWindow::getEditor(){
 }
 
 void MainWindow::loadLocalSim(){
-    ld->show();
+    //ld->show();
+    QString fileName = QFileDialog::getOpenFileName(this, "Load local simulation", "./",
+                                                    "XML Sim File (*.xml)");
+
+    __loadSim(fileName);
 }
+
+void MainWindow::editProperties(){
+
+}
+
+
+
+
+
+
+
+
