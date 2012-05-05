@@ -16,6 +16,37 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     usersFile = "./users.dat";
     logFile = "./log.dat";
     simDirectory = "./sims";
+    mutex.lock();
+}
+
+void PNSimThread::readIncoming(){
+    if(commSock->bytesAvailable() < (int)sizeof(qint64))
+        return;
+
+    QDataStream in(commSock);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    in >> block;
+    qDebug() << "velikost: " << block;
+    if(commSock->bytesAvailable() < block) return;
+
+    QString command;
+    in >> command;
+    QString message = "";
+    if (!handleCommand(command,message)) {
+        commSock->write(createMessage(message));
+        commSock->disconnectFromHost();
+        return;
+    }
+    if (message != "")
+        commSock->write(createMessage(message));
+
+    block = 0;
+}
+
+void PNSimThread::handleDisconnection(){
+    //todo
+    mutex.unlock();
 }
 
 void PNSimThread::run()
@@ -25,38 +56,13 @@ void PNSimThread::run()
         emit error(commSock->error());
         return;
     }
+    block = 0;
     commSock->waitForConnected(-1);
-
+    connect(commSock, SIGNAL(readyRead()),this,SLOT(readIncoming()));
+    connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()));
     bool connected = true;
 
-    qint64 block = 0;
-    QDataStream in(commSock);
-    in.setVersion(QDataStream::Qt_4_0);
-
-    while (connected) {
-        while (commSock->bytesAvailable() < (int)sizeof(qint64)) {
-            commSock->waitForReadyRead(-1);
-            if (commSock->state() == QTcpSocket::UnconnectedState) {
-                connected = false;
-                break;
-            }
-        }
-        if (!connected) break;
-        in >> block;
-        qDebug() << "velikost: " << block;
-        while (commSock->bytesAvailable() < block) {
-            commSock->waitForReadyRead(-1);
-        }
-        QString command;
-        in >> command;
-        QString message = "";
-        if (!handleCommand(command,message)) {
-            commSock->write(createMessage(message));
-            commSock->disconnectFromHost();
-        }
-        if (message != "")
-            commSock->write(createMessage(message));
-    }
+    mutex.lock();
     qDebug() << "odpojeno";
 }
 

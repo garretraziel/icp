@@ -7,6 +7,8 @@
 #include <vector>
 #include <QMap>
 #include "petrisim.h"
+#include <QMutex>
+#include <QMutexLocker>
 
 typedef std::vector<PetriSim *> SimVector;
 typedef QMap<QString, QString> StrToStrMap;
@@ -23,6 +25,10 @@ public:
 signals:
     void error(QTcpSocket::SocketError socketError);
 
+private slots:
+    void readIncoming();
+    void handleDisconnection();
+
 private:
     int socketDescriptor;
     int isLogged;
@@ -30,8 +36,10 @@ private:
     QString logFile;
     QString simDirectory;
     QTcpSocket *commSock;
-
+    qint64 block;
     SimVector simulations;
+
+    QMutex mutex;
 
     bool handleCommand(QString command,QString &message);
     int logUser(QString login, QString password);

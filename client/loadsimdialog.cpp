@@ -30,4 +30,5 @@ void loadSimDialog::pushSim(QString name, QString author, QString version, QStri
 
 void loadSimDialog::updateList(){
     QStringList filterList = ui->filterEdit->text().split("\\s");
+
 }
