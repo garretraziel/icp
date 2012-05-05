@@ -139,6 +139,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
         return false;
     } else {
         if (strcmd == "list-simuls") {
+            qDebug() << "vypisuju";
             message = getSimulations();
             return true;
         }
@@ -215,6 +216,7 @@ QString PNSimThread::getSimulations()
     QString result;
     QXmlStreamWriter xml(&result);
     xml.writeStartDocument();
+    xml.writeStartElement("simul-list");
 
     QFileInfoList files = dir.entryInfoList();
 
@@ -231,12 +233,14 @@ QString PNSimThread::getSimulations()
             continue;
         }
         xml.writeEmptyElement("simul-item");
-        xml.writeAttribute("autor",inxml.attributes().value("autor").toString());
+        xml.writeAttribute("author",inxml.attributes().value("author").toString());
         xml.writeAttribute("name",inxml.attributes().value("name").toString());
         xml.writeAttribute("version",inxml.attributes().value("version").toString());
         xml.writeAttribute("info",inxml.attributes().value("info").toString());
     }
+    xml.writeEndElement();
     xml.writeEndDocument();
+    qDebug() << result;
     return result;
 }
 
