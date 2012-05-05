@@ -55,6 +55,13 @@ public:
             }
         }
     }
+
+    void setProperies(QString _name, QString _author, QString _version, QString _info){
+        name = _name;
+        autor = _author;
+        version = _version.toInt();
+        info = _info;
+    }
 };
 
 #endif // SIMSTATE_H

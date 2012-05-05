@@ -13,6 +13,7 @@
 #include "../server/pnplace.h"
 #include "../server/pntrans.h"
 #include <QFileDialog>
+#include "propertiesdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,12 +30,16 @@ public:
     editDialog * getEditor();
     SimState * getCurrentSim();
 
+    void setSimName(QString name);
+
 private:
     Ui::MainWindow *ui;
-    ConnectDialog * cd;
-    aboutDialog * ad;
 
-    QFileDialog * ld;
+    // dialogs
+    ConnectDialog * cd;
+    aboutDialog * ad;   
+    propertiesDialog * pd;
+    //
 
     QGraphicsScene * canvas;
 
