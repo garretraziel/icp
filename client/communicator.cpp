@@ -258,7 +258,6 @@ bool Communicator::handleCommand(QString command){
         emit simError();
         return false;
     }
-
     if(strcmd == "simul"){
         simID = xml.attributes().value("id").toString();
         command.remove(QRegExp("^<simul[^>]+>"));

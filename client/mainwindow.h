@@ -48,6 +48,7 @@ private:
 
     QGraphicsScene * canvas;
 
+    void __loadSimString(QString simString);
 
     pnItem * __addItem(PNPlace * simPlace);
     pnItem * __addItemRect(PNTrans * simTrans);
