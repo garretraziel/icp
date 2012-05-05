@@ -178,24 +178,31 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
 
 bool Communicator::getSimulations(simList &sims){
     QString message = "<list-simuls/>";
-
+    QObject::disconnect(this, SLOT(handleIncomming()));
     if(!sendCommand(message)){
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
         return false;
     }
     QString recMessage;
 
     if (!recvCommand(recMessage)) {
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
         return false;
     }
     QXmlStreamReader xml(recMessage);
     if (xml.readNext() != QXmlStreamReader::StartDocument) {
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
         return false;
     }
     xml.readNext();
     if (xml.atEnd() || xml.hasError()) {
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
         return false;
     }
-    if (xml.name() != "simul-list") return false;
+    if (xml.name() != "simul-list"){
+        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        return false;
+    }
 
     while (!xml.atEnd()) {
         if (xml.readNextStartElement()) {
@@ -209,7 +216,7 @@ bool Communicator::getSimulations(simList &sims){
             sims.push_back(list);
         }
     }
-
+    QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
     return true;
 }
 
@@ -224,6 +231,18 @@ bool Communicator::loadThis(QString name, QString version){
     return sendCommand(command);
 }
 
+bool Communicator::handleCommand(QString command){
+
+    //neco
+
+    //neco
+
+    //neco
+
+    //jen test
+    sim = command;
+    emit simOk();
+}
 
 
 void Communicator::handleIncomming(){

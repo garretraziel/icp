@@ -30,9 +30,13 @@ public:
     bool getSimulations(simList & sims);
     bool loadThis(QString name, QString version);
 
+    QString sim;
+    QString errorMsg;
 
 signals:
     void error(QTcpSocket::SocketError socketError);
+    void simError();
+    void simOk();
 
 private:
     QTcpSocket *commSock;
@@ -41,7 +45,7 @@ private:
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
     qint64 block;
     bool isNotError(QString & recMessage, QString & message);
-
+    bool handleCommand(QString command);
     QString loginName;
 
 private slots:
