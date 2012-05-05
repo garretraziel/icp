@@ -20,24 +20,23 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
 
 void PNSimThread::run()
 {
-    QTcpSocket commSock;
-    //commSock = new QTcpSocket(this);
-    if (!commSock.setSocketDescriptor(socketDescriptor)) {
-        emit error(commSock.error());
+    commSock = new QTcpSocket();
+    if (!commSock->setSocketDescriptor(socketDescriptor)) {
+        emit error(commSock->error());
         return;
     }
-    commSock.waitForConnected(-1);
+    commSock->waitForConnected(-1);
 
     bool connected = true;
 
     qint64 block = 0;
-    QDataStream in(&commSock);
+    QDataStream in(commSock);
     in.setVersion(QDataStream::Qt_4_0);
 
     while (connected) {
-        while (commSock.bytesAvailable() < (int)sizeof(qint64)) {
-            commSock.waitForReadyRead(-1);
-            if (commSock.state() == QTcpSocket::UnconnectedState) {
+        while (commSock->bytesAvailable() < (int)sizeof(qint64)) {
+            commSock->waitForReadyRead(-1);
+            if (commSock->state() == QTcpSocket::UnconnectedState) {
                 connected = false;
                 break;
             }
@@ -45,18 +44,18 @@ void PNSimThread::run()
         if (!connected) break;
         in >> block;
         qDebug() << "velikost: " << block;
-        while (commSock.bytesAvailable() < block) {
-            commSock.waitForReadyRead(-1);
+        while (commSock->bytesAvailable() < block) {
+            commSock->waitForReadyRead(-1);
         }
         QString command;
         in >> command;
         QString message = "";
         if (!handleCommand(command,message)) {
-            commSock.write(createMessage(message));
-            commSock.disconnectFromHost();
+            commSock->write(createMessage(message));
+            commSock->disconnectFromHost();
         }
         if (message != "")
-            commSock.write(createMessage(message));
+            commSock->write(createMessage(message));
     }
     qDebug() << "odpojeno";
 }
@@ -260,7 +259,7 @@ bool PNSimThread::loadSim(QString name, int version)
     foreach(QFileInfo info, files) {
         QFile file(info.absoluteFilePath());
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCritical() << "Erro: cannot open file";
+            qCritical() << "Error: cannot open file";
             continue;
         }
         QXmlStreamReader inxml(&file);

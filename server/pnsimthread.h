@@ -29,6 +29,7 @@ private:
     QString usersFile;
     QString logFile;
     QString simDirectory;
+    QTcpSocket *commSock;
 
     SimVector simulations;
 
