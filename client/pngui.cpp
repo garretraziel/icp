@@ -303,7 +303,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
 }
 
 pnLine::~pnLine(){
-    delete editor;
+
     delete line;
     delete label;
 }
