@@ -65,16 +65,7 @@ public:
     bool doOperations(unsigned int choice);
     int possibleChoicesCount();
 
-    void removeConnectedPlace(PNPlace * place, bool isIn){
-        StringToPnplaceMap * names = (isIn)? &in_names : &out_names;
-        StringToPnplaceMap::iterator it;
-        for(it=names->begin(); it!=names->end(); it++){
-            if((*it).second == place){
-                names->erase(it);
-                return;
-            }
-        }
-    }
+    void removeConnectedPlace(PNPlace * place, bool isIn);
 };
 
 #endif // PNTRANS_H

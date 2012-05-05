@@ -132,3 +132,14 @@ int PNTrans::possibleChoicesCount()
 {
     return possible_choices.size();
 }
+
+void PNTrans::removeConnectedPlace(PNPlace * place, bool isIn){
+    StringToPnplaceMap * names = (isIn)? &in_names : &out_names;
+    StringToPnplaceMap::iterator it;
+    for(it=names->begin(); it!=names->end(); it++){
+        if((*it).second == place){
+            names->erase(it);
+            return;
+        }
+    }
+}
