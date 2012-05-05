@@ -143,7 +143,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             qDebug() << "vypisuju";
             message = getSimulations();
             return true;
-        } else if (strcmd == "simul-this") {
+        } else if (strcmd == "simul-that") {
             qDebug() << "loaduju";
             message = loadSim(args["name"],args["version"]);
             return true;
