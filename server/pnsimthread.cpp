@@ -152,8 +152,9 @@ bool PNSimThread::handleCommand(QString command, QString &message)
                 return true;
             }
             message = "<simul id=\""+QString::number(maxid-1)+"\">";
-            message = net;
-            message = "</simul>";
+            message += net;
+            message += "</simul>";
+            qDebug() << "posilam simulaci";
             return true;
         }
     }
