@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     ../server/pntrans.cpp \
     ../server/constraint.cpp \
     communicator.cpp \
-    propertiesdialog.cpp
+    propertiesdialog.cpp \
+    loadsimdialog.cpp
 
 HEADERS  += mainwindow.h \
     connectdialog.h \
@@ -33,13 +34,15 @@ HEADERS  += mainwindow.h \
     ../server/pntrans.h \
     ../server/constraint.h \
     communicator.h \
-    propertiesdialog.h
+    propertiesdialog.h \
+    loadsimdialog.h
 
 FORMS    += mainwindow.ui \
     connectdialog.ui \
     aboutdialog.ui \
     editdialog.ui \
-    propertiesdialog.ui
+    propertiesdialog.ui \
+    loadsimdialog.ui
 
 OTHER_FILES += \
     doc/protokol \

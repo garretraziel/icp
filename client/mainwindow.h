@@ -14,6 +14,7 @@
 #include "../server/pntrans.h"
 #include <QFileDialog>
 #include "propertiesdialog.h"
+#include "loadsimdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +40,7 @@ private:
     ConnectDialog * cd;
     aboutDialog * ad;   
     propertiesDialog * pd;
+    loadSimDialog * ld;
     //
 
     QGraphicsScene * canvas;

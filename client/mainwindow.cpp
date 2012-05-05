@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cd = new ConnectDialog(this);
     ad = new aboutDialog(this);
     editor = new editDialog(this);
-
+    ld = new loadSimDialog(this);
     pd = new propertiesDialog(this);
 
     mw = this;
@@ -189,8 +189,11 @@ void MainWindow::__loadSim(QString fileName){
 void MainWindow::loadSim(){
 
     //TODo
-    __loadSim("");
+    ld->show();
+    ld->pushSim("Semafor", "brrab", "1", "Jednoduchý semafor");
 
+
+    //__loadSim("");
 }
 
 // TODO:
