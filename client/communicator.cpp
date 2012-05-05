@@ -159,6 +159,8 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
             "<save-simul name=\"jmeno\" version=\"-1\">\n"
             +xmlSimState+
             "</save-simul>";
+
+    //FIXYY
     sendCommand(sendMessage);
 
     QString recMessage;
@@ -168,5 +170,47 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
     }
 
     return isNotError(recMessage, message);
-
 }
+
+bool Communicator::getSimulations(QStringList &sims){
+    QString message = "<list-simuls/>";
+
+    if(!sendCommand(message)){
+        return false;
+    }
+
+    QString recMessage;
+
+    if (!recvCommand(recMessage)) {
+        return false;
+    }
+
+    QXmlStreamReader xml(recMessage);
+
+    if (!xml.readNext() != QXmlStreamReader::StartDocument) {
+        return false;
+    }
+
+    xml.readNext();
+    if (xml.atEnd() || xml.hasError()) {
+        return false;
+    }
+
+    if (xml.name() != "simul-list") return false;
+
+    while (!xml.atEnd()) {
+        xml.readNext();
+        QString result = xml.attributes().value("name").toString() +"\tv"+
+                xml.attributes().value("version").toString() +"\tby "+
+                xml.attributes().value("author").toString()+"\t("+
+                xml.attributes().value("info").toString()+")";
+        sims.push_back(result);
+    }
+
+    return true;
+}
+
+
+
+
+

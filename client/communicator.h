@@ -3,6 +3,7 @@
 
 #include <QTcpSocket>
 #include <QString>
+#include <QStringList>
 
 class Communicator
 {
@@ -18,6 +19,8 @@ public:
     bool saveSimState(QString xmlSimState, QString &message);
 
     QString userLoggedIn() {return loginName;}
+
+    bool getSimulations(QStringList & sims);
 
 signals:
     void error(QTcpSocket::SocketError socketError);

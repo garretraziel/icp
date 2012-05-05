@@ -1,8 +1,9 @@
 #include "loadsimdialog.h"
 #include "ui_loadsimdialog.h"
 #include <QTableWidgetItem>
+#include <QString>
 #include <QDebug>
-#include <QStringList>
+#include <QRegExp>
 
 loadSimDialog::loadSimDialog(QWidget *parent) :
     QDialog(parent),
@@ -21,14 +22,21 @@ loadSimDialog::~loadSimDialog()
     delete ui;
 }
 
-void loadSimDialog::pushSim(QString name, QString author, QString version, QString info){
+void loadSimDialog::pushSim(QString sim){
 
-    ui->listWidget->addItem(name+" v"+version+" by "+author+" ("+info+")");
-
-    index++;
+    items.push_back(sim);
 }
 
 void loadSimDialog::updateList(){
-    QStringList filterList = ui->filterEdit->text().split("\\s");
-
+    ui->listWidget->clear();
+    QStringList filterList = ui->filterEdit->text().split(QRegExp("\\s*,\\s*"));
+    foreach(QString item, items){
+        foreach(QString filter, filterList){
+            qDebug() << filter;
+            if(item.contains(filter,Qt::CaseInsensitive)){
+                ui->listWidget->addItem(item);
+                break;
+            }
+        }
+    }
 }

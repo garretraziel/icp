@@ -2,6 +2,7 @@
 #define LOADSIMDIALOG_H
 
 #include <QDialog>
+#include <QStringList>
 
 namespace Ui {
 class loadSimDialog;
@@ -14,11 +15,12 @@ class loadSimDialog : public QDialog
 public:
     explicit loadSimDialog(QWidget *parent = 0);
     ~loadSimDialog();
-    void pushSim(QString name, QString author, QString version, QString info);
+    void pushSim(QString sim);
     
 private:
     Ui::loadSimDialog *ui;
     int index;
+    QStringList items;
 
 public slots:
     void updateList();

@@ -188,11 +188,17 @@ void MainWindow::__loadSim(QString fileName){
 
 void MainWindow::loadSim(){
 
-    //TODo
+    QStringList simulations;
+    if(!communicator.getSimulations(simulations)){
+        QMessageBox::critical(this,"Error","Server didn't response");
+        return;
+    }
+
+    foreach(QString sim, simulations)
+        ld->pushSim(sim);
+
+    ld->updateList();
     ld->show();
-    ld->pushSim("Semafor", "brrab", "1", "Jednoduchý semafor");
-
-
     //__loadSim("");
 }
 
