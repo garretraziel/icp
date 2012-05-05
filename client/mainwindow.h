@@ -78,6 +78,8 @@ public slots:
     void zoomIn();
 
     void editProperties();
+
+    void simOk();
 };
 
 extern MainWindow * mw;

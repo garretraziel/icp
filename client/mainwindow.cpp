@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->actionSave_Local_Sim, SIGNAL(activated()), this, SLOT(saveLocalSim()));
 
     QObject::connect(ui->actionEdit_Properties, SIGNAL(activated()),this, SLOT(editProperties()));
+
+    QObject::connect(communicator, SIGNAL(simOk()), this, SLOT(simOk()));
 }
 
 MainWindow::~MainWindow()
@@ -349,3 +351,40 @@ void MainWindow::editProperties(){
 void MainWindow::setSimName(QString name){
     ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), name);
 }
+
+void MainWindow::simOk(){
+    std::cout << communicator.sim << std::endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
