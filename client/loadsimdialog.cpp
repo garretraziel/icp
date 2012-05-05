@@ -2,6 +2,7 @@
 #include "ui_loadsimdialog.h"
 #include <QTableWidgetItem>
 #include <QDebug>
+#include <QStringList>
 
 loadSimDialog::loadSimDialog(QWidget *parent) :
     QDialog(parent),
@@ -9,6 +10,8 @@ loadSimDialog::loadSimDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     index = 1;
+
+    connect(ui->filterEdit,SIGNAL(textChanged(QString)),this,SLOT(updateList()));
 
 }
 
@@ -20,9 +23,11 @@ loadSimDialog::~loadSimDialog()
 
 void loadSimDialog::pushSim(QString name, QString author, QString version, QString info){
 
-
-    qDebug() << "Hurr durr";
     ui->listWidget->addItem(name+" v"+version+" by "+author+" ("+info+")");
-    qDebug() << "Durr hurr";
+
     index++;
+}
+
+void loadSimDialog::updateList(){
+    QStringList filterList = ui->filterEdit->text().split("\\s");
 }

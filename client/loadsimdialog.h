@@ -19,6 +19,9 @@ public:
 private:
     Ui::loadSimDialog *ui;
     int index;
+
+public slots:
+    void updateList();
 };
 
 #endif // LOADSIMDIALOG_H
