@@ -198,7 +198,7 @@ QString PNSimThread::getSimulations()
     }
     QDir dir(simDirectory);
 
-    dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
+    dir.setFilter(QDir::Files | QDir::Readable);
 
     QString result;
     QXmlStreamWriter xml(&result);
@@ -245,4 +245,36 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
         args[attrib.name().toString()] = attrib.value().toString();
     }
     return true;
+}
+
+bool PNSimThread::loadSim(QString name, int version)
+{
+    if (!QDir(simDirectory).exists()) {
+        return false;
+    }
+    QDir dir(simDirectory);
+    dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
+
+    QFileInfoList files = dir.entryInfoList();
+
+    foreach(QFileInfo info, files) {
+        QFile soubor(info.absoluteFilePath());
+        if (!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "Erro: cannot open file";
+            continue;
+        }
+        QXmlStreamReader inxml(&soubor);
+        inxml.readNext();
+        inxml.readNext();
+        if (inxml.atEnd() || inxml.hasError()) {
+            continue;
+        }
+        if (inxml.attributes().value("name") == name && inxml.attributes().value("version") == QString::number(version)) {
+            //load
+
+            return true;
+        }
+    }
+
+    return false;
 }
