@@ -57,6 +57,8 @@ private:
 
     void __loadSim(QString fileName);
 
+    QGraphicsView * currentTabView();
+
 public slots:
     void showConnectDialog();
     void showAboutDialog();

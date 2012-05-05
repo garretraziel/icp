@@ -37,31 +37,9 @@ public:
 
     //toto pujde jinam, jen ted narychlo...
     //a mozna pujdou sjednotit do jedne
-    void removePlace(PNPlace * _place){
-        PlaceVector::iterator it;
-        for(it=places.begin(); it!=places.end(); it++){
-            if((*it)==_place){
-                places.erase(it);
-                return;
-            }
-        }
-    }
-    void removeTrans(PNTrans * _trans){
-        TransVector::iterator it;
-        for(it=transits.begin(); it!=transits.end(); it++){
-            if((*it)==_trans){
-                transits.erase(it);
-                return;
-            }
-        }
-    }
-
-    void setProperies(QString _name, QString _author, QString _version, QString _info){
-        name = _name;
-        autor = _author;
-        version = _version.toInt();
-        info = _info;
-    }
+    void removePlace(PNPlace * _place);
+    void removeTrans(PNTrans * _trans);
+    void setProperies(QString _name, QString _author, QString _version, QString _info);
 };
 
 #endif // SIMSTATE_H

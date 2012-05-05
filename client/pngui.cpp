@@ -220,6 +220,7 @@ protected:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
         Q_UNUSED(widget);
+        Q_UNUSED(option);
         painter->setBrush(QBrush(QColor(128,128,128)));
         painter->setPen(QPen(QColor(128,128,128), 1));
         painter->drawRoundedRect(QRectF(this->boundingRect().left()+2,this->boundingRect().top()+2,
@@ -240,6 +241,7 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
         Q_UNUSED(widget);
+        Q_UNUSED(option);
 
         std::vector<QLineF> boundingLines;
 #define bndRct colider->boundingRect()

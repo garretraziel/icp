@@ -70,7 +70,7 @@ void MainWindow::newTab(){
 
     //~~~~~ tyto dva musi byt v tomto poradi
     viewVect.push_back(new QGraphicsView(tabVect.back()));
-    QLayout * layout = new QVBoxLayout(tabVect.back()); //TODO zkontrolovat jestli se uklidi
+    QLayout * layout = new QVBoxLayout(tabVect.back());
     //~~~~~
 
     canvasVect.push_back(new QGraphicsScene(viewVect.back()));
@@ -242,15 +242,18 @@ void MainWindow::showAboutDialog()
     ad->show();
 }
 
-//TOTO KURVA, TOTO JE MOC MOC MOC MOC KREHKY!!!!!!!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ index !!
+QGraphicsView * MainWindow::currentTabView(){
+    return ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]));
+}
+
 #define currentTabScene (((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scene())
-#define noTabReturn if(ui->tabWidget->currentWidget() == NULL) return NULL
+#define returnIfNoTab if(ui->tabWidget->currentWidget() == NULL) return
 
 
 pnItem * MainWindow::__addItem(PNPlace * simPlace){
-    noTabReturn;
+    returnIfNoTab NULL;
 
-    pnItem * item = new pnCircle(currentTabScene, simPlace);
+    pnItem * item = new pnCircle(currentTabView()->scene(), simPlace);
     return item;
 }
 
@@ -270,8 +273,9 @@ pnItem * MainWindow::addItem(){
 }
 
 pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
-    noTabReturn;
-    pnItem * item = new pnRect(currentTabScene, simTrans);
+    returnIfNoTab NULL;
+
+    pnItem * item = new pnRect(currentTabView()->scene(), simTrans);
     return item;
 }
 
@@ -295,11 +299,13 @@ void MainWindow::checkErase(){
 }
 
 void MainWindow::zoomOut(){
-    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.8,0.8);
+    if(getCurrentSim())
+        currentTabView()->scale(0.8,0.8);
 }
 
 void MainWindow::zoomIn(){
-    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(1/0.8,1/0.8);
+    if(getCurrentSim())
+        currentTabView()->scale(1/0.8,1/0.8);
 }
 
 
