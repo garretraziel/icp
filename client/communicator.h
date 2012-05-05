@@ -47,6 +47,7 @@ private:
     bool isNotError(QString & recMessage, QString & message);
     bool handleCommand(QString command);
     QString loginName;
+    bool exclusion;
 
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
