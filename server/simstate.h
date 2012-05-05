@@ -26,7 +26,7 @@ public:
     int version;
     QString info;
 
-    SimState();
+    SimState():autor(""),name(""),version(1),info("") {}
     ~SimState();
     bool setState(QString xml);
     QString getState();

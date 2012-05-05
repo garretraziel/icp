@@ -2,10 +2,6 @@
 #include <map>
 #include <QXmlStreamWriter>
 
-SimState::SimState()
-{
-}
-
 bool SimState::setState(QString xml)
 {
     QString errorStr;
