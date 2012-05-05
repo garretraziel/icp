@@ -91,6 +91,8 @@ void MainWindow::newTab(){
 
 
     simVect.push_back(new SimState());
+
+    idVect.push_back("unkown");
 }
 
 QString fromConstraint(Constraint * cons){
@@ -326,6 +328,14 @@ SimState * MainWindow::getCurrentSim(){
         return NULL;
     else
         return simVect[ui->tabWidget->currentIndex()];
+}
+
+void MainWindow::setID(QString id){
+    idVect[ui->tabWidget->currentIndex()] = id;
+}
+
+QString MainWindow::getID(){
+    return idVect[ui->tabWidget->currentIndex()];
 }
 
 editDialog * MainWindow::getEditor(){

@@ -33,6 +33,9 @@ public:
 
     void setSimName(QString name);
 
+    void setID(QString id);
+    QString getID();
+
 private:
     Ui::MainWindow *ui;
 
@@ -54,6 +57,7 @@ private:
     std::vector<QGraphicsScene *> canvasVect;
 
     std::vector<SimState *> simVect;
+    std::vector<QString> idVect;
 
     editDialog * editor;
 
