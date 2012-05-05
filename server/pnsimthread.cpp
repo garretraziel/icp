@@ -258,23 +258,48 @@ bool PNSimThread::loadSim(QString name, int version)
     QFileInfoList files = dir.entryInfoList();
 
     foreach(QFileInfo info, files) {
-        QFile soubor(info.absoluteFilePath());
-        if (!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QFile file(info.absoluteFilePath());
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical() << "Erro: cannot open file";
             continue;
         }
-        QXmlStreamReader inxml(&soubor);
+        QXmlStreamReader inxml(&file);
         inxml.readNext();
         inxml.readNext();
         if (inxml.atEnd() || inxml.hasError()) {
             continue;
         }
         if (inxml.attributes().value("name") == name && inxml.attributes().value("version") == QString::number(version)) {
-            //load
+            file.close();
+
+            if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                qCritical("Cannot open file.");
+                return false;
+            }
+
+            QString str;
+            QTextStream stream(&file);
+
+            while (!stream.atEnd()) {
+                str += stream.readLine();
+            }
+
+            PetriSim *simulation = new PetriSim();
+
+            simulation->setState(str);
+
+            simulations.push_back(simulation);
 
             return true;
         }
     }
 
     return false;
+}
+
+PNSimThread::~PNSimThread()
+{
+    foreach (PetriSim *simulation, simulations) {
+        delete simulation;
+    }
 }
