@@ -5,11 +5,11 @@
 #include <QTcpSocket>
 #include <QString>
 #include <vector>
-#include <map>
+#include <QMap>
 #include "petrisim.h"
 
 typedef std::vector<PetriSim> SimVector;
-typedef std::map<QString, QString> StrToStrMap;
+typedef QMap<QString, QString> StrToStrMap;
 
 class PNSimThread : public QThread
 {

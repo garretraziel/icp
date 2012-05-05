@@ -64,28 +64,21 @@ void PNSimThread::run()
 bool PNSimThread::handleCommand(QString command, QString &message)
 {
     qDebug() << command;
-    QXmlStreamReader com(command);
-    if (com.readNext() != QXmlStreamReader::StartDocument) {
-        qCritical() << "Error: unknown command from client";
-        message = "<err info=\"Unknown command\"/>";
-        return false;
-    }
-    com.readNext();
-    if (com.atEnd() || com.hasError()) {
-        qCritical() << "Error: bad command from client";
+    QString strcmd;
+    StrToStrMap args;
+
+    if (!getCommand(command,strcmd,args)) {
         message = "<err info=\"Bad command\"/>";
         return false;
     }
-    QString strcmd = com.name().toString();
+
     if (strcmd == "register") {
-        QString name = com.attributes().value("name").toString();
-        QString password = com.attributes().value("password").toString();
-        if (name == "" || password == "") {
+        if (!args.contains("name") || !args.contains("password") || args["name"] == "" || args["password"] == "") {
             qDebug() << "nemuzu lognout";
             message = "<err info=\"Password and name cannot be blank\"/>";
             return false;
         }
-        int result = registerUser(name,password);
+        int result = registerUser(args["name"],args["password"]);
         if (result != 0) {
             if (result == 1) {
                 qDebug() << "already registere";
@@ -106,14 +99,12 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             qDebug() << "zalogovat, zaregistrovan";
         }
     } else if (strcmd == "login") {
-        QString name = com.attributes().value("name").toString();
-        QString password = com.attributes().value("password").toString();
-        if (name == "" || password == "") {
+        if (!args.contains("name") || !args.contains("password") || args["name"] == "" || args["password"] == "") {
             qDebug() << "nemuzu lognout";
             message = "<err info=\"Password and name cannot be blank\"/>";
             return false;
         }
-        int result = logUser(name, password);
+        int result = logUser(args["name"], args["password"]);
         if (result != 0) {
             if (result == 1) {
                 qDebug() << "doesn't exists";
@@ -241,5 +232,17 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
 {
     QXmlStreamReader input(xml);
 
-
+    if (input.readNext() != QXmlStreamReader::StartDocument) {
+        return false;
+    }
+    input.readNext();
+    if (input.atEnd() || input.hasError()) {
+        qCritical() << "Bad XML request";
+        return false;
+    }
+    result = input.name().toString();
+    foreach (QXmlStreamAttribute attrib, input.attributes()) {
+        args[attrib.name().toString()] = attrib.value().toString();
+    }
+    return true;
 }
