@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     pntrans.cpp \
     simstate.cpp \
     constraint.cpp \
-    pnsimthread.cpp
+    pnsimthread.cpp \
+    runsimthread.cpp
 
 HEADERS += \
     petrinetserver.h \
@@ -31,7 +32,8 @@ HEADERS += \
     pntrans.h \
     simstate.h \
     constraint.h \
-    pnsimthread.h
+    pnsimthread.h \
+    runsimthread.h
 
 OTHER_FILES += \
     doc/protokol \

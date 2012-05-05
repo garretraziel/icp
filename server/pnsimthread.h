@@ -20,12 +20,17 @@ public:
 
     void run();
 
+    QMutex *simmutex;
+    QString *outid;
+
+
 signals:
     void error(QTcpSocket::SocketError socketError);
 
 private slots:
     void readIncoming();
     void handleDisconnection();
+    void handleSimuled();
 
 private:
     int socketDescriptor;
@@ -46,6 +51,7 @@ private:
     bool getCommand(QString xml, QString &result, StrToStrMap &args);
     QString loadSim(QString name, QString version);
     bool saveSimulation(QString xml);
+    void runSimulation(QString id);
 };
 
 #endif // PNSIMTHREAD_H

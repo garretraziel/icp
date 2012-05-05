@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->actionEdit_Properties, SIGNAL(activated()),this, SLOT(editProperties()));
 
     QObject::connect(&communicator, SIGNAL(simOk()), this, SLOT(simOk()));
+    QObject::connect(ui->runButton, SIGNAL(clicked()), this, SLOT(runSim()));
 }
 
 MainWindow::~MainWindow()
@@ -373,35 +374,7 @@ void MainWindow::simOk(){
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void MainWindow::runSim() {
+    QString id = idVect[ui->tabWidget->currentIndex()];
+    communicator.runSimulation(id);
+}

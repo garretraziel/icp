@@ -85,6 +85,7 @@ public slots:
     void editProperties();
 
     void simOk();
+    void runSim();
 };
 
 extern MainWindow * mw;

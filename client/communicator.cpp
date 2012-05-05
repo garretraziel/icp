@@ -308,3 +308,10 @@ void Communicator::handleIncomming(){
         return;
     }
 }
+
+bool Communicator::runSimulation(QString id)
+{
+    QString command = "<run id=\""+id+"\"/>";
+    qDebug() << "Posilam: " << command;
+    return sendCommand(command);
+}

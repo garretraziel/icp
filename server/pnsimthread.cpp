@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QMutex>
 #include <QRegExp>
+#include "runsimthread.h"
 
 QMutex iomutex;
 
@@ -60,6 +61,9 @@ void PNSimThread::run()
 {
 
     commSock = new QTcpSocket;
+    simmutex = new QMutex;
+    outid = new QString;
+
     connect(commSock, SIGNAL(readyRead()), this, SLOT(readIncoming()),Qt::DirectConnection);
     connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()), Qt::DirectConnection);
 
@@ -73,6 +77,10 @@ void PNSimThread::run()
     qDebug() << "davam connect";
 
     this->exec();
+
+    delete commSock;
+    delete simmutex;
+    delete outid;
     qDebug() << "odpojeno";
 }
 
@@ -177,6 +185,9 @@ bool PNSimThread::handleCommand(QString command, QString &message)
 
             qDebug() << "posilam id";
             return true;
+        } else if (strcmd == "run") {
+            qDebug() << "chce simulovat";
+            runSimulation(args["id"]);
         }
     }
     return true;
@@ -437,4 +448,22 @@ bool PNSimThread::saveSimulation(QString xml)
     qDebug() << "zapsano";
     iomutex.unlock();
     return true;
+}
+
+void PNSimThread::runSimulation(QString id)
+{
+    qDebug() << "purr";
+    RunSimThread *thread = new RunSimThread(id,simulations[id.toInt()],simmutex,outid);
+    qDebug() << "hurr";
+    connect(thread,SIGNAL(finished()),this,SLOT(handleSimuled()),Qt::DirectConnection);
+    qDebug() << "durr";
+    connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
+    qDebug() << "spawnuju thread";
+    thread->run();
+}
+
+void PNSimThread::handleSimuled()
+{
+    qDebug() << "odsimulovano: " << (*outid);
+    simmutex->unlock();
 }

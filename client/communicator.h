@@ -29,6 +29,7 @@ public:
     //bool getSimulations(QStringList & sims);
     bool getSimulations(simList & sims);
     bool loadThis(QString name, QString version);
+    bool runSimulation(QString id);
 
     QString sim;
     QString errorMsg;
