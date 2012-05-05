@@ -11,6 +11,7 @@ Communicator communicator;
 Communicator::Communicator(QWidget *parent):QObject(parent)
 {
     commSock = new QTcpSocket;
+    exclusion = false;
 
 }
 
@@ -178,29 +179,29 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
 
 bool Communicator::getSimulations(simList &sims){
     QString message = "<list-simuls/>";
-    QObject::disconnect(this, SLOT(handleIncomming()));
+    commSock->blockSignals(true);
     if(!sendCommand(message)){
-        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        commSock->blockSignals(false);
         return false;
     }
     QString recMessage;
 
     if (!recvCommand(recMessage)) {
-        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        commSock->blockSignals(false);
         return false;
     }
     QXmlStreamReader xml(recMessage);
     if (xml.readNext() != QXmlStreamReader::StartDocument) {
-        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        commSock->blockSignals(false);
         return false;
     }
     xml.readNext();
     if (xml.atEnd() || xml.hasError()) {
-        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        commSock->blockSignals(false);
         return false;
     }
     if (xml.name() != "simul-list"){
-        QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        commSock->blockSignals(false);
         return false;
     }
 
@@ -216,7 +217,7 @@ bool Communicator::getSimulations(simList &sims){
             sims.push_back(list);
         }
     }
-    QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+    commSock->blockSignals(false);
     return true;
 }
 
@@ -241,11 +242,13 @@ bool Communicator::handleCommand(QString command){
 
     //jen test
     sim = command;
+
     emit simOk();
 }
 
 
 void Communicator::handleIncomming(){
+
     if(commSock->bytesAvailable() < (int)sizeof(qint64))
         return;
 

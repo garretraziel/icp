@@ -48,6 +48,9 @@ void loadSimDialog::accept(){
         if(selected == item[0]+"\tv"+item[1]+"\t by"+item[2]+"\t("+item[3]+")"){
             if(!communicator.loadThis(item[0],item[1]))
                 QMessageBox::critical(this,"Error","Server didn't response");
+            else {
+                this->hide();
+            }
             return;
         }
     }
