@@ -4,13 +4,12 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QString>
-#include <vector>
 #include <QMap>
 #include "petrisim.h"
 #include <QMutex>
 #include <QMutexLocker>
 
-typedef std::vector<PetriSim *> SimVector;
+typedef QMap<int, PetriSim *> SimVector;
 typedef QMap<QString, QString> StrToStrMap;
 
 class PNSimThread : public QThread
@@ -38,6 +37,7 @@ private:
     QTcpSocket *commSock;
     qint64 block;
     SimVector simulations;
+    int maxid;
 
     bool handleCommand(QString command,QString &message);
     int logUser(QString login, QString password);
