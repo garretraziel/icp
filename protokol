@@ -51,13 +51,6 @@ C:
 XML se simulaci...
 </same-simul>
 
-S:
-<ok/> | <ask text="Already there. Rewrite? New version? Cancel?" pos1="rewrite" pos2="new" pos3="cancel"/>
-C:
-<answer choice="1"/>
-S:
-<ok/> | <err info="Hurr durr"/>
-
 Simulace:
 ---------
 Simulace musí být načtená.

@@ -143,6 +143,10 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             qDebug() << "vypisuju";
             message = getSimulations();
             return true;
+        } else if (strcmd == "simul-this") {
+            qDebug() << "loaduju";
+            message = loadSim(args["name"],args["version"]);
+            return true;
         }
     }
     return true;
@@ -264,10 +268,10 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
     return true;
 }
 
-bool PNSimThread::loadSim(QString name, int version)
+QString PNSimThread::loadSim(QString name, QString version)
 {
     if (!QDir(simDirectory).exists()) {
-        return false;
+        return "false";
     }
     QDir dir(simDirectory);
     dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
@@ -286,12 +290,12 @@ bool PNSimThread::loadSim(QString name, int version)
         if (inxml.atEnd() || inxml.hasError()) {
             continue;
         }
-        if (inxml.attributes().value("name") == name && inxml.attributes().value("version") == QString::number(version)) {
+        if (inxml.attributes().value("name") == name && inxml.attributes().value("version") == version) {
             file.close();
 
             if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 qCritical("Cannot open file.");
-                return false;
+                return "false";
             }
 
             QString str;
@@ -307,11 +311,11 @@ bool PNSimThread::loadSim(QString name, int version)
 
             simulations.push_back(simulation);
 
-            return true;
+            return simulation->getState();
         }
     }
 
-    return false;
+    return "false";
 }
 
 PNSimThread::~PNSimThread()

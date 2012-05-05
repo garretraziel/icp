@@ -45,7 +45,7 @@ private:
     int registerUser(QString login, QString password);
     QString getSimulations();
     bool getCommand(QString xml, QString &result, StrToStrMap &args);
-    bool loadSim(QString name, int version);
+    QString loadSim(QString name, QString version);
 };
 
 #endif // PNSIMTHREAD_H
