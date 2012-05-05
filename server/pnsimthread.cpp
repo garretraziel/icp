@@ -16,10 +16,11 @@ PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     usersFile = "./users.dat";
     logFile = "./log.dat";
     simDirectory = "./sims";
-    mutex.lock();
+
 }
 
 void PNSimThread::readIncoming(){
+    qDebug() << "incomming!";
     if(commSock->bytesAvailable() < (int)sizeof(qint64))
         return;
 
@@ -46,23 +47,28 @@ void PNSimThread::readIncoming(){
 
 void PNSimThread::handleDisconnection(){
     //todo
-    mutex.unlock();
+    this->exit();
 }
 
 void PNSimThread::run()
 {
+
     commSock = new QTcpSocket();
+    connect(commSock, SIGNAL(readyRead()), this, SLOT(readIncoming()));
+    connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()));
+
     if (!commSock->setSocketDescriptor(socketDescriptor)) {
         emit error(commSock->error());
         return;
     }
     block = 0;
     commSock->waitForConnected(-1);
-    connect(commSock, SIGNAL(readyRead()),this,SLOT(readIncoming()));
-    connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()));
+
+    qDebug() << "davam connect";
+
     bool connected = true;
 
-    mutex.lock();
+    this->exec();
     qDebug() << "odpojeno";
 }
 

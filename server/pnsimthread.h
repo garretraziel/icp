@@ -39,8 +39,6 @@ private:
     qint64 block;
     SimVector simulations;
 
-    QMutex mutex;
-
     bool handleCommand(QString command,QString &message);
     int logUser(QString login, QString password);
     QByteArray createMessage(QString message);
