@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     cd = new ConnectDialog(this);
     ad = new aboutDialog(this);
     editor = new editDialog(this);
+
+    ld = new QFileDialog(this);
+
     mw = this;
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
@@ -38,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(ui->zoomOut, SIGNAL(clicked()),this,SLOT(zoomOut()));
     QObject::connect(ui->zoomIn, SIGNAL(clicked()),this,SLOT(zoomIn()));
+
+    QObject::connect(ui->actionLoad_Local_Sim, SIGNAL(activated()), this, SLOT(loadLocalSim()));
 }
 
 MainWindow::~MainWindow()
@@ -267,4 +272,8 @@ SimState * MainWindow::getCurrentSim(){
 
 editDialog * MainWindow::getEditor(){
     return editor;
+}
+
+void MainWindow::loadLocalSim(){
+    ld->show();
 }
