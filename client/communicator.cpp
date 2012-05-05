@@ -178,32 +178,34 @@ bool Communicator::getSimulations(QStringList &sims){
     if(!sendCommand(message)){
         return false;
     }
-
+    qDebug() << "1";
     QString recMessage;
 
     if (!recvCommand(recMessage)) {
         return false;
     }
-
+    qDebug() << "2";
     QXmlStreamReader xml(recMessage);
-
-    if (!xml.readNext() != QXmlStreamReader::StartDocument) {
+    qDebug() << recMessage;
+    if (xml.readNext() != QXmlStreamReader::StartDocument) {
         return false;
     }
-
+    qDebug() << "3";
     xml.readNext();
     if (xml.atEnd() || xml.hasError()) {
         return false;
     }
-
+    qDebug() << "4";
     if (xml.name() != "simul-list") return false;
 
+    qDebug() << "5";
     while (!xml.atEnd()) {
         xml.readNext();
         QString result = xml.attributes().value("name").toString() +"\tv"+
                 xml.attributes().value("version").toString() +"\tby "+
                 xml.attributes().value("author").toString()+"\t("+
                 xml.attributes().value("info").toString()+")";
+        qDebug() << result;
         sims.push_back(result);
     }
 

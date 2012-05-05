@@ -342,7 +342,7 @@ void MainWindow::editProperties(){
     SimState * currentSim = getCurrentSim();
     if(!currentSim) return;
 
-    pd->loadData(currentSim->name,currentSim->autor,QString::number(currentSim->version),currentSim->info);
+    pd->loadData(currentSim->name,currentSim->author,QString::number(currentSim->version),currentSim->info);
     pd->show();
 }
 
