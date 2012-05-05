@@ -55,7 +55,7 @@ void PNSimThread::run()
 
     commSock = new QTcpSocket;
     connect(commSock, SIGNAL(readyRead()), this, SLOT(readIncoming()),Qt::DirectConnection);
-    connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()));
+    connect(commSock, SIGNAL(disconnected()), this, SLOT(handleDisconnection()), Qt::DirectConnection);
 
     if (!commSock->setSocketDescriptor(socketDescriptor)) {
         emit error(commSock->error());
@@ -65,8 +65,6 @@ void PNSimThread::run()
     commSock->waitForConnected(-1);
 
     qDebug() << "davam connect";
-
-    bool connected = true;
 
     this->exec();
     qDebug() << "odpojeno";
@@ -140,7 +138,10 @@ bool PNSimThread::handleCommand(QString command, QString &message)
         qDebug() << "not logged!";
         return false;
     } else {
-
+        if (strcmd == "list-simuls") {
+            message = getSimulations();
+            return true;
+        }
     }
     return true;
 }
