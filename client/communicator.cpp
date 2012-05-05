@@ -95,7 +95,14 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
         return false;
     }
 
-    return isNotError(recMessage, message);
+    if(isNotError(recMessage, message)){
+        loginName = name;
+        return true;
+    }
+    else {
+        loginName = "";
+        return false;
+    }
 }
 
 bool Communicator::login(QString name, QString password, QString &message)
@@ -163,5 +170,3 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
     return isNotError(recMessage, message);
 
 }
-
-

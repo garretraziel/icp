@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ad = new aboutDialog(this);
     editor = new editDialog(this);
 
+    pd = new propertiesDialog(this);
+
     mw = this;
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
@@ -186,8 +188,8 @@ void MainWindow::__loadSim(QString fileName){
 
 void MainWindow::loadSim(){
 
+    //TODo
     __loadSim("");
-
 
 }
 
@@ -322,13 +324,13 @@ void MainWindow::loadLocalSim(){
 }
 
 void MainWindow::editProperties(){
+    SimState * currentSim = getCurrentSim();
+    if(!currentSim) return;
 
+    pd->loadData(currentSim->name,currentSim->autor,QString::number(currentSim->version),currentSim->info);
+    pd->show();
 }
 
-
-
-
-
-
-
-
+void MainWindow::setSimName(QString name){
+    ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), name);
+}

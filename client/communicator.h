@@ -17,6 +17,8 @@ public:
 
     bool saveSimState(QString xmlSimState, QString &message);
 
+    QString userLoggedIn() {return loginName;}
+
 signals:
     void error(QTcpSocket::SocketError socketError);
 
@@ -27,6 +29,8 @@ private:
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
 
     bool isNotError(QString & recMessage, QString & message);
+
+    QString loginName;
 
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
