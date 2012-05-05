@@ -21,7 +21,7 @@ bool SimState::setState(QString xml)
         return false;
     }
 
-    autor = root.attribute("autor");
+    author = root.attribute("author");
     name = root.attribute("name");
     version = root.attribute("version").toInt();
     info = root.attribute("info");
@@ -134,7 +134,7 @@ QString SimState::getState()
 
     doc.writeStartElement("petrinet");
 
-    doc.writeAttribute("autor",autor);
+    doc.writeAttribute("author",author);
     doc.writeAttribute("name",name);
     doc.writeAttribute("version",QString::number(version));
     doc.writeAttribute("info",info);
@@ -299,7 +299,7 @@ void SimState::removeTrans(PNTrans * _trans){
 
 void SimState::setProperies(QString _name, QString _author, QString _version, QString _info){
     name = _name;
-    autor = _author;
+    author = _author;
     version = _version.toInt();
     info = _info;
 }

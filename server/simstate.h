@@ -21,12 +21,12 @@ public:
     StringToPnplaceMap places_id;
     StringToPntransMap transits_id;
 
-    QString autor;
+    QString author;
     QString name;
     int version;
     QString info;
 
-    SimState():autor(""),name(""),version(1),info("") {}
+    SimState():author(""),name(""),version(1),info("") {}
     ~SimState();
     bool setState(QString xml);
     QString getState();
