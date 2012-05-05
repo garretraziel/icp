@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QXmlStreamReader>
 #include <QDataStream>
+#include <QRegExp>
+#include "mainwindow.h"
 
 Communicator communicator;
 
@@ -160,20 +162,21 @@ bool Communicator::isNotError(QString & recMessage, QString & message){
 
 bool Communicator::saveSimState(QString xmlSimState, QString & message){
     //TODO!!
-    QString sendMessage =
-            "<save-simul name=\"jmeno\" version=\"-1\">\n"
-            +xmlSimState+
-            "</save-simul>";
-
+    QString sendMessage = xmlSimState;
+    commSock->blockSignals(true);
     //FIXYY
     sendCommand(sendMessage);
 
     QString recMessage;
     if (!recvCommand(recMessage)) {
         message = "Error: server didn't response";
+        commSock->blockSignals(false);
         return false;
     }
+    //todo!
+    mw->setID(recMessage);
 
+    commSock->blockSignals(false);
     return isNotError(recMessage, message);
 }
 
@@ -233,17 +236,38 @@ bool Communicator::loadThis(QString name, QString version){
 }
 
 bool Communicator::handleCommand(QString command){
+    QXmlStreamReader xml(command);
+    if(xml.readNext()!=QXmlStreamReader::StartDocument){
+        errorMsg = "Error: cannot load sim";
+        emit simError();
+        return false;
+    }
 
-    //neco
+    xml.readNext();
 
-    //neco
+    if(xml.atEnd() || xml.hasError()) {
+        errorMsg = "Cannot load sim";
+        emit simError();
+        return false;
+    }
 
-    //neco
+    QString strcmd = xml.name().toString();
 
-    //jen test
-    sim = command;
+    if (strcmd == "err") {
+        errorMsg = xml.attributes().value("info").toString();
+        emit simError();
+        return false;
+    }
+    if(strcmd == "simul"){
+        simID = xml.attributes().value("id").toString();
+        command.remove(QRegExp("^<simul[^>]+>"));
+        command.remove(QRegExp("</simul>$"));
+        sim = command;
+        emit simOk();
+    }
 
-    emit simOk();
+
+    return true;
 }
 
 

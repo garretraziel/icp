@@ -32,6 +32,7 @@ public:
 
     QString sim;
     QString errorMsg;
+    QString simID;
 
 signals:
     void error(QTcpSocket::SocketError socketError);

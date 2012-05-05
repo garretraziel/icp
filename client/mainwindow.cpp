@@ -91,6 +91,8 @@ void MainWindow::newTab(){
 
 
     simVect.push_back(new SimState());
+
+    idVect.push_back("unkown");
 }
 
 QString fromConstraint(Constraint * cons){
@@ -123,18 +125,22 @@ QString fromOperation(OneOut oper){
 
 #define loadLines(direction)
 
-void MainWindow::__loadSim(QString fileName){
-
-    newTab();
-    SimState * currentSim = getCurrentSim();
-    //TOO DOO
-    //(((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scale(0.5,0.5));
-
+void MainWindow::__loadSim(QString fileName) {
     QFile xmlfile(fileName);
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray xml = xmlfile.readAll();
     xmlfile.close();
-    currentSim->setState(xml.data());
+    __loadSimString(xml.data());
+}
+
+void MainWindow::__loadSimString(QString simString){
+
+    newTab();
+    SimState * currentSim = getCurrentSim();
+
+    currentSim->setState(simString);
+    mw->setSimName(getCurrentSim()->name);
+
     QPointF center(0,0);
     int centerCnt = 1;
     std::map<PNPlace *, pnItem *> placeToGui;
@@ -328,6 +334,14 @@ SimState * MainWindow::getCurrentSim(){
         return simVect[ui->tabWidget->currentIndex()];
 }
 
+void MainWindow::setID(QString id){
+    idVect[ui->tabWidget->currentIndex()] = id;
+}
+
+QString MainWindow::getID(){
+    return idVect[ui->tabWidget->currentIndex()];
+}
+
 editDialog * MainWindow::getEditor(){
     return editor;
 }
@@ -353,7 +367,10 @@ void MainWindow::setSimName(QString name){
 }
 
 void MainWindow::simOk(){
-    std::cout << communicator.sim.toStdString() << std::endl;
+
+    __loadSimString(communicator.sim);
+    setID(communicator.simID);
+
 }
 
 
