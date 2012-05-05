@@ -8,7 +8,7 @@
 #include <QMap>
 #include "petrisim.h"
 
-typedef std::vector<PetriSim> SimVector;
+typedef std::vector<PetriSim *> SimVector;
 typedef QMap<QString, QString> StrToStrMap;
 
 class PNSimThread : public QThread
@@ -16,6 +16,7 @@ class PNSimThread : public QThread
     Q_OBJECT
 public:
     explicit PNSimThread(int socketDescriptor, QObject *parent = 0);
+    ~PNSimThread();
 
     void run();
 
