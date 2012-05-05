@@ -162,7 +162,7 @@ bool Communicator::isNotError(QString & recMessage, QString & message){
 
 bool Communicator::saveSimState(QString xmlSimState, QString & message){
     //TODO!!
-    QString sendMessage = xmlSimState;
+    QString sendMessage = "<save-this>"+xmlSimState+"</save-this>";
     commSock->blockSignals(true);
     //FIXYY
     sendCommand(sendMessage);
@@ -174,10 +174,26 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
         return false;
     }
     //todo!
-    mw->setID(recMessage);
+    QString errmessage;
+    if (!isNotError(recMessage,errmessage)) {
+        message = errmessage;
+        commSock->blockSignals(false);
+        return false;
+    }
+    QXmlStreamReader xml(recMessage);
+    xml.readNext();
+    xml.readNext();
+
+    if (xml.name() != "simulid") {
+        message = "Error: received bad response";
+        commSock->blockSignals(false);
+        return false;
+    }
+
+    mw->setID(xml.attributes().value("id").toString());
 
     commSock->blockSignals(false);
-    return isNotError(recMessage, message);
+    return true;
 }
 
 bool Communicator::getSimulations(simList &sims){

@@ -8,6 +8,10 @@
 #include <QXmlStreamWriter>
 #include <QDataStream>
 #include <QTextStream>
+#include <QMutex>
+#include <QRegExp>
+
+QMutex iomutex;
 
 PNSimThread::PNSimThread(int socketDescriptor, QObject *parent) :
     QThread(parent),socketDescriptor(socketDescriptor)
@@ -156,6 +160,23 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             message += "</simul>";
             qDebug() << "posilam simulaci";
             return true;
+        } else if (strcmd == "save-this") {
+            command.remove(QRegExp("^<save-this>"));
+            command.remove(QRegExp("</save-this>$"));
+            if (!saveSimulation(command)) {
+                message = "<err info=\"Cannot save simulation\"/>";
+                return true;
+            }
+            PetriSim *simulation = new PetriSim();
+
+            simulation->setState(command);
+
+            simulations[maxid++] = simulation;
+
+            message = "<simulid id=\""+QString::number(maxid-1)+"\">";
+
+            qDebug() << "posilam id";
+            return true;
         }
     }
     return true;
@@ -163,9 +184,11 @@ bool PNSimThread::handleCommand(QString command, QString &message)
 
 int PNSimThread::logUser(QString login, QString password)
 {
+    iomutex.lock();
     QFile users(usersFile);
 
     if (!users.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        iomutex.unlock();
         qCritical("Error: cannot open file with users");
         return 3;
     }
@@ -175,10 +198,17 @@ int PNSimThread::logUser(QString login, QString password)
         QString line = filestream.readLine();
         QStringList items = line.split(':');
         if (items.size() != 2) continue;
-        if (items[0] == login && items[1] == password) return 0;
-        if (items[0] == login) return 2;
+        if (items[0] == login && items[1] == password) {
+            iomutex.unlock();
+            return 0;
+        }
+        if (items[0] == login) {
+            iomutex.unlock();
+            return 2;
+        }
     }
 
+    iomutex.unlock();
     return 1;
 }
 
@@ -199,10 +229,11 @@ int PNSimThread::registerUser(QString login, QString password)
     if (login == "" || password == "" || login.count(':') != 0 || password.count(':') != 0) {
         return 3;
     }
-
+    iomutex.lock();
     QFile users(usersFile);
 
     if (!users.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        iomutex.unlock();
         qCritical("Error: cannot open file with users");
         return 2;
     }
@@ -212,14 +243,19 @@ int PNSimThread::registerUser(QString login, QString password)
         QString line = filestream.readLine();
         QStringList items = line.split(':');
         if (items.size() != 2) continue;
-        if (items[0] == login) return 1;
+        if (items[0] == login) {
+            iomutex.unlock();
+            return 1;
+        }
     }
     filestream << login << ":" << password << endl;
+    iomutex.unlock();
     return 0;
 }
 
 QString PNSimThread::getSimulations()
 {
+    iomutex.lock();
     if (!QDir(simDirectory).exists()) {
         QDir().mkdir(simDirectory);
     }
@@ -255,6 +291,7 @@ QString PNSimThread::getSimulations()
     xml.writeEndElement();
     xml.writeEndDocument();
     qDebug() << result;
+    iomutex.unlock();
     return result;
 }
 
@@ -279,7 +316,9 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
 
 QString PNSimThread::loadSim(QString name, QString version)
 {
+    iomutex.lock();
     if (!QDir(simDirectory).exists()) {
+        iomutex.unlock();
         return "false";
     }
     QDir dir(simDirectory);
@@ -303,6 +342,7 @@ QString PNSimThread::loadSim(QString name, QString version)
             file.close();
 
             if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                iomutex.unlock();
                 qCritical("Cannot open file.");
                 return "false";
             }
@@ -320,10 +360,12 @@ QString PNSimThread::loadSim(QString name, QString version)
 
             simulations[maxid++] = simulation;
 
+            iomutex.unlock();
             return simulation->getState();
         }
     }
 
+    iomutex.unlock();
     return "false";
 }
 
@@ -332,4 +374,67 @@ PNSimThread::~PNSimThread()
     foreach (PetriSim *simulation, simulations) {
         delete simulation;
     }
+}
+
+bool PNSimThread::saveSimulation(QString xml)
+{
+    iomutex.lock();
+
+    QDir dir(simDirectory);
+    dir.setFilter(QDir::Files | QDir::Readable | QDir::Writable);
+    int maxversion = 1;
+    QXmlStreamReader simXml(xml);
+    simXml.readNext();
+    simXml.readNext();
+    if(simXml.atEnd() || simXml.hasError()) {
+        qCritical() << "Error: bad simulation file";
+        iomutex.unlock();
+        return false;
+    }
+
+    QString name = simXml.attributes().value("name").toString();
+
+    QFileInfoList files = dir.entryInfoList();
+
+    foreach(QFileInfo info, files) {
+        QFile file(info.absoluteFilePath());
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "Error: cannot open file";
+            continue;
+        }
+        QXmlStreamReader inxml(&file);
+        inxml.readNext();
+        inxml.readNext();
+        if (inxml.atEnd() || inxml.hasError()) {
+            continue;
+        }
+        if (inxml.attributes().value("name") == name) {
+            int thisversion = inxml.attributes().value("version").toString().toInt();
+            if (thisversion >= maxversion) maxversion = thisversion+1;
+        }
+    }
+
+    SimState state;
+    state.setState(xml);
+    state.version = maxversion;
+    QString fileName = dir.absoluteFilePath(name+QString::number(maxversion)+".xml");
+    QFile output(fileName);
+    if (output.exists()) {
+        qCritical() << "Error: file exists";
+        iomutex.unlock();
+        return false;
+    }
+
+    if (!output.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical() << "Error: cannot open file";
+        iomutex.unlock();
+        return false;
+    }
+
+    QTextStream stream(&output);
+    stream << state.getState();
+
+    qDebug() << "zapsano";
+    iomutex.unlock();
+    return true;
 }

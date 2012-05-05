@@ -7,7 +7,6 @@
 #include <QMap>
 #include "petrisim.h"
 #include <QMutex>
-#include <QMutexLocker>
 
 typedef QMap<int, PetriSim *> SimVector;
 typedef QMap<QString, QString> StrToStrMap;
@@ -46,6 +45,7 @@ private:
     QString getSimulations();
     bool getCommand(QString xml, QString &result, StrToStrMap &args);
     QString loadSim(QString name, QString version);
+    bool saveSimulation(QString xml);
 };
 
 #endif // PNSIMTHREAD_H
