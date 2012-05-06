@@ -1,3 +1,15 @@
+/**
+ * @file aboutdialog.h
+ * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
+ * @version 1.0
+ *
+ * @section DESCRIPTION
+ *
+ * Tridy pro graficke prvky ve scene.
+ *
+ */
+
 #include "pngui.h"
 #include <math.h>
 #include <mainwindow.h>

@@ -1,3 +1,16 @@
+/**
+ * @file aboutdialog.h
+ * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
+ * @version 1.0
+ *
+ * @section DESCRIPTION
+ *
+ * Trida pro hlavni okno, ktere slouzi jako klientsky editor a
+ * prohlizec siti.
+ *
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
