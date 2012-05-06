@@ -8,7 +8,7 @@ RunSimThread::RunSimThread(QString myid, PetriSim *sim, QMutex *outmutex, QStrin
 
 void RunSimThread::run()
 {
-    qDebug() << "spoustim: " << myid;
+    qDebug() << "[info] starting: " << myid;
     if (run_or_step) {
         sim->run();
     } else {

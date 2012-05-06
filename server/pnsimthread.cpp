@@ -12,6 +12,8 @@
 #include <QRegExp>
 #include "runsimthread.h"
 
+QMutex sockmutex;
+
 PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent) :
     QThread(parent),iomutex(iomutex),socketDescriptor(socketDescriptor)
 {
@@ -24,6 +26,7 @@ PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent)
 }
 
 void PNSimThread::readIncoming(){
+    sockmutex.lock();
     qDebug() << "[info] message from user";
     if(commSock->bytesAvailable() < (int)sizeof(qint64))
         return;
@@ -42,12 +45,21 @@ void PNSimThread::readIncoming(){
     if (!handleCommand(command,message)) {
         commSock->write(createMessage(message));
         commSock->disconnectFromHost();
+        sockmutex.unlock();
         return;
     }
     if (message != "")
         commSock->write(createMessage(message));
 
+    foreach (QString id, idsToSend) {
+        QString message = "<simul id=\""+id+"\">";
+        message += simulations[(*outid).toInt()]->getState();
+        message += "</simul>";
+        qDebug() << "[info] sending simulation";
+    }
+    idsToSend.clear();
 
+    sockmutex.unlock();
 }
 
 void PNSimThread::handleDisconnection(){
@@ -458,4 +470,15 @@ void PNSimThread::handleSimuled()
 {
     qDebug() << "[info] simulated: " << (*outid);
     simmutex->unlock();
+    idsToSend.push_back((*outid));
+    if (sockmutex.tryLock()) {
+        foreach (QString id, idsToSend) {
+            QString message = "<simul id=\""+id+"\">";
+            message += simulations[(*outid).toInt()]->getState();
+            message += "</simul>";
+            qDebug() << "[info] sending simulation";
+        }
+        idsToSend.clear();
+        sockmutex.unlock();
+    }
 }
