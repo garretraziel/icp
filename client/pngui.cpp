@@ -145,12 +145,12 @@ void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     this->setPos(event->scenePos().x(),event->scenePos().y());
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     if(primType == PLACE){
-        ((pnCircle *)this)->simPlace->x = QString::number(this->x());
-        ((pnCircle *)this)->simPlace->y = QString::number(this->y());
+        ((pnCircle *)this)->simPlace->x = QString::number(int(this->x()));
+        ((pnCircle *)this)->simPlace->y = QString::number(int(this->y()));
     } else
     if(primType == TRANS){
-        ((pnRect *)this)->simTrans->x = QString::number(this->x());
-        ((pnRect *)this)->simTrans->y = QString::number(this->y());
+        ((pnRect *)this)->simTrans->x = QString::number(int(this->x()));
+        ((pnRect *)this)->simTrans->y = QString::number(int(this->y()));
     }
     if(funcLabel)
         funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
