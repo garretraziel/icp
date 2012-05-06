@@ -7,9 +7,11 @@
 #include <QMap>
 #include "petrisim.h"
 #include <QMutex>
+#include <vector>
 
 typedef QMap<int, PetriSim *> SimVector;
 typedef QMap<QString, QString> StrToStrMap;
+typedef std::vector<QString> QStringVector;
 
 class PNSimThread : public QThread
 {
@@ -42,6 +44,7 @@ private:
     QTcpSocket *commSock;
     qint64 block;
     SimVector simulations;
+    QStringVector idsToSend;
     int maxid;
 
     bool handleCommand(QString command,QString &message);

@@ -12,6 +12,8 @@
 #include <QRegExp>
 #include "runsimthread.h"
 
+QMutex sockmutex;
+
 PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent) :
     QThread(parent),iomutex(iomutex),socketDescriptor(socketDescriptor)
 {
@@ -24,14 +26,19 @@ PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent)
 }
 
 void PNSimThread::readIncoming(){
+    sockmutex.lock();
     qDebug() << "[info] message from user";
-    if(commSock->bytesAvailable() < (int)sizeof(qint64))
-        return;
 
     QDataStream in(commSock);
     in.setVersion(QDataStream::Qt_4_0);
 
-    in >> block;
+    if(block == 0) {
+        if(commSock->bytesAvailable() < (int)sizeof(qint64))
+            return;
+
+        in >> block;
+    }
+
     qDebug() << "[info] size:" << block;
     if(commSock->bytesAvailable() < block) return;
 
@@ -42,12 +49,23 @@ void PNSimThread::readIncoming(){
     if (!handleCommand(command,message)) {
         commSock->write(createMessage(message));
         commSock->disconnectFromHost();
+        sockmutex.unlock();
         return;
     }
-    if (message != "")
+    if (message != "") {
+        qDebug() << commSock->write(createMessage(message));
+    }
+
+    foreach (QString id, idsToSend) {
+        QString message = "<simul id=\""+id+"\">";
+        message += simulations[(*outid).toInt()]->getState();
+        message += "</simul>";
+        qDebug() << "[info] sending simulation";
         commSock->write(createMessage(message));
+    }
+    idsToSend.clear();
 
-
+    sockmutex.unlock();
 }
 
 void PNSimThread::handleDisconnection(){
@@ -160,7 +178,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             message = "<simul id=\""+QString::number(maxid-1)+"\">";
             message += net;
             message += "</simul>";
-            qDebug() << "[info] sending simulation";
+            qDebug() << "[info] sending new simulation";
             return true;
         } else if (strcmd == "save-this") {
             command.remove(QRegExp("^<save-this>"));
@@ -458,4 +476,18 @@ void PNSimThread::handleSimuled()
 {
     qDebug() << "[info] simulated: " << (*outid);
     simmutex->unlock();
+    idsToSend.push_back((*outid));
+    if (sockmutex.tryLock()) {
+        commSock->blockSignals(true);
+        foreach (QString id, idsToSend) {
+            QString message = "<simul id=\""+id+"\">";
+            message += simulations[(*outid).toInt()]->getState();
+            message += "</simul>";
+            qDebug() << "[info] sending simulation";
+            commSock->write(createMessage(message));
+        }
+        idsToSend.clear();
+        sockmutex.unlock();
+        commSock->blockSignals(false);
+    }
 }
