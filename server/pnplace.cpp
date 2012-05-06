@@ -1,3 +1,13 @@
+/**
+ * @file pnplace.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Obsahuje tridu pro reprezentaci mista v petriho siti.
+ */
+
 #include "pnplace.h"
 #include <algorithm>
 

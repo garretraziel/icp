@@ -1,3 +1,13 @@
+/**
+ * @file petrisim.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Obsahuje tridu pro simulaci.
+ */
+
 #include "petrisim.h"
 #include "pnplace.h"
 #include "pntrans.h"
@@ -19,7 +29,6 @@ QString PetriSim::getState()
 
 bool PetriSim::setState(QString xml)
 {
-    //todo: vse co je potreba pro nastaveni stavu
     return this -> state.setState(xml);
 }
 

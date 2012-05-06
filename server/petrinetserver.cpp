@@ -1,3 +1,13 @@
+/**
+ * @file petrinetserver.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Trida, ktera poskytuje rozhrani TCP serveru. Pro kazdeho noveho uzivatele vytvori novy thread.
+ */
+
 #include "petrinetserver.h"
 #include <QNetworkProxy>
 #include <iostream>
@@ -10,14 +20,6 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     setProxy(QNetworkProxy::NoProxy);
     setMaxPendingConnections(maxconnections);
 
-    /*QString ip;
-    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    foreach (QHostAddress address, ipAddressesList) {
-        if (address != QHostAddress::LocalHost && address.toIPv4Address()) {
-            ip = address.toString();
-            break;
-        }
-    }*/
     my_ip = QHostAddress::Any;
 
     this -> port = port; //pokud je port 0, automaticky vyber portu. Asi to neni spravne.
@@ -25,7 +27,7 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
 }
 
 PetriNetServer::~PetriNetServer()
-{ //todo: mozna odchytavat signal?
+{
     qDebug() << "Ending server";
     delete iomutex;
     close();

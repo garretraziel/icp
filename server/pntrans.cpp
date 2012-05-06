@@ -28,7 +28,7 @@ bool PNTrans::fire()
         hash[(*it).first] = (*it).second->getTokens();
     }
 
-    possible_choices = chooseValues(hash); //todo: bude vracet vector tohohle, kvuli moznostem
+    possible_choices = chooseValues(hash);
 
     if (possible_choices.empty()) {
         return false;
@@ -64,7 +64,6 @@ StrPntMapVector PNTrans::chooseValues(StringToTokensMap hash)
             possibility[(*it).first] = (*it).second[positions[i]];
         }
 
-        //todo: zjistit jestli vyhovuje, kdyztak ho pridat do result
         ConstraintVector::iterator cit;
         bool possible = true;
         for (cit = constraints.begin(); cit != constraints.end(); cit++) {

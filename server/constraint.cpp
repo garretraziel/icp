@@ -1,3 +1,13 @@
+/**
+ * @file constraint.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Trida constraint reprezentuje jednu podminku, co se muze vyskytnout u hrany.
+ */
+
 #include "constraint.h"
 #include <QChar>
 #include <QDebug>
@@ -29,31 +39,6 @@ Constraint::Constraint(QString var1, int op, int cons)
     }
     this->op = Operators(op);
     type = TYPECONST;
-}
-
-Constraint::Constraint(QString string_condition)
-{
-    //proparsuju string
-    //todo: kontrolovat, zda to muzu rozrezavat v poradku
-    first = string_condition.section(' ',0,0);
-    int op = string_condition.section(' ',1,1).toInt();
-    QString second_var = string_condition.section(' ',2,2);
-    if (second_var.startsWith("v:")) {
-        type = TYPEVAR;
-        this -> second_var = second_var.remove(0,2);
-    } else if (second_var.startsWith("c:")) {
-        type = TYPECONST;
-        second_var.remove(0,2);
-        this -> second_const = second_var.toInt();
-    } else {
-        qCritical() << "Error: bad value in condition in XML";
-        return;
-    }
-    if (op < 0 || op > 5) {
-        qCritical() << "Error: bad operator in condition in XML";
-        return;
-    }
-    this->op = Operators(op);
 }
 
 bool Constraint::conditionAccepts(StringToPntypeMap values)
