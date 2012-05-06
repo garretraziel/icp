@@ -67,6 +67,7 @@ private:
     std::vector<QGraphicsView *> viewVect;
     std::vector<QGraphicsScene *> canvasVect;
 
+
     std::vector<SimState *> simVect;
     std::vector<QString> idVect;
 
@@ -78,7 +79,7 @@ private:
 
 private slots:
     void preClose();
-
+    void actAct(int i);
 public slots:
     void showConnectDialog();
     void showAboutDialog();

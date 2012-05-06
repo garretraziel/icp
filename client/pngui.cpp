@@ -64,7 +64,6 @@ void pnItem::setPosition(int x, int y){
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  {
     if(erase){
-        // toto je ovsem ohavne, ale mazat pri iterovani pres vektor se mi nepodarilo
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
             if(l->start==this || l->end == this){
@@ -141,7 +140,6 @@ void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     foreach(pnLine * l,lineVect){
         l->update();
     }
-
     setCursor(Qt::OpenHandCursor);
 }
 

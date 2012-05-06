@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->actionNew_Simulation, SIGNAL(activated()),this,SLOT(newTab()));
     QObject::connect(ui->actionLoad_Simulation, SIGNAL(activated()),this, SLOT(loadSim()));
     QObject::connect(ui->actionSave_Simulation, SIGNAL(activated()),this, SLOT(saveSim()));
+    QObject::connect(ui->sendToServer, SIGNAL(clicked()),this, SLOT(saveSim()));
 
     QObject::connect(ui->deleter, SIGNAL(clicked()),this,SLOT(checkErase()));
 
@@ -60,10 +61,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(ui->actionHelp, SIGNAL(activated()), this->hd, SLOT(show()));
 
+    QObject::connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(actAct(int)));
+
     statusLabel = new QLabel;
     ui->statusBar->addWidget(statusLabel);
 
     setStatusLabel("Offline", "#ff0000");
+}
+
+
+void MainWindow::actAct(int i){
+    if(simVect[i]->isAct)
+        ui->actLabel->setText("na serveru je aktualni verze");
+    else
+        ui->actLabel->setText("na serveru neni aktualni verze");
 }
 
 void MainWindow::preClose(){
@@ -85,11 +96,12 @@ MainWindow::~MainWindow()
     foreach(QGraphicsView * view, viewVect){
         delete view;
     }
-    //TODO ja kurva nevim jestli to uklizi samo nejak nebo ne
+
 }
 
 void MainWindow::newTab(){
-    //TODO oddelat ty dementni back();
+
+
     tabVect.push_back(new QWidget(this));
 
     //~~~~~ tyto dva musi byt v tomto poradi
@@ -120,6 +132,7 @@ void MainWindow::newTab(){
         simVect.back()->author = "Offline user";
 
     idVect.push_back("unkown");
+
 }
 
 QString fromConstraint(Constraint * cons){
@@ -150,7 +163,6 @@ QString fromOperation(OneOut oper){
     return func;
 }
 
-#define loadLines(direction)
 
 void MainWindow::__loadSim(QString fileName) {
     QFile xmlfile(fileName);
@@ -222,8 +234,9 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
         }
 
     }
-    if(centerCnt)
+    /*if(centerCnt)
         currentTabView()->centerOn(center/centerCnt);
+    */
     return;
 
 }
@@ -302,7 +315,6 @@ QGraphicsView * MainWindow::currentTabView(){
 
 pnItem * MainWindow::__addItem(PNPlace * simPlace){
     returnIfNoTab NULL;
-
     pnItem * item = new pnCircle(currentTabView()->scene(), simPlace);
     return item;
 }
@@ -313,7 +325,8 @@ pnItem * MainWindow::addItem(){
         return NULL;
 
     currentSim->places.push_back(new PNPlace());
-
+    currentSim->isAct = false;
+    actAct(ui->tabWidget->currentIndex());
 #define simPlace ((PNPlace *)(currentSim->places.back()))
     simPlace->id = QString::number(++UniqID);
     simPlace->x = QString::number(this->x());
@@ -324,7 +337,6 @@ pnItem * MainWindow::addItem(){
 
 pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
     returnIfNoTab NULL;
-
     pnItem * item = new pnRect(currentTabView()->scene(), simTrans);
 
     return item;
@@ -334,7 +346,8 @@ pnItem * MainWindow::addItemRect(){
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
         return NULL;
-
+    currentSim->isAct = false;
+    actAct(ui->tabWidget->currentIndex());
     currentSim->transits.push_back(new PNTrans());
 #define simTrans ((PNTrans *)(currentSim->transits.back()))
     simTrans->id = QString::number(++UniqID);
@@ -403,10 +416,7 @@ void MainWindow::setSimName(QString name){
 
 void MainWindow::simOk(){
 
-    //__loadSimString(communicator.sim);
-    //setID(communicator.simID);
     simReload(communicator.simID, communicator.sim);
-
 }
 
 void MainWindow::runSim() {
@@ -440,10 +450,6 @@ void MainWindow::simReload(QString _id, QString newSimState){
     else {
         ui->tabWidget->setCurrentIndex(tabIndex);
 
-        //jsem ve spravnym tabu
-        //getCurrentSim()->setState(newSimState);
-        //smazani lajn co jsou v teto scene
-
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
             if(l->canvas == canvasVect[tabIndex])
@@ -464,7 +470,7 @@ void MainWindow::simReload(QString _id, QString newSimState){
         __loadSimStringNoNewTab(newSimState);
 
     }
-
+    actAct(tabIndex);
 }
 
 void MainWindow::setStatusLabel(QString status, QString color){
@@ -474,3 +480,6 @@ void MainWindow::setStatusLabel(QString status, QString color){
         statusLabel->setStyleSheet(styleSheet);
     }
 }
+
+
+

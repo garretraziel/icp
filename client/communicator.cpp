@@ -285,7 +285,6 @@ bool Communicator::handleCommand(QString command){
         simID = xml.attributes().value("id").toString();
         command.remove(QRegExp("^<simul[^>]+>"));
         command.remove(QRegExp("</simul>$"));
-        qDebug() << simID;
         sim = command;
         emit simOk();
     }

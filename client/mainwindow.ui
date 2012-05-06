@@ -97,9 +97,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="stopButton">
+       <widget class="QPushButton" name="sendToServer">
         <property name="text">
-         <string>Stop</string>
+         <string>Send to Server</string>
         </property>
        </widget>
       </item>
@@ -115,6 +115,18 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="actLabel">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>na serveru neni aktualni verze</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
