@@ -181,7 +181,7 @@ public slots:
     /**
       * Slot aktualizujici informaci o aktualnosti site
       */
-    void actAct(unsigned int i);
+    void actAct(int i);
 
     /**
       * Slot zobrazujici connect dialog

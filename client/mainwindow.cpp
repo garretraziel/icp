@@ -84,8 +84,9 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 
-void MainWindow::actAct(unsigned int i){
-    if(simVect.empty() || i >= simVect.size())
+void MainWindow::actAct(int i){
+    unsigned int j = i;
+    if(simVect.empty() || j >= simVect.size())
         return;
 
     if(simVect[i]->isAct)
