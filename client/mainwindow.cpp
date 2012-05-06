@@ -113,6 +113,11 @@ void MainWindow::newTab(){
 
 
     simVect.push_back(new SimState());
+    simVect.back()->name = "Unnamed simulation";
+    simVect.back()->info = "(Empty info)";
+    simVect.back()->author = communicator.userLoggedIn();
+    if (simVect.back()->author == "")
+        simVect.back()->author = "Offline user";
 
     idVect.push_back("unkown");
 }
@@ -168,7 +173,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
     mw->setSimName(getCurrentSim()->name);
 
     QPointF center(0,0);
-    int centerCnt = 1;
+    int centerCnt = 0;
     std::map<PNPlace *, pnItem *> placeToGui;
     foreach(PNPlace * place, currentSim->places){
         UniqID = (UniqID > place->id.toInt())? UniqID : place->id.toInt();
@@ -217,7 +222,8 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
         }
 
     }
-    ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->centerOn(center/centerCnt);
+    if(centerCnt)
+        currentTabView()->centerOn(center/centerCnt);
     return;
 
 }
