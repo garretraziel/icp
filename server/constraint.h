@@ -48,11 +48,11 @@ enum ConditionType {
 class Constraint
 {
 public:
-    ConditionType type; /// typ podminky
-    QString first; /// prvni promenna podminky
-    Operators op; /// operator podminky
-    QString second_var; /// druha promenna podminky
-    int second_const; /// konstanta v podmince
+    ConditionType type; ///< typ podminky
+    QString first; ///< prvni promenna podminky
+    Operators op; ///< operator podminky
+    QString second_var; ///< druha promenna podminky
+    int second_const; ///< konstanta v podmince
 
     /**
       * Konstruktor podminky, nastavy typ na none.
