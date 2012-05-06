@@ -113,15 +113,15 @@ public:
     void setStatusLabel(QString status, QString color);
 
 private:
-    Ui::MainWindow *ui;     /// user interface
+    Ui::MainWindow *ui;     ///< user interface
 
-    ConnectDialog * cd;     /// connect dialog pointer
-    aboutDialog * ad;       /// about dialog pointer
-    propertiesDialog * pd;  /// properties dialog pointer
-    loadSimDialog * ld;     /// loadsim dialog pointer
-    helpDialog * hd;        /// help dialog pointer
+    ConnectDialog * cd;     ///< connect dialog pointer
+    aboutDialog * ad;       ///< about dialog pointer
+    propertiesDialog * pd;  ///< properties dialog pointer
+    loadSimDialog * ld;     ///< loadsim dialog pointer
+    helpDialog * hd;        ///< help dialog pointer
 
-    QLabel * statusLabel;   /// status label (online/offline status)
+    QLabel * statusLabel;   ///< status label (online/offline status)
 
     /**
       * Nacte simulaci z XML retezce, ulozi do aktualni
@@ -149,15 +149,15 @@ private:
       */
     pnItem * __addItemRect(PNTrans * simTrans);
 
-    std::vector<QWidget *> tabVect;             /// vektor tabu
-    std::vector<QGraphicsView *> viewVect;      /// vektor zobrazovacu scen
-    std::vector<QGraphicsScene *> canvasVect;   /// vektor scen
+    std::vector<QWidget *> tabVect;             ///< vektor tabu
+    std::vector<QGraphicsView *> viewVect;      ///< vektor zobrazovacu scen
+    std::vector<QGraphicsScene *> canvasVect;   ///< vektor scen
 
 
-    std::vector<SimState *> simVect;            /// vektor simulaci
-    std::vector<QString> idVect;                /// vektor ID simulaci
+    std::vector<SimState *> simVect;            ///< vektor simulaci
+    std::vector<QString> idVect;                ///< vektor ID simulaci
 
-    editDialog * editor;                        /// ukazatel na editor prvku
+    editDialog * editor;                        ///< ukazatel na editor prvku
 
     /**
       * Nacte simulaci ze souboru

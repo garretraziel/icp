@@ -458,11 +458,17 @@ void MainWindow::simOk(){
 }
 
 void MainWindow::runSim() {
+    if(!getCurrentSim()->isAct)
+        return;
+
     QString id = idVect[ui->tabWidget->currentIndex()];
     communicator.runSimulation(id, true);
 }
 
 void MainWindow::stepSim() {
+    if(!getCurrentSim()->isAct)
+        return;
+
     QString id = idVect[ui->tabWidget->currentIndex()];
     communicator.runSimulation(id, false);
 }
