@@ -252,6 +252,7 @@ bool Communicator::loadThis(QString name, QString version){
 }
 
 bool Communicator::handleCommand(QString command){
+
     QXmlStreamReader xml(command);
     if(xml.readNext()!=QXmlStreamReader::StartDocument){
         errorMsg = "Error: cannot load sim";
@@ -278,6 +279,7 @@ bool Communicator::handleCommand(QString command){
         simID = xml.attributes().value("id").toString();
         command.remove(QRegExp("^<simul[^>]+>"));
         command.remove(QRegExp("</simul>$"));
+        qDebug() << simID;
         sim = command;
         emit simOk();
     }
@@ -289,13 +291,15 @@ bool Communicator::handleCommand(QString command){
 
 void Communicator::handleIncomming(){
 
-    if(commSock->bytesAvailable() < (int)sizeof(qint64))
-        return;
-
     QDataStream in(commSock);
     in.setVersion(QDataStream::Qt_4_0);
 
-    in >> block;
+    if (block == 0) {
+        if(commSock->bytesAvailable() < (int)sizeof(qint64))
+            return;
+
+        in >> block;
+    }
 
     if(commSock->bytesAvailable() < block) return;
 

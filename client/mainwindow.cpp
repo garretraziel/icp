@@ -136,8 +136,12 @@ void MainWindow::__loadSim(QString fileName) {
 }
 
 void MainWindow::__loadSimString(QString simString){
-
     newTab();
+    __loadSimStringNoNewTab(simString);
+}
+
+void MainWindow::__loadSimStringNoNewTab(QString simString){
+
     SimState * currentSim = getCurrentSim();
 
     currentSim->setState(simString);
@@ -295,6 +299,7 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
     returnIfNoTab NULL;
 
     pnItem * item = new pnRect(currentTabView()->scene(), simTrans);
+
     return item;
 }
 
@@ -310,6 +315,7 @@ pnItem * MainWindow::addItemRect(){
     simTrans->y = QString::number(this->y());
     return __addItemRect(simTrans);
 #undef simTrans
+
 }
 
 
@@ -370,8 +376,9 @@ void MainWindow::setSimName(QString name){
 
 void MainWindow::simOk(){
 
-    __loadSimString(communicator.sim);
-    setID(communicator.simID);
+    //__loadSimString(communicator.sim);
+    //setID(communicator.simID);
+    simReload(communicator.simID, communicator.sim);
 
 }
 
@@ -384,3 +391,56 @@ void MainWindow::stepSim() {
     QString id = idVect[ui->tabWidget->currentIndex()];
     communicator.runSimulation(id, false);
 }
+
+int MainWindow::findID(QString _id){
+    for(unsigned int i= 0; i< idVect.size(); i++){
+        if(idVect[i] == _id){
+            return i;
+        }
+    }
+    return -1;
+}
+
+//volat se bude simReaload("id", new SimState()
+void MainWindow::simReload(QString _id, QString newSimState){
+    int tabIndex = findID(_id);
+    if(tabIndex == -1){
+        //neni tab
+        __loadSimString(newSimState);
+        //snad to nebude indexovat blbe
+        idVect.back() = _id;
+    }
+    else {
+        ui->tabWidget->setCurrentIndex(tabIndex);
+
+        //jsem ve spravnym tabu
+        //getCurrentSim()->setState(newSimState);
+        //smazani lajn co jsou v teto scene
+
+        std::vector<pnLine *> tmp;
+        foreach(pnLine * l, lineVect){
+            if(l->canvas == canvasVect[tabIndex])
+                delete l;
+            else
+                tmp.push_back(l);
+        }
+        lineVect.clear();
+        foreach(pnLine * l, tmp)
+            lineVect.push_back(l);
+        //smazani obsahu sceny
+
+        //((QGraphicsScene *)canvasVect[tabIndex])->clear();
+
+        currentTabView()->scene()->clear();
+
+
+        __loadSimStringNoNewTab(newSimState);
+
+    }
+
+}
+
+
+
+
+

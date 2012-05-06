@@ -35,8 +35,7 @@ void loadSimDialog::updateList(){
     ui->listWidget->clear();
     QStringList filterList = ui->filterEdit->text().split(QRegExp("\\s*,\\s*"));
     foreach(StringVector item, items){
-        foreach(QString filter, filterList){
-            qDebug() << filter;
+        foreach(QString filter, filterList){            
             if((item[0]+item[1]+item[2]+item[3]).contains(filter,Qt::CaseInsensitive)){
                 ui->listWidget->addItem(item[0]+"\tv"+item[1]+"\t by "+item[2]+"\t("+item[3]+")");
                 break;

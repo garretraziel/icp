@@ -4,6 +4,12 @@
 
 bool SimState::setState(QString xml)
 {
+
+    places.clear();
+    transits.clear();
+    places_id.clear();
+    transits_id.clear();
+
     QString errorStr;
     int errorLine;
     int errorColumn;
