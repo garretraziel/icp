@@ -41,8 +41,7 @@ public:
     ~aboutDialog();
     
 private:
-    Ui::aboutDialog *ui;
-    QGraphicsScene * scene;
+    Ui::aboutDialog *ui; ///< user interface
 };
 
 #endif // ABOUTDIALOG_H

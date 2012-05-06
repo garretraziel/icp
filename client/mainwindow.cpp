@@ -1,5 +1,5 @@
 /**
- * @file aboutdialog.h
+ * @file mainwindow.cpp
  * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
  * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
  * @version 1.0
@@ -364,8 +364,8 @@ pnItem * MainWindow::addItem(){
     actAct(ui->tabWidget->currentIndex());
 #define simPlace ((PNPlace *)(currentSim->places.back()))
     simPlace->id = QString::number(++UniqID);
-    simPlace->x = QString::number(this->x());
-    simPlace->y = QString::number(this->y());
+    simPlace->x = QString::number(int(this->x()));
+    simPlace->y = QString::number(int(this->y()));
     return __addItem(simPlace);
 #undef simPlace
 }
@@ -386,8 +386,8 @@ pnItem * MainWindow::addItemRect(){
     currentSim->transits.push_back(new PNTrans());
 #define simTrans ((PNTrans *)(currentSim->transits.back()))
     simTrans->id = QString::number(++UniqID);
-    simTrans->x = QString::number(this->x());
-    simTrans->y = QString::number(this->y());
+    simTrans->x = QString::number(int(this->x()));
+    simTrans->y = QString::number(int(this->y()));
     return __addItemRect(simTrans);
 #undef simTrans
 
