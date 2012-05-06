@@ -51,6 +51,20 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&communicator, SIGNAL(simOk()), this, SLOT(simOk()));
     QObject::connect(ui->runButton, SIGNAL(clicked()), this, SLOT(runSim()));
     QObject::connect(ui->stepButton, SIGNAL(clicked()), this, SLOT(stepSim()));
+
+    QObject::connect(ui->actionExit, SIGNAL(activated()), this, SLOT(preClose()));
+
+    statusLabel = new QLabel;
+    ui->statusBar->addWidget(statusLabel);
+
+    setStatusLabel("Offline", "#ff0000");
+}
+
+void MainWindow::preClose(){
+    communicator.blockSocket(true);
+    delete statusLabel;
+    statusLabel = NULL;
+    this->close();
 }
 
 MainWindow::~MainWindow()
@@ -440,7 +454,10 @@ void MainWindow::simReload(QString _id, QString newSimState){
 
 }
 
-
-
-
-
+void MainWindow::setStatusLabel(QString status, QString color){
+    if(statusLabel){
+        QString styleSheet = "QLabel { color : "+color+";}";
+        statusLabel->setText(status);
+        statusLabel->setStyleSheet(styleSheet);
+    }
+}

@@ -39,6 +39,8 @@ public:
     int findID(QString _id);
     void simReload(QString _id, QString newSimState);
 
+    void setStatusLabel(QString status, QString color);
+
 private:
     Ui::MainWindow *ui;
 
@@ -49,7 +51,9 @@ private:
     loadSimDialog * ld;
     //
 
-    QGraphicsScene * canvas;
+    QGraphicsScene * canvas; //mozna zbytecny
+
+    QLabel * statusLabel;
 
     void __loadSimString(QString simString);
     void __loadSimStringNoNewTab(QString simString);
@@ -69,6 +73,9 @@ private:
     void __loadSim(QString fileName);
 
     QGraphicsView * currentTabView();
+
+private slots:
+    void preClose();
 
 public slots:
     void showConnectDialog();
