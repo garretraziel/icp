@@ -278,9 +278,13 @@ void MainWindow::loadSim(){
 // tyto dve mozna pujdou prepracovat do jedne
 
 void MainWindow::saveSim(){
+    if(!getCurrentSim())
+        return;
+
     if(!getCurrentSim()->checkConfiguration())
         QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
     else{
+
         QString message;
         if(!communicator.saveSimState(getCurrentSim()->getState(), message)){
             QMessageBox::critical(this, "Error", message);
@@ -296,14 +300,21 @@ int MainWindow::getCurrentIndex(){
 }
 
 void MainWindow::saveLocalSim(){
+    if(!getCurrentSim())
+        return;
+
     if(!getCurrentSim()->checkConfiguration())
         QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
     else{
+
         QString xmlOut = getCurrentSim()->getState();
         QString fileName = QFileDialog::getSaveFileName(this,
                                                         "Save Local Simulation",
                                                         "./",
                                                         "XML Sim File (*.xml)");
+
+        if(fileName == "")
+            return;
 
         QFile fileOut(fileName);
         if(!fileOut.open(QIODevice::WriteOnly | QIODevice::Text)){
@@ -422,6 +433,8 @@ void MainWindow::loadLocalSim(){
     //ld->show();
     QString fileName = QFileDialog::getOpenFileName(this, "Load local simulation", "./",
                                                     "XML Sim File (*.xml)");
+    if(fileName == "")
+        return;
 
     __loadSim(fileName);
 }

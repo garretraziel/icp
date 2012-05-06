@@ -32,6 +32,9 @@ class Communicator : public QObject
     Q_OBJECT
 public:
     explicit Communicator(QWidget *parent = 0);
+    /**
+      * Destruktor Communicator
+      */
     ~Communicator();
 
     bool connect(QString hostname, QString port);
