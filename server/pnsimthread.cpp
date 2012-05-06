@@ -24,7 +24,7 @@ PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent)
 }
 
 void PNSimThread::readIncoming(){
-    qDebug() << "incomming!";
+    qDebug() << "[info] message from user";
     if(commSock->bytesAvailable() < (int)sizeof(qint64))
         return;
 
@@ -32,7 +32,7 @@ void PNSimThread::readIncoming(){
     in.setVersion(QDataStream::Qt_4_0);
 
     in >> block;
-    qDebug() << "velikost: " << block;
+    qDebug() << "[info] size:" << block;
     if(commSock->bytesAvailable() < block) return;
 
     QString command;
@@ -51,7 +51,6 @@ void PNSimThread::readIncoming(){
 }
 
 void PNSimThread::handleDisconnection(){
-    //todo
     this->exit();
 }
 
@@ -72,19 +71,16 @@ void PNSimThread::run()
     block = 0;
     commSock->waitForConnected(-1);
 
-    qDebug() << "davam connect";
-
     this->exec();
 
     delete commSock;
     delete simmutex;
     delete outid;
-    qDebug() << "odpojeno";
+    qDebug() << "[info] user disconnected";
 }
 
 bool PNSimThread::handleCommand(QString command, QString &message)
 {
-    qDebug() << command;
     QString strcmd;
     StrToStrMap args;
 
@@ -95,67 +91,67 @@ bool PNSimThread::handleCommand(QString command, QString &message)
 
     if (strcmd == "register") {
         if (!args.contains("name") || !args.contains("password") || args["name"] == "" || args["password"] == "") {
-            qDebug() << "nemuzu lognout";
+            qCritical() << "[err] cannot login";
             message = "<err info=\"Password and name cannot be blank\"/>";
             return false;
         }
         int result = registerUser(args["name"],args["password"]);
         if (result != 0) {
             if (result == 1) {
-                qDebug() << "already registere";
+                qCritical() << "[err] already registered";
                 message = "<err info=\"User is already registered\"/>";
                 return false;
             } else if (result == 2) {
-                qDebug() << "spatny soubor";
+                qCritical() << "[err] bad userfile";
                 message = "<err info=\"Cannot read usersfile, probably server's problem\"/>";
                 return false;
             } else {
-                qDebug() << "asi obsahuje dvojtecku";
+                qCritical() << "[err] bad password";
                 message = "<err info=\"Bad login or password\"/>";
                 return false;
             }
         } else {
             isLogged = true;
             message = "<ok/>";
-            qDebug() << "zalogovat, zaregistrovan";
+            qDebug() << "[info] user logged in";
         }
     } else if (strcmd == "login") {
         if (!args.contains("name") || !args.contains("password") || args["name"] == "" || args["password"] == "") {
-            qDebug() << "nemuzu lognout";
+            qCritical() << "[err] cannot login";
             message = "<err info=\"Password and name cannot be blank\"/>";
             return false;
         }
         int result = logUser(args["name"], args["password"]);
         if (result != 0) {
             if (result == 1) {
-                qDebug() << "doesn't exists";
+                qCritical() << "[err] user doesn't exist";
                 message = "<err info=\"User doesn't exist\"/>";
                 return false;
             } else if (result == 2) {
-                qDebug() << "bad password";
+                qCritical() << "[err] bad password";
                 message = "<err info=\"Bad password\"/>";
                 return false;
             } else {
-                qDebug() << "file with users doesn't exists";
+                qCritical() << "[err] file with users doesn't exist";
                 message = "<err info=\"User file doesn't exist\"/>";
                 return false;
             }
         } else {
             isLogged = true;
             message = "<ok/>";
-            qDebug() << "zalogovan";
+            qDebug() << "[info] user logged in";
         }
     } else if (!isLogged) {
         message = "<err info=\"Not logged on\"/>";
-        qDebug() << "not logged!";
+        qCritical() << "[err] user is not logged in!";
         return false;
     } else {
         if (strcmd == "list-simuls") {
-            qDebug() << "vypisuju";
+            qCritical() << "[info] list simulations";
             message = getSimulations();
             return true;
         } else if (strcmd == "simul-that") {
-            qDebug() << "loaduju";
+            qDebug() << "[info] loading simulation";
             QString net = loadSim(args["name"],args["version"]);
             if (net == "false") {
                 message = "<err info=\"Cannot load petrinet\"/>";
@@ -164,7 +160,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             message = "<simul id=\""+QString::number(maxid-1)+"\">";
             message += net;
             message += "</simul>";
-            qDebug() << "posilam simulaci";
+            qDebug() << "[info] sending simulation";
             return true;
         } else if (strcmd == "save-this") {
             command.remove(QRegExp("^<save-this>"));
@@ -181,13 +177,13 @@ bool PNSimThread::handleCommand(QString command, QString &message)
 
             message = "<simulid id=\""+QString::number(maxid-1)+"\">";
 
-            qDebug() << "posilam id";
+            qDebug() << "[info] sending simulation id";
             return true;
         } else if (strcmd == "run") {
-            qDebug() << "chce simulovat";
+            qDebug() << "[info] user wants to run simulation";
             runSimulation(args["id"],true);
         } else if (strcmd == "step") {
-            qDebug() << "chce stepovat";
+            qDebug() << "[info] user wants to step simulation";
             runSimulation(args["id"],false);
         }
     }
@@ -201,7 +197,7 @@ int PNSimThread::logUser(QString login, QString password)
 
     if (!users.open(QIODevice::ReadOnly | QIODevice::Text)) {
         iomutex->unlock();
-        qCritical("Error: cannot open file with users");
+        qCritical("[err] cannot open file with users");
         return 3;
     }
 
@@ -246,7 +242,7 @@ int PNSimThread::registerUser(QString login, QString password)
 
     if (!users.open(QIODevice::ReadWrite | QIODevice::Text)) {
         iomutex->unlock();
-        qCritical("Error: cannot open file with users");
+        qCritical("[err] cannot open file with users");
         return 2;
     }
 
@@ -285,7 +281,7 @@ QString PNSimThread::getSimulations()
     foreach(QFileInfo info, files) {
         QFile soubor(info.absoluteFilePath());
         if (!soubor.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCritical() << "Error: cannot open file";
+            qCritical() << "[err] cannot open file";
             continue;
         }
         QXmlStreamReader inxml(&soubor);
@@ -302,7 +298,6 @@ QString PNSimThread::getSimulations()
     }
     xml.writeEndElement();
     xml.writeEndDocument();
-    qDebug() << result;
     iomutex->unlock();
     return result;
 }
@@ -316,7 +311,7 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
     }
     input.readNext();
     if (input.atEnd() || input.hasError()) {
-        qCritical() << "Bad XML request";
+        qCritical() << "[err] bad XML request";
         return false;
     }
     result = input.name().toString();
@@ -341,7 +336,7 @@ QString PNSimThread::loadSim(QString name, QString version)
     foreach(QFileInfo info, files) {
         QFile file(info.absoluteFilePath());
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCritical() << "Error: cannot open file";
+            qCritical() << "[err] cannot open file";
             continue;
         }
         QXmlStreamReader inxml(&file);
@@ -355,7 +350,7 @@ QString PNSimThread::loadSim(QString name, QString version)
 
             if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 iomutex->unlock();
-                qCritical("Cannot open file.");
+                qCritical("[err] cannot open file.");
                 return "false";
             }
 
@@ -399,7 +394,7 @@ bool PNSimThread::saveSimulation(QString xml)
     simXml.readNext();
     simXml.readNext();
     if(simXml.atEnd() || simXml.hasError()) {
-        qCritical() << "Error: bad simulation file";
+        qCritical() << "[err] bad simulation file";
         iomutex->unlock();
         return false;
     }
@@ -411,7 +406,7 @@ bool PNSimThread::saveSimulation(QString xml)
     foreach(QFileInfo info, files) {
         QFile file(info.absoluteFilePath());
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCritical() << "Error: cannot open file";
+            qCritical() << "[err] cannot open file";
             continue;
         }
         QXmlStreamReader inxml(&file);
@@ -432,13 +427,13 @@ bool PNSimThread::saveSimulation(QString xml)
     QString fileName = dir.absoluteFilePath(name+QString::number(maxversion)+".xml");
     QFile output(fileName);
     if (output.exists()) {
-        qCritical() << "Error: file exists";
+        qCritical() << "[err] file exists";
         iomutex->unlock();
         return false;
     }
 
     if (!output.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qCritical() << "Error: cannot open file";
+        qCritical() << "[err] cannot open file";
         iomutex->unlock();
         return false;
     }
@@ -446,7 +441,7 @@ bool PNSimThread::saveSimulation(QString xml)
     QTextStream stream(&output);
     stream << state.getState();
 
-    qDebug() << "zapsano";
+    qDebug() << "[info] saved";
     iomutex->unlock();
     return true;
 }
@@ -461,6 +456,6 @@ void PNSimThread::runSimulation(QString id, bool run_or_step)
 
 void PNSimThread::handleSimuled()
 {
-    qDebug() << "odsimulovano: " << (*outid);
+    qDebug() << "[info] simulated: " << (*outid);
     simmutex->unlock();
 }

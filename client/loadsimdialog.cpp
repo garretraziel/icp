@@ -54,9 +54,11 @@ void loadSimDialog::accept(){
             else {
                 this->hide();
             }
+            items.clear();
             return;
         }
     }
+    items.clear();
 }
 
 void loadSimDialog::clearSims()
