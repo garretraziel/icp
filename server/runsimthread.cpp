@@ -1,3 +1,13 @@
+/**
+ * @file runsimthread.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Vlakno, ve kterem bezi samotna simulace.
+ */
+
 #include "runsimthread.h"
 #include <QDebug>
 #include <time.h>
@@ -11,7 +21,6 @@ RunSimThread::RunSimThread(QString myid, PetriSim *sim, QMutex *outmutex, QStrin
 
 void RunSimThread::run()
 {
-    //qsrand(time(NULL));
     qsrand(QTime::currentTime().msec());
     qDebug() << "[info] starting: " << myid;
     if (run_or_step) {

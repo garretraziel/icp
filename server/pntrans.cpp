@@ -1,3 +1,13 @@
+/**
+ * @file pntrans.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Trida pro reprezentaci prechodu simulatoru petriho siti.
+ */
+
 #include "pntrans.h"
 #include <QDebug>
 #include <iostream>

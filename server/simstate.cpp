@@ -1,3 +1,13 @@
+/**
+ * @file simstate.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Trida popisujici stav simulace.
+ */
+
 #include "simstate.h"
 #include <map>
 #include <QXmlStreamWriter>
