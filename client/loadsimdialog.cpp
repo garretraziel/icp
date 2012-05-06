@@ -14,7 +14,10 @@ loadSimDialog::loadSimDialog(QWidget *parent) :
     index = 1;
 
     connect(ui->filterEdit,SIGNAL(textChanged(QString)),this,SLOT(updateList()));
-
+    connect(this,SIGNAL(accepted()),ui->listWidget,SLOT(clear()));
+    connect(this,SIGNAL(rejected()),ui->listWidget,SLOT(clear()));
+    connect(this,SIGNAL(accepted()),this,SLOT(clearSims()));
+    connect(this,SIGNAL(rejected()),this,SLOT(clearSims()));
 }
 
 loadSimDialog::~loadSimDialog()
@@ -35,7 +38,7 @@ void loadSimDialog::updateList(){
         foreach(QString filter, filterList){
             qDebug() << filter;
             if((item[0]+item[1]+item[2]+item[3]).contains(filter,Qt::CaseInsensitive)){
-                ui->listWidget->addItem(item[0]+"\tv"+item[1]+"\t by"+item[2]+"\t("+item[3]+")");
+                ui->listWidget->addItem(item[0]+"\tv"+item[1]+"\t by "+item[2]+"\t("+item[3]+")");
                 break;
             }
         }
@@ -45,7 +48,7 @@ void loadSimDialog::updateList(){
 void loadSimDialog::accept(){
     QString selected = ui->listWidget->item(ui->listWidget->currentRow())->text();
     foreach(StringVector item, items){
-        if(selected == item[0]+"\tv"+item[1]+"\t by"+item[2]+"\t("+item[3]+")"){
+        if(selected == item[0]+"\tv"+item[1]+"\t by "+item[2]+"\t("+item[3]+")"){
             if(!communicator.loadThis(item[0],item[1]))
                 QMessageBox::critical(this,"Error","Server didn't response");
             else {
@@ -54,4 +57,9 @@ void loadSimDialog::accept(){
             return;
         }
     }
+}
+
+void loadSimDialog::clearSims()
+{
+    items.clear();
 }

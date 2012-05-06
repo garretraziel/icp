@@ -86,6 +86,7 @@ public slots:
 
     void simOk();
     void runSim();
+    void stepSim();
 };
 
 extern MainWindow * mw;

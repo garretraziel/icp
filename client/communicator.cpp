@@ -309,9 +309,14 @@ void Communicator::handleIncomming(){
     }
 }
 
-bool Communicator::runSimulation(QString id)
+bool Communicator::runSimulation(QString id, bool run_or_step)
 {
-    QString command = "<run id=\""+id+"\"/>";
+    QString command;
+    if (run_or_step) {
+        command = "<run id=\""+id+"\"/>";
+    } else {
+        command = "<step id=\""+id+"\"/>";
+    }
     qDebug() << "Posilam: " << command;
     return sendCommand(command);
 }

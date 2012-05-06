@@ -27,6 +27,7 @@ private:
 public slots:
     void updateList();
     void accept();
+    void clearSims();
 };
 
 #endif // LOADSIMDIALOG_H

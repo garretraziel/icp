@@ -185,7 +185,10 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             return true;
         } else if (strcmd == "run") {
             qDebug() << "chce simulovat";
-            runSimulation(args["id"]);
+            runSimulation(args["id"],true);
+        } else if (strcmd == "step") {
+            qDebug() << "chce stepovat";
+            runSimulation(args["id"],false);
         }
     }
     return true;
@@ -448,9 +451,9 @@ bool PNSimThread::saveSimulation(QString xml)
     return true;
 }
 
-void PNSimThread::runSimulation(QString id)
+void PNSimThread::runSimulation(QString id, bool run_or_step)
 {
-    RunSimThread *thread = new RunSimThread(id,simulations[id.toInt()],simmutex,outid);
+    RunSimThread *thread = new RunSimThread(id,simulations[id.toInt()],simmutex,outid,run_or_step);
     connect(thread,SIGNAL(finished()),this,SLOT(handleSimuled()),Qt::DirectConnection);
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
     thread->start();

@@ -52,7 +52,7 @@ private:
     bool getCommand(QString xml, QString &result, StrToStrMap &args);
     QString loadSim(QString name, QString version);
     bool saveSimulation(QString xml);
-    void runSimulation(QString id);
+    void runSimulation(QString id, bool run_or_step);
 };
 
 #endif // PNSIMTHREAD_H
