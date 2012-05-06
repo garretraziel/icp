@@ -45,7 +45,7 @@ private:
     bool sendCommand(QString command);
     bool recvCommand(QString &command);
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
-    qint64 block;
+    quint32 block;
     bool isNotError(QString & recMessage, QString & message);
     bool handleCommand(QString command);
     QString loginName;
