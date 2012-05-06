@@ -343,8 +343,8 @@ bool Communicator::runSimulation(QString id, bool run_or_step)
 }
 
 void Communicator::setOffline(){
-    mw->setStatusLabel("Offline","#ff0000");
-    commSock->blockSignals(true);
+    //mw->setStatusLabel("Offline","#ff0000");
+    //commSock->blockSignals(true);
 }
 
 void Communicator::blockSocket(bool b){
