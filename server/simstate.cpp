@@ -56,10 +56,18 @@ bool SimState::setState(QString xml)
     while (!one_trans.isNull()) {
         StringToPnplaceMap in_names;
         StringToPnplaceMap out_names;
+        ConstraintVector constraints;
 
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
-            in_names[one_element.attribute("name")] = places_id[one_element.text()];
+            bool isNum = false;
+            one_element.attribute("name").toInt(&isNum);
+            if (isNum) {
+                in_names[one_element.attribute("name")] = places_id[one_element.text()];
+                constraints.push_back(new Constraint(one_element.attribute("name"),OP_EQ,one_element.attribute("name").toInt()));
+            } else {
+                in_names[one_element.attribute("name")] = places_id[one_element.text()];
+            }
             one_element = one_element.nextSiblingElement("inplace");
         }
 
@@ -69,7 +77,6 @@ bool SimState::setState(QString xml)
             one_element = one_element.nextSiblingElement("outplace");
         }
 
-        ConstraintVector constraints;
         QDomElement one_cond = one_trans.firstChildElement("constraint");
         while (!one_cond.isNull()) {
             Constraint *cond;
@@ -184,6 +191,11 @@ QString SimState::getState()
         ConstraintVector::iterator cvit;
         for (cvit = transit->constraints.begin(); cvit != transit->constraints.end(); cvit++) {
             Constraint *constraint = (*cvit);
+
+            bool isNum = false;
+            constraint->first.toInt(&isNum);
+
+            if (isNum) continue;
 
             doc.writeEmptyElement("constraint");
 
