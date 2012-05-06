@@ -285,9 +285,12 @@ bool SimState::checkConfiguration(){
                 return false;
 
             foreach(Operation op, operation.operations){
-                //TODOOO ted to funguje jen pro promenny!!
-                if(trans->in_names.find(op.var) == trans->in_names.end())
-                    return false;
+                bool isNum = false;
+                op.var.toInt(&isNum);
+                if (!isNum) {
+                    if(trans->in_names.find(op.var) == trans->in_names.end())
+                        return false;
+                }
             }
 
         }
