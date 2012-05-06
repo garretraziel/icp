@@ -38,6 +38,7 @@ private slots:
 private:
     int socketDescriptor;
     int isLogged;
+    QString userName;
     QString usersFile;
     QString logFile;
     QString simDirectory;
@@ -56,6 +57,7 @@ private:
     QString loadSim(QString name, QString version);
     bool saveSimulation(QString xml);
     void runSimulation(QString id, bool run_or_step);
+    void logRun(QString name, QString version, QString user);
 };
 
 #endif // PNSIMTHREAD_H
