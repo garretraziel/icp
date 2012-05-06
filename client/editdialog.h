@@ -51,7 +51,7 @@ public:
 
     /**
       * nacte data do dialogu
-      * @param ukazatel na prvek, ktery nastaveni zavolal
+      * @param sender ukazatel na prvek, ktery nastaveni zavolal
       */
     void loadData(pnPrimitive * sender);
 

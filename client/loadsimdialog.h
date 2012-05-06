@@ -47,7 +47,7 @@ public:
 
     /**
       * zapise informace o simulaci do seznamu
-      * @param vektor vlatnosti site (jmeno, autor, verze, info)
+      * @param sim vektor vlatnosti site (jmeno, autor, verze, info)
       */
     void pushSim(StringVector sim);
     

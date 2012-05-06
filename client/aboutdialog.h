@@ -41,7 +41,7 @@ public:
     ~aboutDialog();
     
 private:
-    Ui::aboutDialog *ui; ///user interface
+    Ui::aboutDialog *ui; ///< user interface
 };
 
 #endif // ABOUTDIALOG_H
