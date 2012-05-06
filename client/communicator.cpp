@@ -7,8 +7,9 @@
 #include <QDataStream>
 #include <QRegExp>
 #include "mainwindow.h"
+#include <QHostAddress>
 
-Communicator communicator;
+Communicator communicator(mw);
 
 Communicator::Communicator(QWidget *parent):QObject(parent)
 {
@@ -104,6 +105,10 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
     if(isNotError(recMessage, message)){
         loginName = name;
         QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
+        QObject::connect(commSock, SIGNAL(disconnected()), this, SLOT(setOffline()));
+        mw->setStatusLabel("Online, connected to: "+commSock->peerName()+
+                           " ("+commSock->peerAddress().toString()+":"+QString::number(commSock->peerPort())+")",
+                           "#008800");
         block = 0;
         return true;
     }
@@ -324,4 +329,13 @@ bool Communicator::runSimulation(QString id, bool run_or_step)
     }
     qDebug() << "Posilam: " << command;
     return sendCommand(command);
+}
+
+void Communicator::setOffline(){
+    mw->setStatusLabel("Offline","#ff0000");
+}
+
+void Communicator::blockSocket(bool b){
+    commSock->blockSignals(b);
+    QObject::disconnect(this,SLOT(setOffline()));
 }

@@ -35,6 +35,8 @@ public:
     QString errorMsg;
     QString simID;
 
+    void blockSocket(bool b);
+
 signals:
     void error(QTcpSocket::SocketError socketError);
     void simError();
@@ -54,6 +56,7 @@ private:
 private slots:
     void displayError(QAbstractSocket::SocketError socketError);
     void handleIncomming();
+    void setOffline();
 };
 
 extern Communicator communicator;
