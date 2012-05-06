@@ -310,7 +310,7 @@ void MainWindow::saveLocalSim(){
         QString xmlOut = getCurrentSim()->getState();
         QString fileName = QFileDialog::getSaveFileName(this,
                                                         "Save Local Simulation",
-                                                        "./",
+                                                        QDir::currentPath()+"/examples/",
                                                         "XML Sim File (*.xml)");
 
         if(fileName == "")
@@ -431,7 +431,8 @@ editDialog * MainWindow::getEditor(){
 
 void MainWindow::loadLocalSim(){
     //ld->show();
-    QString fileName = QFileDialog::getOpenFileName(this, "Load local simulation", "./",
+    QString fileName = QFileDialog::getOpenFileName(this, "Load local simulation",
+                                                    QDir::currentPath()+"/examples/",
                                                     "XML Sim File (*.xml)");
     if(fileName == "")
         return;

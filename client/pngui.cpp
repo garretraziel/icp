@@ -109,7 +109,7 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
             case EDGE:
                 //tady se nikdy nedostanu
                 //nicmene:
-                QMessageBox::critical(NULL, "Unhandled shit", "Imposiblu has happened!");
+                QMessageBox::critical(NULL, "Unhandled fluidum exception", "Something is rotten in the state of Denmark!");
             break;
         }
 
