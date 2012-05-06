@@ -2,17 +2,14 @@
 #include "pnplace.h"
 #include "pntrans.h"
 #include <QtGlobal>
-#include <QTime>
 
-int rand_int(int low, int high)
+int rand_int(int high)
 {
-    return qrand() % (high - low) + low;
+    return qrand() % high;
 }
 
 PetriSim::PetriSim()
 {
-    QTime time = QTime::currentTime();
-    qsrand((uint)time.msec());
 }
 
 QString PetriSim::getState()
@@ -42,8 +39,8 @@ void PetriSim::step()
 
     if (!was_fired) return;
 
-    int which_transit = rand_int(0,possible_transits.size());
-    int which_values = rand_int(0,possible_transits[which_transit]->possibleChoicesCount());
+    int which_transit = rand_int(possible_transits.size());
+    int which_values = rand_int(possible_transits[which_transit]->possibleChoicesCount());
 
     possible_transits[which_transit]->doOperations(which_values);
 }
@@ -65,8 +62,8 @@ void PetriSim::run(int steps)
 
         if (!was_fired) return;
 
-        int which_transit = rand_int(0,possible_transits.size());
-        int which_values = rand_int(0,possible_transits[which_transit]->possibleChoicesCount());
+        int which_transit = rand_int(possible_transits.size());
+        int which_values = rand_int(possible_transits[which_transit]->possibleChoicesCount());
 
         possible_transits[which_transit]->doOperations(which_values);
     }

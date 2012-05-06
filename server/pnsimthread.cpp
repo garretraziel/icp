@@ -53,7 +53,7 @@ void PNSimThread::readIncoming(){
         return;
     }
     if (message != "") {
-        qDebug() << commSock->write(createMessage(message));
+        commSock->write(createMessage(message));
     }
 
     foreach (QString id, idsToSend) {
