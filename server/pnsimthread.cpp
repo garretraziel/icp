@@ -1,3 +1,13 @@
+/**
+ * @file pnsimthread.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Trida pro vlakno, ktere komunikuje s uzivatelem a spousti simulace.
+ */
+
 #include "pnsimthread.h"
 #include <QDebug>
 #include <QFile>
@@ -14,7 +24,7 @@
 #include <QDate>
 #include "runsimthread.h"
 
-QMutex sockmutex;
+QMutex sockmutex; /// semafor pro pristup k socketu
 
 PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent) :
     QThread(parent),iomutex(iomutex),socketDescriptor(socketDescriptor)

@@ -26,9 +26,9 @@ class PetriNetServer : public QTcpServer
 {
     Q_OBJECT
 private:
-    QHostAddress my_ip; /// nastavi se na IP adresu spusteneho serveru
-    int port; /// port na kterem server bezi
-    QMutex *iomutex; /// semafor pro pristup k souborum
+    QHostAddress my_ip; ///< nastavi se na IP adresu spusteneho serveru
+    int port; ///< port na kterem server bezi
+    QMutex *iomutex; ///< semafor pro pristup k souborum
 
 public:
     /**

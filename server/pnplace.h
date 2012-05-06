@@ -27,9 +27,9 @@ private:
     TokenVector tokens; /// vektor tokenu typu pntype (in), ktere misto obsahuje
 
 public:
-    QString id; /// id mista
-    QString x; /// x souradnice mista
-    QString y; /// y souradnice mista
+    QString id; ///< id mista
+    QString x; ///< x souradnice mista
+    QString y; ///< y souradnice mista
 
     /**
       * Konstruktor tridy. Konstruuje objekt.
