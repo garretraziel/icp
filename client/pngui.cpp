@@ -46,7 +46,7 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     labelPos = QPointF(-60,-20);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
 
-    funcLabel = canvas->addText("a = x + y + z");
+    funcLabel = canvas->addText("output func = ??");
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
     //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
     //editor = new editDialog;

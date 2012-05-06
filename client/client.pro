@@ -19,13 +19,15 @@ HEADERS += aboutdialog.h \
            ../server/pnplace.h \
            ../server/pntrans.h \
            ../server/constraint.h \
-           ../server/simstate.h
+           ../server/simstate.h \
+    helpdialog.h
 FORMS += aboutdialog.ui \
          connectdialog.ui \
          editdialog.ui \
          loadsimdialog.ui \
          mainwindow.ui \
-         propertiesdialog.ui
+         propertiesdialog.ui \
+    helpdialog.ui
 SOURCES += aboutdialog.cpp \
            communicator.cpp \
            connectdialog.cpp \
@@ -38,4 +40,5 @@ SOURCES += aboutdialog.cpp \
            ../server/pnplace.cpp \
            ../server/pntrans.cpp \
            ../server/constraint.cpp \
-           ../server/simstate.cpp
+           ../server/simstate.cpp \
+    helpdialog.cpp
