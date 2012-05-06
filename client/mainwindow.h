@@ -36,6 +36,9 @@ public:
     void setID(QString id);
     QString getID();
 
+    int findID(QString _id);
+    void simReload(QString _id, QString newSimState);
+
 private:
     Ui::MainWindow *ui;
 
@@ -49,6 +52,7 @@ private:
     QGraphicsScene * canvas;
 
     void __loadSimString(QString simString);
+    void __loadSimStringNoNewTab(QString simString);
 
     pnItem * __addItem(PNPlace * simPlace);
     pnItem * __addItemRect(PNTrans * simTrans);
