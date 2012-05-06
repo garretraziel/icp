@@ -472,6 +472,7 @@ bool PNSimThread::saveSimulation(QString xml)
 
     qDebug() << "[info] saved";
     iomutex->unlock();
+    logRun(name,QString::number(maxversion),userName);
     return true;
 }
 
