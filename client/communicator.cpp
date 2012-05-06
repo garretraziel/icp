@@ -96,6 +96,7 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
         message = "Error: cannot send message to server";
         return false;
     }
+
     QString recMessage;
     if (!recvCommand(recMessage)) {
         message = "Error: server didn't response";
@@ -106,6 +107,7 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
         loginName = name;
         QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
         QObject::connect(commSock, SIGNAL(disconnected()), this, SLOT(setOffline()));
+        commSock->blockSignals(false);
         mw->setStatusLabel("Online, connected to: "+commSock->peerName()+
                            " ("+commSock->peerAddress().toString()+":"+QString::number(commSock->peerPort())+")",
                            "#008800");
@@ -258,7 +260,6 @@ bool Communicator::loadThis(QString name, QString version){
 }
 
 bool Communicator::handleCommand(QString command){
-
     QXmlStreamReader xml(command);
     if(xml.readNext()!=QXmlStreamReader::StartDocument){
         errorMsg = "Error: cannot load sim";
@@ -332,6 +333,7 @@ bool Communicator::runSimulation(QString id, bool run_or_step)
 
 void Communicator::setOffline(){
     mw->setStatusLabel("Offline","#ff0000");
+    commSock->blockSignals(true);
 }
 
 void Communicator::blockSocket(bool b){

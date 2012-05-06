@@ -71,6 +71,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 void MainWindow::actAct(int i){
+    if(simVect.empty() || !simVect[i])
+        return;
+
     if(simVect[i]->isAct)
         ui->actLabel->setText("na serveru je aktualni verze");
     else
@@ -267,8 +270,15 @@ void MainWindow::saveSim(){
         QString message;
         if(!communicator.saveSimState(getCurrentSim()->getState(), message)){
             QMessageBox::critical(this, "Error", message);
+        } else {
+            getCurrentSim()->isAct = true;
+            mw->actAct(mw->getCurrentIndex());
         }
     }
+}
+
+int MainWindow::getCurrentIndex(){
+    return ui->tabWidget->currentIndex();
 }
 
 void MainWindow::saveLocalSim(){
@@ -444,12 +454,13 @@ void MainWindow::simReload(QString _id, QString newSimState){
     if(tabIndex == -1){
         //neni tab
         __loadSimString(newSimState);
+        getCurrentSim()->isAct = true;
+        actAct(ui->tabWidget->currentIndex());
         //snad to nebude indexovat blbe
         idVect.back() = _id;
     }
     else {
         ui->tabWidget->setCurrentIndex(tabIndex);
-
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
             if(l->canvas == canvasVect[tabIndex])
@@ -468,9 +479,10 @@ void MainWindow::simReload(QString _id, QString newSimState){
 
 
         __loadSimStringNoNewTab(newSimState);
+        getCurrentSim()->isAct = true;
+        actAct(tabIndex);
 
     }
-    actAct(tabIndex);
 }
 
 void MainWindow::setStatusLabel(QString status, QString color){

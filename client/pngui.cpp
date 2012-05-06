@@ -64,6 +64,8 @@ void pnItem::setPosition(int x, int y){
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  {
     if(erase){
+        mw->getCurrentSim()->isAct = false;
+        mw->actAct(mw->getCurrentIndex());
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
             if(l->start==this || l->end == this){
@@ -109,6 +111,8 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         line = false;
     }
     else{
+        mw->getCurrentSim()->isAct = false;
+        mw->actAct(mw->getCurrentIndex());
         if(line){
             line = false;
             if(startpos->primType== this->primType || startpos == this)
@@ -125,6 +129,8 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  }
 
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
+    mw->getCurrentSim()->isAct = false;
+    mw->actAct(mw->getCurrentIndex());
     this->setPos(event->scenePos().x(),event->scenePos().y());
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     if(primType == PLACE){
