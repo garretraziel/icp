@@ -33,14 +33,20 @@ void PNSimThread::readIncoming(){
     in.setVersion(QDataStream::Qt_4_0);
 
     if(block == 0) {
-        if(commSock->bytesAvailable() < (int)sizeof(qint64))
+        if(commSock->bytesAvailable() < (int)sizeof(quint32)) {
+            sockmutex.unlock();
             return;
+        }
 
         in >> block;
     }
 
     qDebug() << "[info] size:" << block;
-    if(commSock->bytesAvailable() < block) return;
+    qDebug() << "[info] available: " << commSock->bytesAvailable();
+    if(commSock->bytesAvailable() < block) {
+        sockmutex.unlock();
+        return;
+    }
 
     QString command;
     in >> command;
@@ -243,10 +249,10 @@ QByteArray PNSimThread::createMessage(QString message)
     QByteArray block;
     QDataStream out(&block,QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << (qint64)0;
+    out << (quint32)0;
     out << message;
     out.device()->seek(0);
-    out << (qint64)(block.size() - sizeof(qint64));
+    out << (quint32)(block.size() - sizeof(quint32));
     return block;
 }
 
