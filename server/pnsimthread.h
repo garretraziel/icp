@@ -42,7 +42,7 @@ private:
     QString logFile;
     QString simDirectory;
     QTcpSocket *commSock;
-    qint64 block;
+    quint32 block;
     SimVector simulations;
     QStringVector idsToSend;
     int maxid;
