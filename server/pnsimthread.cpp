@@ -472,6 +472,7 @@ void PNSimThread::handleSimuled()
     simmutex->unlock();
     idsToSend.push_back((*outid));
     if (sockmutex.tryLock()) {
+        commSock->blockSignals(true);
         foreach (QString id, idsToSend) {
             QString message = "<simul id=\""+id+"\">";
             message += simulations[(*outid).toInt()]->getState();
@@ -480,5 +481,6 @@ void PNSimThread::handleSimuled()
         }
         idsToSend.clear();
         sockmutex.unlock();
+        commSock->blockSignals(false);
     }
 }
