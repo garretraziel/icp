@@ -106,7 +106,16 @@ bool PNTrans::doOperations(unsigned int choice)
         OperationVector::iterator opit;
         for (opit = oneout.operations.begin(); opit < oneout.operations.end(); opit++) {
             Operation op = (*opit);
-            pntype value = mapping_choice[op.var];
+            bool isNum = false;
+            op.var.toInt(&isNum);
+
+            pntype value;
+
+            if (isNum) {
+                value = op.var.toInt();
+            } else {
+                value = mapping_choice[op.var];
+            }
             if (op.op == ADD) {
                 result += value;
             } else if (op.op == SUB){
@@ -122,7 +131,7 @@ bool PNTrans::doOperations(unsigned int choice)
     StringToPntypeMap::iterator remit;
 
     for (remit = mapping_choice.begin(); remit != mapping_choice.end(); remit++) {
-        in_names[(*remit).first]->removeToken((*remit).second); //todo: kontrolovat mazani, opravdu se maji mazat vsechny?
+        in_names[(*remit).first]->removeToken((*remit).second);
     }
 
     return true;
