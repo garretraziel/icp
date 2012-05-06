@@ -34,6 +34,11 @@ namespace Ui {
 class MainWindow;
 }
 
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s hlavnim oknem
+ *
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

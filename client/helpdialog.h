@@ -9,6 +9,7 @@
  * Dialog zobrazujici napovedu.
  *
  */
+
 #ifndef HELPDIALOG_H
 #define HELPDIALOG_H
 
@@ -18,6 +19,12 @@ namespace Ui {
 class helpDialog;
 }
 
+
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s "Help dialogem"
+ *
+ */
 class helpDialog : public QDialog
 {
     Q_OBJECT

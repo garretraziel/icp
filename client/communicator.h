@@ -1,3 +1,15 @@
+/**
+ * @file aboutdialog.h
+ * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
+ * @version 1.0
+ *
+ * @section DESCRIPTION
+ *
+ * Trida, obstaravajici komunikaci se serverem
+ *
+ */
+
 #ifndef COMMUNICATOR_H
 #define COMMUNICATOR_H
 
@@ -10,6 +22,11 @@
 typedef std::vector<QString> StringVector;
 typedef std::vector<StringVector> simList;
 
+/**
+ *
+ * Trida zajistujici komunikaci mezi klientem a serverem
+ *
+ */
 class Communicator : public QObject
 {
     Q_OBJECT

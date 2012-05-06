@@ -27,6 +27,11 @@
 #define TRANS 1
 #define EDGE 3
 
+/**
+ *
+ * Zakladni trida grafickych prvku
+ *
+ */
 class pnPrimitive {
 public:
     editDialog * editor;
@@ -41,6 +46,11 @@ public slots:
     void editorDeleter();
 };
 
+/**
+ *
+ * Trida odvozena od grafickych prvku Qt a zakladni tridy
+ *
+ */
 class pnItem: public QGraphicsItem, public pnPrimitive
 {
 private:
@@ -55,12 +65,23 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };
 
+/**
+ *
+ * Trida zastitujici vykresleni a praci s "misty"
+ *
+ */
 class pnCircle: public pnItem{
 public:
     PNPlace * simPlace;
     pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace = NULL);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
+
+/**
+ *
+ * Trida zastitujici vykresleni a praci s "prechody"
+ *
+ */
 class pnRect: public pnItem{    
 public:
     PNTrans * simTrans;
@@ -69,6 +90,11 @@ public:
     QRectF boundingRect() const;
 };
 
+/**
+ *
+ * Trida zastitujici vykresleni a praci se spojovacimi hranami
+ *
+ */
 class pnLine: public pnPrimitive{
 private:
     QGraphicsLineItem * line;

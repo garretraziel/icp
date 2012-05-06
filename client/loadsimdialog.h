@@ -9,6 +9,8 @@
  * Dialog pro zobrazeni, vyhledani a nacetni siti ze serveru
  *
  */
+
+
 #ifndef LOADSIMDIALOG_H
 #define LOADSIMDIALOG_H
 
@@ -21,6 +23,12 @@ namespace Ui {
 class loadSimDialog;
 }
 
+
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s "Load Simulation dialogem"
+ *
+ */
 class loadSimDialog : public QDialog
 {
     Q_OBJECT

@@ -20,8 +20,19 @@ namespace Ui {
 class editDialog;
 }
 
+/**
+ *
+ * Forward definice
+ *
+ */
 class pnPrimitive;
 
+
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s "Edit dialogem"
+ *
+ */
 class editDialog : public QDialog
 {
     Q_OBJECT

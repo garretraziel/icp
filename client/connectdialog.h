@@ -9,6 +9,7 @@
  * Dialog pro pripojeni k serveru
  *
  */
+
 #ifndef CONNECTDIALOG_H
 #define CONNECTDIALOG_H
 
@@ -18,6 +19,11 @@ namespace Ui {
 class ConnectDialog;
 }
 
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s "Connect dialogem"
+ *
+ */
 class ConnectDialog : public QDialog
 {
     Q_OBJECT

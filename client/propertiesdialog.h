@@ -19,6 +19,11 @@ namespace Ui {
 class propertiesDialog;
 }
 
+/**
+ *
+ * Trida zastitujici zobrazeni a praci s "Properties dialogem"
+ *
+ */
 class propertiesDialog : public QDialog
 {
     Q_OBJECT
