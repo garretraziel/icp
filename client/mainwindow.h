@@ -31,6 +31,7 @@ public:
 
     editDialog * getEditor();
     SimState * getCurrentSim();
+    int getCurrentIndex();
 
     void setSimName(QString name);
 
@@ -79,8 +80,9 @@ private:
 
 private slots:
     void preClose();
-    void actAct(int i);
+
 public slots:
+    void actAct(int i);
     void showConnectDialog();
     void showAboutDialog();
     void newTab();

@@ -141,7 +141,8 @@ void editDialog::accept(){
     }
     }
 
-
+    mw->getCurrentSim()->isAct = false;
+    mw->actAct(mw->getCurrentIndex());
     this->hide();
 }
 
