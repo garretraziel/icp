@@ -48,12 +48,20 @@ public:
       * Destruktor editDialog
       */
     ~editDialog();
-    void loadData(pnPrimitive * sender);
-private:
-    Ui::editDialog *ui; ///user interface
-    pnPrimitive * sender; ///odesilatel pozadavku na editaci
-public slots:
 
+    /**
+      * nacte data do dialogu
+      * @param ukazatel na prvek, ktery nastaveni zavolal
+      */
+    void loadData(pnPrimitive * sender);
+
+private:
+    Ui::editDialog *ui;   /// user interface
+    pnPrimitive * sender; /// odesilatel pozadavku na editaci
+public slots:
+    /**
+      * Slot volany pri prijeti dialogu (klik na OK)
+      */
     virtual void accept();
 };
 

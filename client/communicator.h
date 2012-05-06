@@ -33,7 +33,7 @@ class Communicator : public QObject
 public:
     /**
       * Konstruktor vytvarejici Communicator
-      * @param predek pro uklid
+      * @param parent predek pro uklid
       */
     explicit Communicator(QWidget *parent = 0);
 
@@ -44,8 +44,8 @@ public:
 
     /**
       * Pripoji k serveru
-      * @param hostname nebo IP
-      * @param port, na kterem server nasloucha
+      * @param hostname hostname nebo IP
+      * @param port port, na kterem server nasloucha
       * @return true pri uspechu
       */
     bool connect(QString hostname, QString port);
@@ -58,26 +58,26 @@ public:
 
     /**
       * Zaloguje uzivatele
-      * @param uzivatelske jmeno
-      * @param heslo
-      * @param navratova informacni zprava
+      * @param name uzivatelske jmeno
+      * @param password heslo
+      * @param message navratova informacni zprava
       * @return true pri uspechu
       */
     bool login(QString name, QString password, QString &message);
 
     /**
       * Zaregistruje uzivatele
-      * @param uzivatelske jmeno
-      * @param heslo
-      * @param navratova informacni zprava
+      * @param name uzivatelske jmeno
+      * @param password heslo
+      * @param message navratova informacni zprava
       * @return true pri uspechu
       */
     bool registerUser(QString name, QString password, QString &message);
 
     /**
       * Ulozi simulaci na server
-      * @param retezec obsahujici XML stav simulace
-      * @param navratova informacni zprava
+      * @param XmlSimState retezec obsahujici XML stav simulace
+      * @param message navratova informacni zprava
       * @return true pri uspechu
       */
     bool saveSimState(QString xmlSimState, QString &message);
@@ -90,23 +90,23 @@ public:
 
     /**
       * Ziskani simulaci
-      * @param vraceny seznam simulaci
+      * @param sims reference na seznam simulaci
       * @return true pri uspechu
       */
     bool getSimulations(simList & sims);
 
     /**
       * Nacita ze serveru danou simulaci
-      * @param nazev simulace
-      * @param verze simulace
+      * @param name nazev simulace
+      * @param version verze simulace
       * @return true pri uspechu
       */
     bool loadThis(QString name, QString version);
 
     /**
       * Spusti simulaci
-      * @param Unikatni ID (ziskane od serveru)
-      * @param true pokud run, false pokud step
+      * @param id unikatni ID (ziskane od serveru)
+      * @param run_or_step true pokud run, false pokud step
       * @return true pri uspechu
       */
     bool runSimulation(QString id, bool run_or_step);
@@ -117,7 +117,7 @@ public:
 
     /**
       * Blokuje signaly se socketu
-      * @param true zapne blokovani, false vypne
+      * @param b true zapne blokovani, false vypne
       */
     void blockSocket(bool b);
 
@@ -144,54 +144,66 @@ private:
 
     /**
       * Posle prikaz serveru
-      * @param prikaz
+      * @param command prikaz
       * @return true pri uspechu
       */
     bool sendCommand(QString command);
 
     /**
       * Ziska prikaz poslany ze serveru
-      * @param reference na ziskany prikaz
+      * @param command reference na ziskany prikaz
       * @return true pri uspechu
       */
     bool recvCommand(QString &command);
 
     /**
       * Zaregistrue nebo zaloguje uzivatele
-      * @param kterou akci provest ("login", "register")
-      * @param jmeno uzivatele
-      * @param heslo
-      * @param reference na informacni zpravu
+      * @param what kterou akci provest ("login", "register")
+      * @param name jmeno uzivatele
+      * @param password heslo
+      * @param message reference na informacni zpravu
       * @return true pri uspechu
       */
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
 
-    quint32 block; ///
+    quint32 block; /// velikost nacitane zpravy od serveru
 
     /**
-      *
-      * @param
-      * @return true pri uspechu
+      * Zkontroluje, zda zprava od serveru neni error
+      * @param recMessage reference na zpravu ziskanou od serveru
+      * @param message reference na informacni zpravu
+      * @return true, pokud neni error
       */
     bool isNotError(QString & recMessage, QString & message);
 
     /**
-      *
-      * @param
+      * Zpracuje prikaz prijaty od serveru
+      * @param command prikaz
       * @return true pri uspechu
       */
     bool handleCommand(QString command);
 
-    QString loginName;
+    QString loginName; /// jmeno zalogovaneho uzivatele
 
-    bool exclusion;
 
 private slots:
+    /**
+      * Slot na zobrazeni chybove hlasky pri chybe socketu
+      * @param socketError typ chyby socketu
+      */
     void displayError(QAbstractSocket::SocketError socketError);
+
+    /**
+      * Slot na zpracovani prichozi zpravy
+      */
     void handleIncomming();
+
+    /**
+      * Slot na nastaveni offline hlasky v statusbaru mainwindow
+      */
     void setOffline();
 };
 
-extern Communicator communicator;
+extern Communicator communicator; /// staticka instance tridy Communicator
 
 #endif // COMMUNICATOR_H

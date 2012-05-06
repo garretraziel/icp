@@ -44,16 +44,32 @@ public:
       * Destruktor loadSimDialog
       */
     ~loadSimDialog();
+
+    /**
+      * zapise informace o simulaci do seznamu
+      * @param vektor vlatnosti site (jmeno, autor, verze, info)
+      */
     void pushSim(StringVector sim);
     
 private:
-    Ui::loadSimDialog *ui;///user interface
-    int index; ///index do seznamu simulaci
-    simList items; ///seznam simulaci
+    Ui::loadSimDialog *ui;  /// user interface
+    int index;              /// index do seznamu simulaci
+    simList items;          /// seznam simulaci
 
 public slots:
+    /**
+      * slot volany pri zmene filter pole (profiltruje vypsane hodnoty)
+      */
     void updateList();
+
+    /**
+      * slot volany pri prijeti dialogu (klik na OK)
+      */
     void accept();
+
+    /**
+      * slot zajistujici smazani simulaci ze seznamu
+      */
     void clearSims();
 };
 

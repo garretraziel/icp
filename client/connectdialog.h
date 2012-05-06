@@ -41,11 +41,18 @@ public:
     ~ConnectDialog();
     
 private:
-    Ui::ConnectDialog *ui; ///user interface
+    Ui::ConnectDialog *ui; /// user interface
 
 public slots:
+    /**
+      * slot pri prijeti dialogu (klik na OK)
+      */
     virtual void accept();
+
 private slots:
+    /**
+      * slot na registraci klienta
+      */
     void registerUser();
 };
 

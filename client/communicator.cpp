@@ -26,7 +26,6 @@ Communicator communicator(mw);
 Communicator::Communicator(QWidget *parent):QObject(parent)
 {
     commSock = new QTcpSocket;
-    exclusion = false;
 
 }
 
