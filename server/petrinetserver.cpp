@@ -25,7 +25,7 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
 }
 
 PetriNetServer::~PetriNetServer()
-{ //todo: mozna odchytavat signal?
+{
     qDebug() << "Ending server";
     delete iomutex;
     close();

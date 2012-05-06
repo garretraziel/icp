@@ -34,10 +34,7 @@ public:
     TransVector getTransits() {return transits;}
 
     bool checkConfiguration();
-    //todo: a taky zde bude funkce vracejici XML, neco jako getStaticState a getDynamicState
 
-    //toto pujde jinam, jen ted narychlo...
-    //a mozna pujdou sjednotit do jedne
     void removePlace(PNPlace * _place);
     void removeTrans(PNTrans * _trans);
     void setProperies(QString _name, QString _author, QString _version, QString _info);

@@ -202,7 +202,7 @@ QString SimState::getState()
             if (constraint -> type == TYPENONE) {
                 doc.writeAttribute("type","none");
             } else if (constraint -> type == TYPEANYTHING) {
-                doc.writeAttribute("type","anything"); //todo: toto implementovat i v nacitani
+                doc.writeAttribute("type","anything");
             } else {
                 doc.writeAttribute("var1",constraint->first);
                 doc.writeAttribute("op",QString::number(int(constraint->op)));

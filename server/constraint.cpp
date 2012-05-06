@@ -34,7 +34,6 @@ Constraint::Constraint(QString var1, int op, int cons)
 Constraint::Constraint(QString string_condition)
 {
     //proparsuju string
-    //todo: kontrolovat, zda to muzu rozrezavat v poradku
     first = string_condition.section(' ',0,0);
     int op = string_condition.section(' ',1,1).toInt();
     QString second_var = string_condition.section(' ',2,2);
