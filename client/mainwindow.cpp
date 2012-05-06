@@ -85,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 void MainWindow::actAct(int i){
-    if(simVect.empty() || !simVect[i])
+    if(simVect.empty())
         return;
 
     if(simVect[i]->isAct)
@@ -140,8 +140,9 @@ void MainWindow::newTab(){
     ui->tabWidget->addTab(tabVect.back(),QString("Unnamed simulation"));
     ui->tabWidget->setCurrentWidget(tabVect.back());
 
+    SimState * newSim = new SimState();
+    simVect.push_back(newSim);
 
-    simVect.push_back(new SimState());
     simVect.back()->name = "Unnamed simulation";
     simVect.back()->info = "(Empty info)";
     simVect.back()->author = communicator.userLoggedIn();
