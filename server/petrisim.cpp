@@ -1,3 +1,13 @@
+/**
+ * @file petrisim.cpp
+ * @author Jan Sedlak <xsedla85@stud.fit.vutbr.cz>
+ * @author Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
+ *
+ * @section DESCRIPTION
+ *
+ * Obsahuje tridu pro simulaci.
+ */
+
 #include "petrisim.h"
 #include "pnplace.h"
 #include "pntrans.h"
