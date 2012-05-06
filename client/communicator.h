@@ -1,5 +1,5 @@
 /**
- * @file aboutdialog.h
+ * @file communicator.h
  * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
  * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
  * @version 1.0
@@ -31,7 +31,12 @@ class Communicator : public QObject
 {
     Q_OBJECT
 public:
+    /**
+      * Konstruktor vytvarejici Communicator
+      * @param predek pro uklid
+      */
     explicit Communicator(QWidget *parent = 0);
+
     /**
       * Destruktor Communicator
       */

@@ -1,5 +1,5 @@
 /**
- * @file aboutdialog.h
+ * @file mainwindow.h
  * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
  * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
  * @version 1.0
@@ -44,7 +44,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
+    /**
+      * Konstruktor vytvarejici MainWindow
+      * @param predek pro uklid
+      */
     explicit MainWindow(QWidget *parent = 0);
+
+    /**
+      * Destruktor MainWindow
+      */
     ~MainWindow();
 
     editDialog * getEditor();
@@ -62,19 +70,15 @@ public:
     void setStatusLabel(QString status, QString color);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui;///user interface
 
-    // dialogs
-    ConnectDialog * cd;
-    aboutDialog * ad;   
-    propertiesDialog * pd;
-    loadSimDialog * ld;
-    helpDialog * hd;
-    //
+    ConnectDialog * cd;     ///connect dialog pointer
+    aboutDialog * ad;       ///about dialog pointer
+    propertiesDialog * pd;  ///properties dialog pointer
+    loadSimDialog * ld;     ///loadsim dialog pointer
+    helpDialog * hd;        ///help dialog pointer
 
-    QGraphicsScene * canvas; //mozna zbytecny
-
-    QLabel * statusLabel;
+    QLabel * statusLabel;   ///status label (online/offline status)
 
     void __loadSimString(QString simString);
     void __loadSimStringNoNewTab(QString simString);

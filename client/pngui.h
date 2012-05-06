@@ -1,5 +1,5 @@
 /**
- * @file aboutdialog.h
+ * @file pngui.h
  * @author  Lukas Brabec <xbrabe09@stud.fit.vutbr.cz>
  * @author  Jan Sedlak   <xsedla85@stud.fit.vutbr.cz>
  * @version 1.0
@@ -99,7 +99,16 @@ class pnLine: public pnPrimitive{
 private:
     QGraphicsLineItem * line;
 public:
+    /**
+      * Konstruktor vytvarejici pnLine
+      * @param pocatecni prvek
+      * @param koncovy prvek
+      * @param scena kam se kresli
+      */
     pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas);
+    /**
+      * Destruktor pnLine
+      */
     ~pnLine();
     void update();
     //to by asi chtelo nejakyho pritele, nez public
