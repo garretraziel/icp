@@ -52,7 +52,9 @@ bool Communicator::sendCommand(QString command)
     out << command;
     out.device()->seek(0);
     out << (qint64)(block.size() - sizeof(qint64));
-    commSock->write(block);
+    qDebug() << command << "\n\n\n" << block.size();
+    qDebug() << commSock->write(block);
+    qDebug() << "zapsano";
     return true;
 }
 
