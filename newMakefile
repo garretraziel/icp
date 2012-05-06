@@ -1,0 +1,15 @@
+
+
+default:
+	
+	make -f src/Makefile
+
+clean:
+	make clean
+
+
+run:
+	./pn2012
+
+runserver:
+	./server2012
