@@ -180,10 +180,10 @@ bool Communicator::isNotError(QString & recMessage, QString & message){
 }
 
 bool Communicator::saveSimState(QString xmlSimState, QString & message){
-    //TODO!!
+
     QString sendMessage = "<save-this>"+xmlSimState+"</save-this>";
     commSock->blockSignals(true);
-    //FIXYY
+
     sendCommand(sendMessage);
 
     QString recMessage;
@@ -338,7 +338,7 @@ bool Communicator::runSimulation(QString id, bool run_or_step)
     } else {
         command = "<step id=\""+id+"\"/>";
     }
-    qDebug() << "Posilam: " << command;
+
     return sendCommand(command);
 }
 

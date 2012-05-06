@@ -284,9 +284,6 @@ bool SimState::checkConfiguration(){
 
             if((trans->in_names.find(constraint->first) == trans->in_names.end()) ||
                (constraint->type == TYPEVAR && trans->in_names.find(constraint->second_var) == trans->in_names.end()))
-                /*
-                  hurr durr
-                  */
                     return false;
         }
 
@@ -306,7 +303,7 @@ bool SimState::checkConfiguration(){
         }
     }
 
-    return true; //nigga wrote da shit well!
+    return true;
 }
 
 void SimState::removePlace(PNPlace * _place){

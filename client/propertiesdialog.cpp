@@ -37,7 +37,7 @@ void propertiesDialog::loadData(QString name, QString author, QString version, Q
 }
 
 void propertiesDialog::accept(){
-    //TODO mozna nejaky check...
+
     mw->getCurrentSim()->setProperies(
                 ui->nameEdit->text(),
                 ui->authorEdit->text(),

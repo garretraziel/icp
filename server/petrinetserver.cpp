@@ -22,7 +22,7 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
 
     my_ip = QHostAddress::Any;
 
-    this -> port = port; //pokud je port 0, automaticky vyber portu. Asi to neni spravne.
+    this -> port = port; //pokud je port 0, automaticky vyber portu.
     iomutex = new QMutex;
 }
 

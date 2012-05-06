@@ -22,7 +22,7 @@
 
 pnItem * startpos;
 bool line;
-std::vector<pnLine*> lineVect; //FIXME!
+std::vector<pnLine*> lineVect;
 bool erase;
 
 #define PI 3.1415927537
@@ -32,7 +32,7 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
-    //jojo, moc pekne, indexace do "neznama"
+
     QGraphicsView * thisView = canvas->views()[0];
     QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
     this->setPos(center.x(),center.y());
@@ -40,7 +40,7 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     labelPos = QPointF(-15, -10);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
     funcLabel = NULL;
-    //editor = new editDialog; //toto se asi neuklizi
+
     editor = mw->getEditor();
     simPlace = _simPlace;
     primType = PLACE;
@@ -60,8 +60,7 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
 
     funcLabel = canvas->addText("output func = ??");
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
-    //toto by slo mozna lip, takto bude mit kazda bunka svuj editor...
-    //editor = new editDialog;
+
     editor = mw->getEditor();
     simTrans = _simTrans;
     primType = TRANS;
