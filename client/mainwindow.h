@@ -15,6 +15,7 @@
 #include <QFileDialog>
 #include "propertiesdialog.h"
 #include "loadsimdialog.h"
+#include "helpdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +50,7 @@ private:
     aboutDialog * ad;   
     propertiesDialog * pd;
     loadSimDialog * ld;
+    helpDialog * hd;
     //
 
     QGraphicsScene * canvas; //mozna zbytecny

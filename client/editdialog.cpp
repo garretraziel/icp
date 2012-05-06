@@ -108,7 +108,7 @@ void editDialog::accept(){
         if(!(parts.size()==1 && parts[0]=="")){
             foreach(QString part, parts){
                 QRegExp * rx = checkExp("(\\s*)(\\d+)(\\s*)", part,
-                                        "Bad token list: repair the token list condition");
+                                        "Bad token list: repair the token list");
                 if(!rx){
                     ((pnCircle *)sender)->simPlace->removeTokens();
                     foreach(pntype token, backup){

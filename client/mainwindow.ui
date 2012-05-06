@@ -145,6 +145,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelp"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuSimulation">
@@ -236,6 +237,11 @@
   <action name="actionEdit_Properties">
    <property name="text">
     <string>Edit Properties</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

@@ -13,8 +13,11 @@
 #include <map>
 #include "../server/simstate.h"
 #include "communicator.h"
+#include <time.h>
 
 MainWindow * mw;
+
+int UniqID = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     editor = new editDialog(this);
     ld = new loadSimDialog(this);
     pd = new propertiesDialog(this);
+    hd = new helpDialog(this);
 
     mw = this;
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
@@ -53,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->stepButton, SIGNAL(clicked()), this, SLOT(stepSim()));
 
     QObject::connect(ui->actionExit, SIGNAL(activated()), this, SLOT(preClose()));
+
+    QObject::connect(ui->actionHelp, SIGNAL(activated()), this->hd, SLOT(show()));
 
     statusLabel = new QLabel;
     ui->statusBar->addWidget(statusLabel);
@@ -165,6 +171,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
     int centerCnt = 1;
     std::map<PNPlace *, pnItem *> placeToGui;
     foreach(PNPlace * place, currentSim->places){
+        UniqID = (UniqID > place->id.toInt())? UniqID : place->id.toInt();
         pnItem * item = __addItem(place);
         placeToGui[place] = item;
         QString id = "";
@@ -180,6 +187,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
 
 
     foreach(PNTrans * transit, currentSim->transits){
+        UniqID = (UniqID > transit->id.toInt())? UniqID : transit->id.toInt();
         pnItem * item = __addItemRect(transit);
         QString guard = "";
         foreach(Constraint * cons, transit->constraints){
@@ -264,7 +272,6 @@ void MainWindow::saveLocalSim(){
         QTextStream out(&fileOut);
         out << xmlOut;
 
-        //destruktor sam vola .close(), wheee!
     }
 
 }
@@ -302,7 +309,7 @@ pnItem * MainWindow::addItem(){
     currentSim->places.push_back(new PNPlace());
 
 #define simPlace ((PNPlace *)(currentSim->places.back()))
-    simPlace->id = QString::number((long long)simPlace); //FIXME!
+    simPlace->id = QString::number(++UniqID);
     simPlace->x = QString::number(this->x());
     simPlace->y = QString::number(this->y());
     return __addItem(simPlace);
@@ -324,7 +331,7 @@ pnItem * MainWindow::addItemRect(){
 
     currentSim->transits.push_back(new PNTrans());
 #define simTrans ((PNTrans *)(currentSim->transits.back()))
-    simTrans->id = QString::number((long long)this);
+    simTrans->id = QString::number(++UniqID);
     simTrans->x = QString::number(this->x());
     simTrans->y = QString::number(this->y());
     return __addItemRect(simTrans);
