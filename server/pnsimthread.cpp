@@ -10,6 +10,8 @@
 #include <QTextStream>
 #include <QMutex>
 #include <QRegExp>
+#include <QTime>
+#include <QDate>
 #include "runsimthread.h"
 
 QMutex sockmutex;
@@ -136,6 +138,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             }
         } else {
             isLogged = true;
+            userName = args["name"];
             message = "<ok/>";
             qDebug() << "[info] user logged in";
         }
@@ -162,6 +165,7 @@ bool PNSimThread::handleCommand(QString command, QString &message)
             }
         } else {
             isLogged = true;
+            userName = args["name"];
             message = "<ok/>";
             qDebug() << "[info] user logged in";
         }
@@ -392,6 +396,7 @@ QString PNSimThread::loadSim(QString name, QString version)
             simulations[maxid++] = simulation;
 
             iomutex->unlock();
+            logRun(name,version,userName);
             return simulation->getState();
         }
     }
@@ -496,4 +501,18 @@ void PNSimThread::handleSimuled()
         sockmutex.unlock();
         commSock->blockSignals(false);
     }
+}
+
+void PNSimThread::logRun(QString name, QString version, QString user)
+{
+    QFile log(logFile);
+    if (!log.open(QIODevice::Append | QIODevice::Text)) {
+        if (!log.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+    }
+    QString outstr = QDate::currentDate().toString("yyyy-MM-dd") + " ";
+    outstr += QTime::currentTime().toString("HH:mm:ss");
+    outstr += ": "+user+" loaded "+name+" v"+version+"\n";
+    QTextStream ts(&log);
+    ts << outstr;
 }
