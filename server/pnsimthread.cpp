@@ -27,7 +27,6 @@ PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent)
 
 void PNSimThread::readIncoming(){
     sockmutex.lock();
-    qDebug() << "limit:" << commSock->readBufferSize();
     qDebug() << "[info] message from user";
 
     QDataStream in(commSock);
