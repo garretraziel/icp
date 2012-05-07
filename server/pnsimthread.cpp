@@ -26,6 +26,13 @@
 
 QMutex sockmutex; ///< semafor pro pristup k socketu
 
+/**
+  * Konstruktor tridy thread, naplnuje implicitnimi hodnotami.
+  *
+  * @param socketDescriptor popisovac socketu, kterym bude thread komunikovat
+  * @param iomutex semafor pro pristup k souborum
+  * @param parent ukazatel na predka typu qobject
+  */
 PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent) :
     QThread(parent),iomutex(iomutex),socketDescriptor(socketDescriptor)
 {
@@ -36,6 +43,9 @@ PNSimThread::PNSimThread(int socketDescriptor, QMutex *iomutex, QObject *parent)
     maxid = 0; //pro cislovani otevrenych simulaci
 }
 
+/**
+  * Slot, ktery se spusti se signalem readyRead() socketu
+  */
 void PNSimThread::readIncoming(){
     sockmutex.lock(); //kdyby doslo k dokonceni simulace, NESMI se zatim odeslat
     qDebug() << "[info] message from user";
@@ -85,10 +95,16 @@ void PNSimThread::readIncoming(){
     sockmutex.unlock(); //odemku semafor, aby se mohly simulace zapisovat i asynchronne
 }
 
+/**
+  * Slot, ktery se spusti se signalem odpojeni socketu.
+  */
 void PNSimThread::handleDisconnection(){
     this->exit(); //pri odpojeni zastavim vlakno
 }
 
+/**
+  * Metoda, ktera se vola automaticky po spusteni vlakna pomoci start().
+  */
 void PNSimThread::run()
 {
     commSock = new QTcpSocket; //pripojil se novy uzivatel, vytvorim socket
@@ -117,6 +133,14 @@ void PNSimThread::run()
     qDebug() << "[info] user disconnected";
 }
 
+/**
+  * Postara se o prijaty prikaz.
+  *
+  * @param command prijaty prikaz
+  * @param message zprava, ktera se zapise zpet uzivateli
+  *
+  * @return true, pokud smi zustat klient pripojen, jinak false
+  */
 bool PNSimThread::handleCommand(QString command, QString &message)
 {
     QString strcmd; //prikaz samotny
@@ -244,6 +268,14 @@ bool PNSimThread::handleCommand(QString command, QString &message)
     return true;
 }
 
+/**
+  * Pokusi se prihlasit uzivatele.
+  *
+  * @param login jmeno uzivatele
+  * @param password heslo uzivatele
+  *
+  * @return 0 pri spravnem prihlaseni, jine pri chybe
+  */
 int PNSimThread::logUser(QString login, QString password)
 {
     iomutex->lock(); //pristup k i/o
@@ -274,6 +306,13 @@ int PNSimThread::logUser(QString login, QString password)
     return 1; //nenasel jsem uzivatele
 }
 
+/**
+  * Vytvori zpravu vhodnout pro poslani.
+  *
+  * @param message zprava, co se ma poslat
+  *
+  * @return bytove pole vhodne k poslani
+  */
 QByteArray PNSimThread::createMessage(QString message)
 {
     //pomoci QDataStreamu vytvori zpravu vhodnou pro zapsani
@@ -287,6 +326,14 @@ QByteArray PNSimThread::createMessage(QString message)
     return block;
 }
 
+/**
+  * Zaregistruje noveho uzivatele.
+  *
+  * @param login jmeno uzivatele
+  * @param password heslo uzivatele
+  *
+  * @return 0 pri spravnem zaregistrovano, jine pri chybe
+  */
 int PNSimThread::registerUser(QString login, QString password)
 {
     //uzivatel se chce zaregistrovat
@@ -317,6 +364,11 @@ int PNSimThread::registerUser(QString login, QString password)
     return 0;
 }
 
+/**
+  * Najde ve slozce vsechny simulace a vrati je v XML.
+  *
+  * @return XML se simulacemi
+  */
 QString PNSimThread::getSimulations()
 {
     iomutex->lock(); //bude se provadet i/o operace
@@ -359,6 +411,15 @@ QString PNSimThread::getSimulations()
     return result; //vysledek poslu uzivateli
 }
 
+/**
+  * Proparsuje vstupni XML prikaz, vysledek ulozi do result, argumenty do args.
+  *
+  * @param xml vstupni XML prikaz
+  * @param result zde se ulozi prikaz
+  * @param args slovnik argumentu a jejich hodnot
+  *
+  * @return false pri chybe, jinak true
+  */
 bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
 {
     //proparsuju XML s prikazem
@@ -379,6 +440,14 @@ bool PNSimThread::getCommand(QString xml, QString &result, StrToStrMap &args)
     return true;
 }
 
+/**
+  * Nacte simulaci, ulozi do seznamu simulaci.
+  *
+  * @param name jmeno otevirane simulace
+  * @param version verze otevirane simulace
+  *
+  * @return XML se simulaci
+  */
 QString PNSimThread::loadSim(QString name, QString version)
 {
     //nacteni simulace
@@ -437,6 +506,9 @@ QString PNSimThread::loadSim(QString name, QString version)
     return "false";
 }
 
+/**
+  * Destruktor vlakna, smaze simulace.
+  */
 PNSimThread::~PNSimThread()
 {
     foreach (PetriSim *simulation, simulations) {
@@ -444,6 +516,13 @@ PNSimThread::~PNSimThread()
     }
 }
 
+/**
+  * Ulozi zadanou simulaci.
+  *
+  * @param xml XML se simulaci k ulozeni
+  *
+  * @return true pokud se vse ulozilo v poradku, jinak false
+  */
 bool PNSimThread::saveSimulation(QString xml)
 {
     iomutex->lock(); //i/o operace
@@ -510,6 +589,12 @@ bool PNSimThread::saveSimulation(QString xml)
     return true;
 }
 
+/**
+  * Spusti zadanou simulaci v novem threadu.
+  *
+  * @param id ID simulace, ktera se ma spustit
+  * @param run_or_step true pokud se ma dat run, jinak false
+  */
 void PNSimThread::runSimulation(QString id, bool run_or_step)
 {
     if (!simulations.contains(id.toInt())) { //ID neodpovida otevrene simulaci
@@ -523,6 +608,9 @@ void PNSimThread::runSimulation(QString id, bool run_or_step)
     thread->start();
 }
 
+/**
+  * Slot, ktery se spusti se signalem dokonce threadu, ktery simuluje simulaci.
+  */
 void PNSimThread::handleSimuled()
 {
     //tento slot se spusti, jakmile se odsimuluje jedna simulace - skonci jeji thread
@@ -544,6 +632,13 @@ void PNSimThread::handleSimuled()
     }
 }
 
+/**
+  * Zapise do souboru s logem informaci o nacteni simulace.
+  *
+  * @param name jmeno simulace
+  * @param version verze simulace
+  * @param user jmeno uzivatele, ktery simulaci spustil
+  */
 void PNSimThread::logRun(QString name, QString version, QString user)
 {
     QFile log(logFile);
