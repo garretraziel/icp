@@ -301,15 +301,19 @@ QString SimState::getState()
 
 
 bool SimState::checkConfiguration(){
+    //zjisti, zda je dana konfigurace spravna
     foreach(PNTrans * trans, transits){
+        //kontroluje podminky
         foreach(Constraint * constraint, trans->constraints){
-
+            //zkontroluje vstupni mista v podminkach
             if((trans->in_names.find(constraint->first) == trans->in_names.end()) ||
                (constraint->type == TYPEVAR && trans->in_names.find(constraint->second_var) == trans->in_names.end()))
                     return false;
         }
 
+        //kontroluje operace
         foreach(OneOut operation, trans->operations){
+            //zkontroluje vystupni mista v podminkach
             if(trans->out_names.find(operation.output) == trans->out_names.end())
                 return false;
 
@@ -329,18 +333,20 @@ bool SimState::checkConfiguration(){
 }
 
 void SimState::removePlace(PNPlace * _place){
+    //smaze ze simulace zadane misto
     PlaceVector::iterator it;
     for(it=places.begin(); it!=places.end(); it++){
-        if((*it)==_place){
+        if((*it)==_place){ //nasel jsem misto
             places.erase(it);
             return;
         }
     }
 }
 void SimState::removeTrans(PNTrans * _trans){
+    //smaze ze simulace zadany prechod
     TransVector::iterator it;
     for(it=transits.begin(); it!=transits.end(); it++){
-        if((*it)==_trans){
+        if((*it)==_trans){ //nasel jsem prechod
             transits.erase(it);
             return;
         }
