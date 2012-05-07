@@ -80,7 +80,11 @@
      <widget class="QLineEdit" name="authorEdit"/>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="versionEdit"/>
+     <widget class="QLineEdit" name="versionEdit">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
     <item row="3" column="1">
      <widget class="QPlainTextEdit" name="infoEdit"/>
