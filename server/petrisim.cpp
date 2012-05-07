@@ -27,20 +27,39 @@ int rand_int(int high)
     return qrand() % high;
 }
 
+/**
+  * Konstruktor simulace. Konstruuje objekt.
+  */
 PetriSim::PetriSim()
 {
 }
 
+/**
+  * Vrati stav ve formatu XML pro ulozeni nebo prenos.
+  *
+  * @return XML se stavem simulace
+  */
 QString PetriSim::getState()
 {
     return state.getState(); //getter simstate
 }
 
+/**
+  * Nastavi pocatecni stav simulace, proparsuje XML.
+  *
+  * @param xml XML se stavem simulace
+  *
+  * @return true pokud se podarilo nastavit simulaci, jinak false
+  */
 bool PetriSim::setState(QString xml)
 {
     return this -> state.setState(xml); //setter simstate
 }
 
+/**
+  * Metoda pro spusteni jednoho kroku simulace. Odpaleny prechod se vybira nahodne,
+  * protoze petriho site jsou ze sve podstaty nedeterministicke.
+  */
 void PetriSim::step()
 {
     TransVector transits = state.getTransits(); //vytahne si vsechny prechody
@@ -63,6 +82,12 @@ void PetriSim::step()
     possible_transits[which_transit]->doOperations(which_values); //odpalim
 }
 
+/**
+  * Metoda pro spusteni simulace az do konce. Bezi, dokud je proveditelny prechod, nebo dokud
+  * nevyprsi zadany pocet kroku.
+  *
+  * @param steps pocet kroku, kterej se maji udelat, implicitne 100
+  */
 void PetriSim::run(int steps)
 {
     for (int i = 0; i<steps; i++) { //run je omezeno poctem kroku, ochrana proti zacykleni
