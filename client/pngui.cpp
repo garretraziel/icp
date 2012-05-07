@@ -159,6 +159,11 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
             line = false;
             if(startpos->primType== this->primType || startpos == this)
                 return;
+            foreach(pnLine * l, lineVect){
+                if(l->start == startpos && l->end == this)
+                    QMessageBox::critical(mw, "Double edge error", "There can't be two same edges");
+                    return;
+            }
 
             pnLine * new_line = new pnLine(startpos,this,canvas);
             Q_UNUSED(new_line);
