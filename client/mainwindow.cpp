@@ -432,6 +432,7 @@ pnItem * MainWindow::addItem(){
     currentSim->places.push_back(new PNPlace());
     currentSim->isAct = false;
     actAct(ui->tabWidget->currentIndex());
+
 #define simPlace ((PNPlace *)(currentSim->places.back()))
     //nastavi vlastnosti prvku
     simPlace->id = QString::number(++UniqID);
