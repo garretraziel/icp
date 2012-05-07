@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include <QDataStream>
 #include <QRegExp>
 #include "mainwindow.h"
@@ -134,13 +135,13 @@ bool Communicator::recvCommand(QString &command)
 inline bool Communicator::login_or_register(QString what, QString name, QString password, QString &message)
 {
     // vytvori zpravu
-    QString sendMessage = "<";
-    sendMessage += what;
-    sendMessage += " name=\"";
-    sendMessage += name;
-    sendMessage += "\" password=\"";
-    sendMessage += password;
-    sendMessage += "\"/>";
+    QString sendMessage;
+    QXmlStreamWriter xml(&sendMessage);
+    xml.writeStartDocument();
+    xml.writeEmptyElement(what);
+    xml.writeAttribute("name",name);
+    xml.writeAttribute("password",password);
+    xml.writeEndDocument();
 
     // zasle zpravu
     if (!sendCommand(sendMessage)) {
