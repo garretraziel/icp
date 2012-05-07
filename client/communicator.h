@@ -111,9 +111,9 @@ public:
       */
     bool runSimulation(QString id, bool run_or_step);
 
-    QString sim;        /// specialni navratova hodnota
-    QString errorMsg;   /// specialni navratova hodnota (chybova zprava)
-    QString simID;      /// specialni navratova hodnota (id simulace)
+    QString sim;        ///< specialni navratova hodnota
+    QString errorMsg;   ///< specialni navratova hodnota (chybova zprava)
+    QString simID;      ///< specialni navratova hodnota (id simulace)
 
     /**
       * Blokuje signaly se socketu
@@ -140,7 +140,7 @@ signals:
 
 private:
 
-    QTcpSocket *commSock; /// komunikacni socket
+    QTcpSocket *commSock; ///< komunikacni socket
 
     /**
       * Posle prikaz serveru
@@ -166,7 +166,7 @@ private:
       */
     inline bool login_or_register(QString what, QString name, QString password, QString &message);
 
-    quint32 block; /// velikost nacitane zpravy od serveru
+    quint32 block; ///< velikost nacitane zpravy od serveru
 
     /**
       * Zkontroluje, zda zprava od serveru neni error
@@ -183,7 +183,7 @@ private:
       */
     bool handleCommand(QString command);
 
-    QString loginName; /// jmeno zalogovaneho uzivatele
+    QString loginName; ///< jmeno zalogovaneho uzivatele
 
 
 private slots:
@@ -204,6 +204,6 @@ private slots:
     void setOffline();
 };
 
-extern Communicator communicator; /// staticka instance tridy Communicator
+extern Communicator communicator; ///< staticka instance tridy Communicator
 
 #endif // COMMUNICATOR_H

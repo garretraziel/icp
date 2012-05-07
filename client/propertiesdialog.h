@@ -51,7 +51,7 @@ public:
     void loadData(QString name, QString author, QString version, QString info);
     
 private:
-    Ui::propertiesDialog *ui; /// user interface
+    Ui::propertiesDialog *ui; ///< user interface
 
 public slots:
     /**

@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    //vytvoreni ui a dialogu
     ui->setupUi(this);
     cd = new ConnectDialog(this);
     ad = new aboutDialog(this);
@@ -50,6 +51,8 @@ MainWindow::MainWindow(QWidget *parent) :
     hd = new helpDialog(this);
 
     mw = this;
+
+    // propojeni signalu a slotu
     QObject::connect(ui->actionConnect_to_server, SIGNAL(activated()),this, SLOT(showConnectDialog()) );
     QObject::connect(ui->pushButton, SIGNAL(clicked()),this,SLOT(addItem()));
     QObject::connect(ui->pushButtonRect, SIGNAL(clicked()),this,SLOT(addItemRect()));
@@ -96,9 +99,9 @@ void MainWindow::actAct(int i){
         return;
 
     if(simVect[i]->isAct)
-        ui->actLabel->setText("na serveru je aktualni verze");
+        ui->actLabel->setText("server has actual version");
     else
-        ui->actLabel->setText("na serveru neni aktualni verze");
+        ui->actLabel->setText("server has NOT actual version (send it to server)");
 }
 
 /**

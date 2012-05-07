@@ -193,6 +193,8 @@ void editDialog::accept(){
   */
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
+
+    // ziskame informace od zasilatele, a nastavime vstupni pole
     ui->labelEdit->setText(sender->label->toPlainText());
 
     if(sender->funcLabel){
@@ -202,6 +204,7 @@ void editDialog::loadData(pnPrimitive * _sender){
     ui->label_2->hide();
     ui->funcEdit->hide();
 
+    //podle typu nastavi labely
     switch(sender->primType){
         case TRANS:
         ui->label->setText("Guard");
