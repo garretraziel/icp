@@ -12,11 +12,21 @@
 #include <QChar>
 #include <QDebug>
 
+/**
+  * Konstruktor podminky, nastavy typ na none.
+  */
 Constraint::Constraint()
 {
     type = TYPENONE; //inicializace typu na "zadny"
 }
 
+/**
+  * Konstruktor podminky, ktery nastavy typ a promenne.
+  *
+  * @param var1 prvni promenna podminky
+  * @param op operator podminky
+  * @param var2 druha promenna podminky
+  */
 Constraint::Constraint(QString var1, int op, QString var2)
 {
     first = var1;
@@ -29,6 +39,13 @@ Constraint::Constraint(QString var1, int op, QString var2)
     type = TYPEVAR; //druhe cislo je "promenna"
 }
 
+/**
+  * Konstruktor podminky, ktery nastavy promennou a konstantu.
+  *
+  * @param var1 prvni promenna podminky
+  * @param op operator podminky
+  * @param cons konstanta podminky
+  */
 Constraint::Constraint(QString var1, int op, int cons)
 {
     first = var1;
@@ -41,6 +58,13 @@ Constraint::Constraint(QString var1, int op, int cons)
     type = TYPECONST; //druhe cislo je konstanta
 }
 
+/**
+  * Zjisti, zda zadane hodnoty odpovidaji podmince.
+  *
+  * @param values slovnik promenna:hodnota, pro ktere podminku kontroluji
+  *
+  * @return true pokud odpovidaji vstupni hodnoty podmince, jinak false
+  */
 bool Constraint::conditionAccepts(StringToPntypeMap values)
 {
     if (type == TYPEANYTHING) return true; //pokud muze by promenna libovolna, podminka odpovida

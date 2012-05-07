@@ -14,6 +14,13 @@
 #include <QByteArray>
 #include <QtNetwork>
 
+/**
+  * Konstruktor tridy, vytvori server na zadanem portu, nezacne naslouchat.
+  *
+  * @param parent ukazatel na rodicovskou tridu typu qobject
+  * @param maxconnections kolik soubeznych pripojeni je server schopen zvladnout, velikost fronty
+  * @param port port, na kterem bude server naslouchat
+  */
 PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     QTcpServer(parent)
 {
@@ -26,6 +33,9 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     iomutex = new QMutex;
 }
 
+/**
+  * Destruktor tridy, smaze semafor.
+  */
 PetriNetServer::~PetriNetServer()
 {
     qDebug() << "Ending server";
@@ -33,6 +43,11 @@ PetriNetServer::~PetriNetServer()
     close();
 }
 
+/**
+  * Server zacne naslouchat na zadanem portu.
+  *
+  * @return true pokud se poradi naslouchat, false pokud ne
+  */
 bool PetriNetServer::start()
 {
     bool listening = listen(my_ip, port); //zacne naslouchat
@@ -47,6 +62,11 @@ bool PetriNetServer::start()
     return true;
 }
 
+/**
+  * Funkce ktera je automaticky spustena pri prichozim pripojeni. Vytvori novy thread pro obsluhu.
+  *
+  * @param socketDescriptor popisovat socketu, na kterem ma thread komunikovat.
+  */
 void PetriNetServer::incomingConnection(int socketDescriptor)
 {
     //vytvori se nove vlakno, preda se mu mutex na i/o operace
