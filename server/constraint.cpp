@@ -14,43 +14,43 @@
 
 Constraint::Constraint()
 {
-    type = TYPENONE;
+    type = TYPENONE; //inicializace typu na "zadny"
 }
 
 Constraint::Constraint(QString var1, int op, QString var2)
 {
     first = var1;
-    second_var = var2;
-    if (op < 0 || op > 5) {
+    second_var = var2; //ulozim jako promennou
+    if (op < 0 || op > 5) { //operator je cislo (dle enum) 0-5
         qCritical() << "Error: bad operator in condition in XML";
         return;
     }
-    this->op = Operators(op);
-    type = TYPEVAR;
+    this->op = Operators(op); //prevedu na enum
+    type = TYPEVAR; //druhe cislo je "promenna"
 }
 
 Constraint::Constraint(QString var1, int op, int cons)
 {
     first = var1;
-    second_const = cons;
+    second_const = cons; //ulozim jako konstantu
     if (op < 0 || op > 5) {
         qCritical() << "Error: bad operator in condition in XML";
         return;
     }
     this->op = Operators(op);
-    type = TYPECONST;
+    type = TYPECONST; //druhe cislo je konstanta
 }
 
 bool Constraint::conditionAccepts(StringToPntypeMap values)
 {
-    if (type == TYPEANYTHING) return true;
+    if (type == TYPEANYTHING) return true; //pokud muze by promenna libovolna, podminka odpovida
 
-    pntype first = values[this->first];
-    pntype second = (type == TYPEVAR)? values[second_var] : second_const;
+    pntype first = values[this->first]; //prvni cislo
+    pntype second = (type == TYPEVAR)? values[second_var] : second_const; //druhe cislo
 
     bool ok;
 
-    switch(op) {
+    switch(op) { //podle operatoru vyhodnotim podminku
     case OP_LESS:
         ok = first < second;
         break;
@@ -74,5 +74,5 @@ bool Constraint::conditionAccepts(StringToPntypeMap values)
         break;
     }
 
-    return ok;
+    return ok; //true/false
 }

@@ -16,9 +16,9 @@
 #include <map>
 #include "pnplace.h"
 
-typedef std::vector<QString> StringVector;
-typedef std::map<QString,TokenVector> StringToTokensMap;
-typedef std::map<QString,pntype> StringToPntypeMap;
+typedef std::vector<QString> StringVector; ///< vektor stringu
+typedef std::map<QString,TokenVector> StringToTokensMap; ///< slovnik, mapujici string - promennou na pole hodnot - moznosti
+typedef std::map<QString,pntype> StringToPntypeMap; ///< slovnik, mapujici string na konkretni hodnotu - vysledek
 
 /** Seznam operatoru v podmince
  */
