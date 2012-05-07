@@ -46,10 +46,13 @@ ConnectDialog::~ConnectDialog()
   * slot pri prijeti dialogu (klik na OK)
   */
 void ConnectDialog::accept(){
+
+    // data od uzivatele posle objektu communicator, ktery se zkusi pripojit
     communicator.connect(ui->server->text(),ui->port->text());
     QString message;
     if (communicator.login(ui->user->text(),ui->password->text(),message))
         this->hide();
+    //a pokud nejde, vyhodi chybu
     else
         QMessageBox::critical(this, "Error", message);
 }
@@ -59,6 +62,7 @@ void ConnectDialog::accept(){
   */
 void ConnectDialog::registerUser()
 {
+    // obdobne jako accept()
     communicator.connect(ui->server->text(),ui->port->text());
     QString message;
 

@@ -79,6 +79,7 @@ bool Communicator::connect(QString hostname, QString port)
   */
 bool Communicator::sendCommand(QString command)
 {
+    // vytvori odesilanou zpravu a na zacatek da jeji delku
     if (!connected()) return false;
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
@@ -104,6 +105,7 @@ bool Communicator::sendCommand(QString command)
   */
 bool Communicator::recvCommand(QString &command)
 {
+    // nacte zpravu (ceka dokud nebude dostatek bytu ke cteni)
     quint32 block;
     while (commSock->bytesAvailable() < (int)sizeof(quint32)) {
         returnWhenTimeout false;
@@ -131,6 +133,7 @@ bool Communicator::recvCommand(QString &command)
   */
 inline bool Communicator::login_or_register(QString what, QString name, QString password, QString &message)
 {
+    // vytvori zpravu
     QString sendMessage = "<";
     sendMessage += what;
     sendMessage += " name=\"";
@@ -139,17 +142,20 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
     sendMessage += password;
     sendMessage += "\"/>";
 
+    // zasle zpravu
     if (!sendCommand(sendMessage)) {
         message = "Error: cannot send message to server";
         return false;
     }
 
+    // ziska odpoved
     QString recMessage;
     if (!recvCommand(recMessage)) {
         message = "Error: server didn't response";
         return false;
     }
 
+    //zkontroluje jestli neni error a propoji signaly, vrati true
     if(isNotError(recMessage, message)){
         loginName = name;
         QObject::connect(commSock, SIGNAL(readyRead()), this, SLOT(handleIncomming()));
@@ -197,6 +203,7 @@ bool Communicator::registerUser(QString name, QString password, QString &message
   */
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
 {
+    //podle druhu chyby informuje...
     switch (socketError) {
     case QAbstractSocket::RemoteHostClosedError:
         break;
@@ -219,6 +226,7 @@ void Communicator::displayError(QAbstractSocket::SocketError socketError)
   * @return true, pokud neni error
   */
 bool Communicator::isNotError(QString & recMessage, QString & message){
+
     QXmlStreamReader xml(recMessage);
 
     if (xml.readNext() != QXmlStreamReader::StartDocument) {
@@ -247,24 +255,28 @@ bool Communicator::isNotError(QString & recMessage, QString & message){
   */
 bool Communicator::saveSimState(QString xmlSimState, QString & message){
 
+    // vytvori zpravu
     QString sendMessage = "<save-this>"+xmlSimState+"</save-this>";
     commSock->blockSignals(true);
 
+    // zasle
     sendCommand(sendMessage);
 
+    // zsika odpoved
     QString recMessage;
     if (!recvCommand(recMessage)) {
         message = "Error: server didn't response";
         commSock->blockSignals(false);
         return false;
     }
-    //todo!
+    //zkontroluje chybu
     QString errmessage;
     if (!isNotError(recMessage,errmessage)) {
         message = errmessage;
         commSock->blockSignals(false);
         return false;
     }
+    //zpracuje xml
     QXmlStreamReader xml(recMessage);
     xml.readNext();
     xml.readNext();
@@ -288,32 +300,36 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
   */
 bool Communicator::getSimulations(simList &sims){
     QString message = "<list-simuls/>";
+    // zasle zpravu
     commSock->blockSignals(true);
     if(!sendCommand(message)){
         commSock->blockSignals(false);
         return false;
     }
     QString recMessage;
-
+    // ziska zpravu
     if (!recvCommand(recMessage)) {
         commSock->blockSignals(false);
         return false;
     }
+    // postupne ...
     QXmlStreamReader xml(recMessage);
     if (xml.readNext() != QXmlStreamReader::StartDocument) {
         commSock->blockSignals(false);
         return false;
     }
+    // ... zpracuje ...
     xml.readNext();
     if (xml.atEnd() || xml.hasError()) {
         commSock->blockSignals(false);
         return false;
     }
+    // ... xml ...
     if (xml.name() != "simul-list"){
         commSock->blockSignals(false);
         return false;
     }
-
+    // ... a nastavi vlastnosti site
     while (!xml.atEnd()) {
         if (xml.readNextStartElement()) {
             StringVector list;
@@ -338,6 +354,7 @@ bool Communicator::getSimulations(simList &sims){
   */
 bool Communicator::loadThis(QString name, QString version){
     QString command;
+    //vytvori zpravu a posle
     QXmlStreamWriter xml(&command);
     xml.writeStartDocument();
     xml.writeEmptyElement("simul-that");
@@ -354,6 +371,7 @@ bool Communicator::loadThis(QString name, QString version){
   */
 bool Communicator::handleCommand(QString command){
     QXmlStreamReader xml(command);
+    //zracuje prijate xml
     if(xml.readNext()!=QXmlStreamReader::StartDocument){
         errorMsg = "Error: cannot load sim";
         emit simError();
@@ -375,6 +393,7 @@ bool Communicator::handleCommand(QString command){
         emit simError();
         return false;
     }
+    // emituje signal jesli, kdyz je prijata zprava okay
     if(strcmd == "simul"){
         simID = xml.attributes().value("id").toString();
         command.remove(QRegExp("^<simul[^>]+>"));
@@ -394,14 +413,14 @@ void Communicator::handleIncomming(){
 
     QDataStream in(commSock);
     in.setVersion(QDataStream::Qt_4_0);
-
+    // pocka az muze precist delku
     if (block == 0) {
         if(commSock->bytesAvailable() < (int)sizeof(quint32))
             return;
 
         in >> block;
     }
-
+    // a nacte zpravu dane delky
     if(commSock->bytesAvailable() < block) return;
 
     QString command;

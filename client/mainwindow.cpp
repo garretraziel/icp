@@ -569,6 +569,8 @@ void MainWindow::simOk(){
   * Slot spoustejici simulaci na serveru (pres communikator)
   */
 void MainWindow::runSim() {
+    if(simVect.empty())
+        return;
     if(!getCurrentSim()->isAct)
         return;
 
@@ -580,6 +582,8 @@ void MainWindow::runSim() {
   * Slot krokujici simulaci na serveru (pres komunikator)
   */
 void MainWindow::stepSim() {
+    if(simVect.empty())
+        return;
     if(!getCurrentSim()->isAct)
         return;
 
