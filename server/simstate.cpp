@@ -14,7 +14,7 @@
 
 bool SimState::setState(QString xml)
 {
-
+    //inicializuji hodnoty
     places.clear();
     transits.clear();
     places_id.clear();
@@ -25,41 +25,46 @@ bool SimState::setState(QString xml)
     int errorColumn;
 
     QDomDocument document;
-    if (!document.setContent(xml,&errorStr,&errorLine,&errorColumn)) {
+    if (!document.setContent(xml,&errorStr,&errorLine,&errorColumn)) { //proparsuju XML
         qCritical() << "Error during parsing xml on line: " << errorLine << ", column: " << errorColumn;
         return false;
     }
 
     QDomElement root = document.documentElement();
 
-    if (root.tagName() != "petrinet") {
+    if (root.tagName() != "petrinet") { //nejedna se petriho sit
         qCritical() << "Error during parsing xml, not valid";
         return false;
     }
 
+    //nactu informace o siti
     author = root.attribute("author");
     name = root.attribute("name");
     version = root.attribute("version").toInt();
     info = root.attribute("info");
 
+    //iteruji nad misty
     QDomElement xml_places = root.firstChildElement("places");
     QDomElement one_place = xml_places.firstChildElement("place");
 
     while (!one_place.isNull()) {
         TokenVector tokens;
+        //projdu vsechny tokeny
         QDomElement one_token = one_place.firstChildElement("token");
         while (!one_token.isNull()) {
             pntype token = one_token.text().toInt();
             tokens.push_back(token);
             one_token = one_token.nextSiblingElement("token");
         }
+        //vytvorim nove misto, naplnim ho
         PNPlace *place = new PNPlace(one_place.attribute("posx"),one_place.attribute("posy")
                                      ,one_place.attribute("id"),tokens);
-        places.push_back(place);
-        places_id[one_place.attribute("id")] = place;
+        places.push_back(place); //a zapisu do vektoru mist
+        places_id[one_place.attribute("id")] = place; //zapisu jeho ID
         one_place = one_place.nextSiblingElement("place");
     }
 
+    //iteruji nad prechody
     QDomElement xml_trans = root.firstChildElement("transitions");
     QDomElement one_trans = xml_trans.firstChildElement("transition");
 
@@ -68,43 +73,49 @@ bool SimState::setState(QString xml)
         StringToPnplaceMap out_names;
         ConstraintVector constraints;
 
+        //nejdriv inicializuji vstupni mista
         QDomElement one_element = one_trans.firstChildElement("inplace");
         while (!one_element.isNull()) {
             bool isNum = false;
-            one_element.attribute("name").toInt(&isNum);
+            one_element.attribute("name").toInt(&isNum); //vstupni misto je konstanta
             if (isNum) {
+                //pridam omezeni prechod == konstanta
                 in_names[one_element.attribute("name")] = places_id[one_element.text()];
                 constraints.push_back(new Constraint(one_element.attribute("name"),OP_EQ,one_element.attribute("name").toInt()));
             } else {
-                in_names[one_element.attribute("name")] = places_id[one_element.text()];
+                in_names[one_element.attribute("name")] = places_id[one_element.text()]; //uchovam ukazatel na vstupni misto
             }
             one_element = one_element.nextSiblingElement("inplace");
         }
 
+        //pote udelam to stejne s vystupnimi misty
         one_element = one_trans.firstChildElement("outplace");
         while (!one_element.isNull()) {
             out_names[one_element.attribute("name")] = places_id[one_element.text()];
             one_element = one_element.nextSiblingElement("outplace");
         }
 
+        //pak iteruji nad omezenimi
         QDomElement one_cond = one_trans.firstChildElement("constraint");
         while (!one_cond.isNull()) {
             Constraint *cond;
-            if (one_cond.attribute("type") == "const") {
+            if (one_cond.attribute("type") == "const") { //druha hodnota je konstanta
                 cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("const").toInt());
-            } else {
+            } else { //druha hodnota je promenna
                 cond = new Constraint(one_cond.attribute("var1"),one_cond.attribute("op").toInt(),one_cond.attribute("var2"));
             }
-            constraints.push_back(cond);
+            constraints.push_back(cond); //ulozim omezeni
             one_cond = one_cond.nextSiblingElement("constraint");
         }
 
+        //nakonec iteruji nad operacemi
         OutputOperations operations;
         QDomElement one_op = one_trans.firstChildElement("operation");
         while (!one_op.isNull()){
             OneOut oneout;
             oneout.output = one_op.attribute("output");
             QDomElement one_operation = one_op.firstChildElement();
+            //iteruji nad jednou vstupni operaci
             while(!one_operation.isNull()) {
                 Operation op;
                 if (one_operation.tagName() == "plus") {
@@ -120,10 +131,11 @@ bool SimState::setState(QString xml)
             one_op = one_op.nextSiblingElement("operation");
         }
 
+        //vytvorim novy prechod a naplnim hodnotami
         PNTrans *trans = new PNTrans(one_trans.attribute("posx"), one_trans.attribute("posy"),
                                      one_trans.attribute("id"), constraints, in_names, out_names, operations);
         transits_id[one_trans.attribute("id")] = trans;
-        transits.push_back(trans);
+        transits.push_back(trans); //ulozim do vektoru mist
         one_trans = one_trans.nextSiblingElement("transition");
     }
 
@@ -134,13 +146,13 @@ SimState::~SimState()
 {
     PlaceVector::iterator pit;
     for (pit = places.begin(); pit < places.end(); pit++) {
-        PNPlace *place = (*pit);
+        PNPlace *place = (*pit); //smazu mista
         delete place;
     }
     places.clear();
     TransVector::iterator tit;
     for (tit = transits.begin(); tit < transits.end(); tit++) {
-        PNTrans *trans = (*tit);
+        PNTrans *trans = (*tit); //smazu prechody
         delete trans;
     }
     transits.clear();
@@ -150,23 +162,26 @@ SimState::~SimState()
 
 QString SimState::getState()
 {
-    QString result;
+    QString result; //vysledne XML
     QXmlStreamWriter doc(&result);
     doc.setAutoFormatting(true);
     doc.writeStartDocument();
 
     doc.writeStartElement("petrinet");
 
+    //zapisi informace o siti
     doc.writeAttribute("author",author);
     doc.writeAttribute("name",name);
     doc.writeAttribute("version",QString::number(version));
     doc.writeAttribute("info",info);
 
+    //nejprve zapisi mista
     doc.writeStartElement("places");
 
     PlaceVector::iterator pit;
 
     for (pit = places.begin(); pit != places.end(); pit++) {
+        //zapisi misto a informace o nem
         doc.writeStartElement("place");
 
         PNPlace *place = (*pit);
@@ -177,6 +192,7 @@ QString SimState::getState()
         TokenVector::iterator tit;
         TokenVector tokens = place->getTokens();
 
+        //zapisi tokeny
         for (tit = tokens.begin(); tit < tokens.end(); tit++) {
             doc.writeTextElement("token",QString::number(*tit));
         }
@@ -186,6 +202,7 @@ QString SimState::getState()
 
     doc.writeEndElement();
 
+    //pote zapisi prechody
     doc.writeStartElement("transitions");
 
     TransVector::iterator trit;
@@ -193,6 +210,7 @@ QString SimState::getState()
     for (trit = transits.begin(); trit != transits.end(); trit++) {
         doc.writeStartElement("transition");
 
+        //zapisi informace o prechodu
         PNTrans *transit = (*trit);
         doc.writeAttribute("id",transit->id);
         doc.writeAttribute("posx",transit->x);
@@ -200,6 +218,7 @@ QString SimState::getState()
 
         ConstraintVector::iterator cvit;
         for (cvit = transit->constraints.begin(); cvit != transit->constraints.end(); cvit++) {
+            //zapisi podminku
             Constraint *constraint = (*cvit);
 
             bool isNum = false;
@@ -227,6 +246,7 @@ QString SimState::getState()
 
         }
 
+        //zapisi vstupni a vystupni mista prechodu
         StringToPnplaceMap::iterator placeit;
 
         for (placeit = transit->in_names.begin(); placeit != transit->in_names.end(); placeit++) {
@@ -247,11 +267,13 @@ QString SimState::getState()
 
         OutputOperations::iterator oit;
 
+        //nakonec zapisi operace
         for (oit = transit->operations.begin(); oit != transit->operations.end(); oit++) {
             doc.writeStartElement("operation");
             doc.writeAttribute("output",(*oit).output);
             OperationVector::iterator opit;
 
+            //a jednotlive kroky dane operace
             for (opit = (*oit).operations.begin(); opit != (*oit).operations.end(); opit++) {
                 Operation operation = (*opit);
                 if (operation.op == ADD) doc.writeEmptyElement("plus");
