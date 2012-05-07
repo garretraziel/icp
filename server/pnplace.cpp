@@ -17,7 +17,7 @@ PNPlace::PNPlace()
 
 bool PNPlace::hasTokens()
 {
-    return !tokens.empty();
+    return !tokens.empty(); //pokud je vektor prazdny, v miste nejsou tokeny
 }
 
 TokenVector PNPlace::getTokens()
@@ -27,11 +27,12 @@ TokenVector PNPlace::getTokens()
 
 void PNPlace::putToken(pntype token)
 {
-    tokens.push_back(token);
+    tokens.push_back(token); //vlozim token nakonec vektoru
 }
 
 bool PNPlace::removeToken(pntype token)
 {
+    //projdu vektorem a prvni nalezenou hodnotu token smazu
     TokenVector::iterator position = std::find(tokens.begin(), tokens.end(), token);
     if (position != tokens.end()) {
         tokens.erase(position);
@@ -41,5 +42,5 @@ bool PNPlace::removeToken(pntype token)
 }
 
 void PNPlace::removeTokens(){
-    tokens.clear();
+    tokens.clear(); //smazu vsechny tokeny
 }

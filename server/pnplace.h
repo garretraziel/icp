@@ -15,8 +15,8 @@
 #include <QString>
 #include <QDebug>
 
-typedef int pntype;
-typedef std::vector<pntype> TokenVector;
+typedef int pntype; ///< datovy typ simulace, dle zadani INT
+typedef std::vector<pntype> TokenVector; ///< vektor hodnot v miste pnplace
 
 /**
  * Trida pro reprezentaci mista v petriho siti. Uchovava si pouze informace o tokenech, ktere obsahuje.
