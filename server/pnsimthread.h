@@ -19,9 +19,9 @@
 #include <QMutex>
 #include <vector>
 
-typedef QMap<int, PetriSim *> SimVector;
-typedef QMap<QString, QString> StrToStrMap;
-typedef std::vector<QString> QStringVector;
+typedef QMap<int, PetriSim *> SimVector; ///< mapa simulaci, na pozici ID je nactena simulace
+typedef QMap<QString, QString> StrToStrMap; ///< mapa string na string, pouziva se pro predavani argumentu z XML
+typedef std::vector<QString> QStringVector; ///< vektor QStringu, pouziva se pro uchovani ID k poslani
 
 /**
  * Vlakno, ve kterem probiha veskera komunikace s uzivatelem, uchovava simulace
