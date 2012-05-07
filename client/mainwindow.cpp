@@ -423,7 +423,7 @@ pnItem * MainWindow::__addItem(PNPlace * simPlace){
   * @return ukazatel na misto (nepouzivan, jen pro uplnost)
   */
 pnItem * MainWindow::addItem(){
-
+    returnIfNoTab NULL;
 
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
@@ -460,7 +460,7 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
   * @return ukazatel na misto (nepouzivan, jen pro uplnost)
   */
 pnItem * MainWindow::addItemRect(){
-
+    returnIfNoTab NULL;
     // obdobne jako v addItem()
 
     SimState * currentSim = getCurrentSim();
