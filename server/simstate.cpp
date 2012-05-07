@@ -12,6 +12,13 @@
 #include <map>
 #include <QXmlStreamWriter>
 
+/**
+  * Nastavi svuj stav podle vstupniho XML, ktere parsuje.
+  *
+  * @param xml vstupni XML se stavem simulace
+  *
+  * @return true pokud se podarilo nastavit stav, jinak false
+  */
 bool SimState::setState(QString xml)
 {
     //inicializuji hodnoty
@@ -142,6 +149,9 @@ bool SimState::setState(QString xml)
     return true;
 }
 
+/**
+  * Destruktor objektu.
+  */
 SimState::~SimState()
 {
     PlaceVector::iterator pit;
@@ -160,6 +170,11 @@ SimState::~SimState()
     transits_id.clear();
 }
 
+/**
+  * Vrati XML se stavem simulace.
+  *
+  * @return XML se stavem simulace
+  */
 QString SimState::getState()
 {
     QString result; //vysledne XML
@@ -299,7 +314,11 @@ QString SimState::getState()
     return result;
 }
 
-
+/**
+  * Zkontroluje, zda je nactena konfigurace validni.
+  *
+  * @return true pokud je konfigurace validni, jinak false
+  */
 bool SimState::checkConfiguration(){
     //zjisti, zda je dana konfigurace spravna
     foreach(PNTrans * trans, transits){
@@ -332,6 +351,11 @@ bool SimState::checkConfiguration(){
     return true;
 }
 
+/**
+  * Smaze zadane misto ze simulace.
+  *
+  * @param _place ukazatel na misto
+  */
 void SimState::removePlace(PNPlace * _place){
     //smaze ze simulace zadane misto
     PlaceVector::iterator it;
@@ -342,6 +366,12 @@ void SimState::removePlace(PNPlace * _place){
         }
     }
 }
+
+/**
+  * Smaze zadany prechod ze simulace.
+  *
+  * @param _trans ukazatel na prechod
+  */
 void SimState::removeTrans(PNTrans * _trans){
     //smaze ze simulace zadany prechod
     TransVector::iterator it;
@@ -353,6 +383,14 @@ void SimState::removeTrans(PNTrans * _trans){
     }
 }
 
+/**
+  * Nastavi informace o prechodu: nazev, autora, verzi, info.
+  *
+  * @param _name nazev simulace
+  * @param _author jmeno autora
+  * @param _version verze simulace
+  * @param _info dodatecne informace k simulaci
+  */
 void SimState::setProperies(QString _name, QString _author, QString _version, QString _info){
     name = _name;
     author = _author;
