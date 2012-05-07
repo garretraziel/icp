@@ -22,7 +22,7 @@ PNTrans::~PNTrans()
 {
     ConstraintVector::iterator cit;
     for (cit = constraints.begin(); cit < constraints.end(); cit++) {
-        Constraint *c = (*cit);
+        Constraint *c = (*cit); //smazu vsechny podminky
         delete c;
     }
     constraints.clear();
@@ -35,12 +35,12 @@ bool PNTrans::fire()
     StringToTokensMap hash;
 
     for (it = in_names.begin(); it != in_names.end(); it++) {
-        hash[(*it).first] = (*it).second->getTokens();
+        hash[(*it).first] = (*it).second->getTokens(); //ziskam hodnoty ze vstupnich mist
     }
 
-    possible_choices = chooseValues(hash);
+    possible_choices = chooseValues(hash); //najdu veskere kombinace, se kterymi tento prechod muzu odpalit
 
-    if (possible_choices.empty()) {
+    if (possible_choices.empty()) { //zadna takova neni, nemohu odpalit
         return false;
     }
 
@@ -49,42 +49,43 @@ bool PNTrans::fire()
 
 StrPntMapVector PNTrans::chooseValues(StringToTokensMap hash)
 {
-    StrPntMapVector result;
+    StrPntMapVector result; //vektor moznych kombinaci hodnot, co odpovidaji podminkam
 
     int hashsize = hash.size();
 
-    IntVector positions(hashsize+1,0);
-    IntVector maximums(hashsize);
+    IntVector positions(hashsize+1,0); //vektor pozic, ze kterych budu brat
+    IntVector maximums(hashsize); //vektor velikosti, maximalnich hodnot na dane pozici
 
     StringToTokensMap::iterator it;
     int i;
     for (i = 0, it = hash.begin(); it != hash.end(); it++, i++) {
-        maximums[i] = (*it).second.size();
+        maximums[i] = (*it).second.size(); //ziskam maximalni hodnotu pro danou pozici
         if (maximums[i] == 0) {
-            return result;
+            return result; //konec pokud nejake vstupni misto je prazdne
         }
     }
 
-    while (positions[hashsize] == 0) {
-        StringToPntypeMap possibility;
+    //toto jsem nazval "hodinarsky algoritmus"
+    while (positions[hashsize] == 0) { //dokud neni na posledni nejvyssi pozici jednicka
+        StringToPntypeMap possibility; //jedna moznost
 
         StringToTokensMap::iterator it;
         int i;
         for (i = 0, it = hash.begin(); it != hash.end(); it++, i++) {
-            possibility[(*it).first] = (*it).second[positions[i]];
+            possibility[(*it).first] = (*it).second[positions[i]]; //vyberu hodnoty na mistech podle positions
         }
 
         ConstraintVector::iterator cit;
         bool possible = true;
         for (cit = constraints.begin(); cit != constraints.end(); cit++) {
-            if (!(*cit)->conditionAccepts(possibility)) {
-                possible = false;
+            if (!(*cit)->conditionAccepts(possibility)) { //pokud neodpovida nejake podmince
+                possible = false; //je tato kombinace spatna
                 break;
             }
         }
 
         if (possible) {
-            result.push_back(possibility);
+            result.push_back(possibility); //kombinace odpovida vstupnim podminkam, ulozim
         }
 
         bool add = true;
