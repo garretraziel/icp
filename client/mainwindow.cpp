@@ -99,9 +99,9 @@ void MainWindow::actAct(int i){
         return;
 
     if(simVect[i]->isAct)
-        ui->actLabel->setText("server has actual version");
+        ui->actLabel->setText("server has an actual version");
     else
-        ui->actLabel->setText("server has NOT actual version (send it to server)");
+        ui->actLabel->setText("server has NOT an actual version (send it to server)");
 }
 
 /**
@@ -548,6 +548,8 @@ void MainWindow::loadLocalSim(){
         return;
 
     __loadSim(fileName);
+    getCurrentSim()->isAct = false;
+    mw->actAct(mw->getCurrentIndex());
 }
 
 /**

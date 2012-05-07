@@ -124,7 +124,7 @@
          </font>
         </property>
         <property name="text">
-         <string>na serveru neni aktualni verze</string>
+         <string/>
         </property>
        </widget>
       </item>
