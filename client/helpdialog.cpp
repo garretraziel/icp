@@ -13,6 +13,10 @@
 #include "helpdialog.h"
 #include "ui_helpdialog.h"
 
+/**
+  * Konstruktor vytvarejici helpDialog
+  * @param predek pro uklid
+  */
 helpDialog::helpDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::helpDialog)
@@ -21,6 +25,9 @@ helpDialog::helpDialog(QWidget *parent) :
 
 }
 
+/**
+  * Destruktor helpDialog
+  */
 helpDialog::~helpDialog()
 {
     delete ui;

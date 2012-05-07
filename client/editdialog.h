@@ -8,6 +8,8 @@
  *
  * Dialog na editaci vlastnosti casti site.
  *
+ * Vygeneroval automaticky Qt Creator
+ *
  */
 
 #ifndef EDITDIALOG_H

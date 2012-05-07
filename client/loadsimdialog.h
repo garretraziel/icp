@@ -8,6 +8,8 @@
  *
  * Dialog pro zobrazeni, vyhledani a nacetni siti ze serveru
  *
+ * Vygeneroval automaticky Qt Creator (nektere metody dopsany rucne)
+ *
  */
 
 

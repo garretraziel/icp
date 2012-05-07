@@ -9,6 +9,8 @@
  * Trida pro hlavni okno, ktere slouzi jako klientsky editor a
  * prohlizec siti.
  *
+ * Puvodni kostru vygeneroval automaticky Qt Creator
+ *
  */
 
 #ifndef MAINWINDOW_H

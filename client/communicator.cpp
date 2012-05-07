@@ -23,12 +23,20 @@
 
 Communicator communicator(mw);
 
+
+/**
+  * Konstruktor vytvarejici Communicator
+  * @param parent predek pro uklid
+  */
 Communicator::Communicator(QWidget *parent):QObject(parent)
 {
     commSock = new QTcpSocket;
 
 }
 
+/**
+  * Destruktor Communicator
+  */
 Communicator::~Communicator()
 {
     if (connected()) {
@@ -38,6 +46,10 @@ Communicator::~Communicator()
     delete commSock;
 }
 
+/**
+  * Zjisteni, zda je klient pripojen k serveru
+  * @return true pokud je pripojen k serveru
+  */
 bool Communicator::connected()
 {
     if (commSock->state() == QAbstractSocket::ConnectedState) {
@@ -47,6 +59,12 @@ bool Communicator::connected()
     }
 }
 
+/**
+  * Pripoji k serveru
+  * @param hostname hostname nebo IP
+  * @param port port, na kterem server nasloucha
+  * @return true pri uspechu
+  */
 bool Communicator::connect(QString hostname, QString port)
 {
     commSock->connectToHost(hostname, port.toUInt(),QIODevice::ReadWrite);
@@ -54,6 +72,11 @@ bool Communicator::connect(QString hostname, QString port)
     return connected();
 }
 
+/**
+  * Posle prikaz serveru
+  * @param command prikaz
+  * @return true pri uspechu
+  */
 bool Communicator::sendCommand(QString command)
 {
     if (!connected()) return false;
@@ -74,6 +97,11 @@ bool Communicator::sendCommand(QString command)
                           if (commSock->state() == QTcpSocket::UnconnectedState) \
                             return
 
+/**
+  * Ziska prikaz poslany ze serveru
+  * @param command reference na ziskany prikaz
+  * @return true pri uspechu
+  */
 bool Communicator::recvCommand(QString &command)
 {
     quint32 block;
@@ -93,6 +121,14 @@ bool Communicator::recvCommand(QString &command)
     return true;
 }
 
+/**
+  * Zaregistrue nebo zaloguje uzivatele
+  * @param what kterou akci provest ("login", "register")
+  * @param name jmeno uzivatele
+  * @param password heslo
+  * @param message reference na informacni zpravu
+  * @return true pri uspechu
+  */
 inline bool Communicator::login_or_register(QString what, QString name, QString password, QString &message)
 {
     QString sendMessage = "<";
@@ -131,16 +167,34 @@ inline bool Communicator::login_or_register(QString what, QString name, QString 
     }
 }
 
+/**
+  * Zaloguje uzivatele
+  * @param name uzivatelske jmeno
+  * @param password heslo
+  * @param message navratova informacni zprava
+  * @return true pri uspechu
+  */
 bool Communicator::login(QString name, QString password, QString &message)
 {
     return login_or_register("login",name,password,message);
 }
 
+/**
+  * Zaregistruje uzivatele
+  * @param name uzivatelske jmeno
+  * @param password heslo
+  * @param message navratova informacni zprava
+  * @return true pri uspechu
+  */
 bool Communicator::registerUser(QString name, QString password, QString &message)
 {
     return login_or_register("register",name,password,message);
 }
 
+/**
+  * Slot na zobrazeni chybove hlasky pri chybe socketu
+  * @param socketError typ chyby socketu
+  */
 void Communicator::displayError(QAbstractSocket::SocketError socketError)
 {
     switch (socketError) {
@@ -158,6 +212,12 @@ void Communicator::displayError(QAbstractSocket::SocketError socketError)
     }
 }
 
+/**
+  * Zkontroluje, zda zprava od serveru neni error
+  * @param recMessage reference na zpravu ziskanou od serveru
+  * @param message reference na informacni zpravu
+  * @return true, pokud neni error
+  */
 bool Communicator::isNotError(QString & recMessage, QString & message){
     QXmlStreamReader xml(recMessage);
 
@@ -179,6 +239,12 @@ bool Communicator::isNotError(QString & recMessage, QString & message){
 
 }
 
+/**
+  * Ulozi simulaci na server
+  * @param XmlSimState retezec obsahujici XML stav simulace
+  * @param message navratova informacni zprava
+  * @return true pri uspechu
+  */
 bool Communicator::saveSimState(QString xmlSimState, QString & message){
 
     QString sendMessage = "<save-this>"+xmlSimState+"</save-this>";
@@ -215,6 +281,11 @@ bool Communicator::saveSimState(QString xmlSimState, QString & message){
     return true;
 }
 
+/**
+  * Ziskani simulaci
+  * @param sims reference na seznam simulaci
+  * @return true pri uspechu
+  */
 bool Communicator::getSimulations(simList &sims){
     QString message = "<list-simuls/>";
     commSock->blockSignals(true);
@@ -259,6 +330,12 @@ bool Communicator::getSimulations(simList &sims){
     return true;
 }
 
+/**
+  * Nacita ze serveru danou simulaci
+  * @param name nazev simulace
+  * @param version verze simulace
+  * @return true pri uspechu
+  */
 bool Communicator::loadThis(QString name, QString version){
     QString command;
     QXmlStreamWriter xml(&command);
@@ -270,6 +347,11 @@ bool Communicator::loadThis(QString name, QString version){
     return sendCommand(command);
 }
 
+/**
+  * Zpracuje prikaz prijaty od serveru
+  * @param command prikaz
+  * @return true pri uspechu
+  */
 bool Communicator::handleCommand(QString command){
     QXmlStreamReader xml(command);
     if(xml.readNext()!=QXmlStreamReader::StartDocument){
@@ -305,7 +387,9 @@ bool Communicator::handleCommand(QString command){
     return true;
 }
 
-
+/**
+  * Slot na zpracovani prichozi zpravy
+  */
 void Communicator::handleIncomming(){
 
     QDataStream in(commSock);
@@ -330,6 +414,12 @@ void Communicator::handleIncomming(){
     }
 }
 
+/**
+  * Spusti simulaci
+  * @param id unikatni ID (ziskane od serveru)
+  * @param run_or_step true pokud run, false pokud step
+  * @return true pri uspechu
+  */
 bool Communicator::runSimulation(QString id, bool run_or_step)
 {
     QString command;
@@ -342,11 +432,18 @@ bool Communicator::runSimulation(QString id, bool run_or_step)
     return sendCommand(command);
 }
 
+/**
+  * Slot na nastaveni offline hlasky v statusbaru mainwindow
+  */
 void Communicator::setOffline(){
     //mw->setStatusLabel("Offline","#ff0000");
     //commSock->blockSignals(true);
 }
 
+/**
+  * Blokuje signaly se socketu
+  * @param b true zapne blokovani, false vypne
+  */
 void Communicator::blockSocket(bool b){
     commSock->blockSignals(b);
     QObject::disconnect(this,SLOT(setOffline()));

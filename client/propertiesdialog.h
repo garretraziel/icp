@@ -8,6 +8,8 @@
  *
  * Dialog pro nastaveni nazvu a informace u siti.
  *
+ * Vygeneroval automaticky Qt Creator
+ *
  */
 
 #ifndef PROPERTIESDIALOG_H

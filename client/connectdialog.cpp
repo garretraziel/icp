@@ -21,6 +21,10 @@
 #include <QDataStream>
 #include <QMessageBox>
 
+/**
+  * Konstruktor vytvarejici ConnecDialog
+  * @param predek pro uklid
+  */
 ConnectDialog::ConnectDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConnectDialog)
@@ -30,19 +34,18 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(registerUser()));
 }
 
+/**
+  * Destruktor ConnectDialog
+  */
 ConnectDialog::~ConnectDialog()
 {
     delete ui;
 }
 
+/**
+  * slot pri prijeti dialogu (klik na OK)
+  */
 void ConnectDialog::accept(){
-    //toto je fakt moc pekny, priste asi nejakej qstream nebo co
-
-
-    /*connect(&commSock, SIGNAL(connected()), this, SLOT(login()));
-
-    commSock.connectToHost(ui->server->text(), ui->port->text().toUInt(),QIODevice::ReadWrite);*/
-
     communicator.connect(ui->server->text(),ui->port->text());
     QString message;
     if (communicator.login(ui->user->text(),ui->password->text(),message))
@@ -51,6 +54,9 @@ void ConnectDialog::accept(){
         QMessageBox::critical(this, "Error", message);
 }
 
+/**
+  * slot na registraci klienta
+  */
 void ConnectDialog::registerUser()
 {
     communicator.connect(ui->server->text(),ui->port->text());

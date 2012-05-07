@@ -8,6 +8,8 @@
  *
  * Dialog pro pripojeni k serveru
  *
+ * Vygeneroval automaticky Qt Creator (nektere metody dopsany rucne)
+ *
  */
 
 #ifndef CONNECTDIALOG_H

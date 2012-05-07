@@ -13,6 +13,11 @@
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 
+
+/**
+  * Konstruktor vytvarejici aboutDialog
+  * @param predek pro uklid
+  */
 aboutDialog::aboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::aboutDialog)
@@ -20,6 +25,9 @@ aboutDialog::aboutDialog(QWidget *parent) :
     ui->setupUi(this);
 }
 
+/**
+  * Destruktor aboutDialog
+  */
 aboutDialog::~aboutDialog()
 {
     delete ui;

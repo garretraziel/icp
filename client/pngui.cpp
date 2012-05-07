@@ -20,13 +20,18 @@
 #include <typeinfo>
 #include <QString>
 
-pnItem * startpos;
-bool line;
-std::vector<pnLine*> lineVect;
-bool erase;
+pnItem * startpos;               ///< ukazatel na pocatecni misto/prechod, ze ktereho je vedena hrana
+bool line;                       ///< globalni prepinac, urcuje zda se prave spojuji prvky ve scene
+std::vector<pnLine*> lineVect;   ///< vektor hran, uzit pro iterovani a opraveni pozice metodou update()
+bool erase;                      ///< globalni prepinas, urcuje zda se prave mazou prvky ve scene
 
 #define PI 3.1415927537
 
+/**
+  * Konstruktor vytvarejici misto ve scene
+  * @param _canvas ukazatel na scena, kam se vykresluje
+  * @param _simPlace ukazatel na misto do SimState
+  */
 pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
@@ -46,6 +51,11 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     primType = PLACE;
 }
 
+/**
+  * Konstruktor vytvarejici prechod ve scene
+  * @param _canvas ukazatel na scena, kam se vykresluje
+  * @param _simTrans ukazatel na prechod do SimState
+  */
 pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
@@ -66,12 +76,22 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     primType = TRANS;
 }
 
+/**
+  * Nastaveni pozice na x y
+  * @param x X pozice
+  * @param y Y pozice
+  */
 void pnItem::setPosition(int x, int y){
     this->setPos(x,y);
     label->setPos(x+labelPos.x(),y+labelPos.y());
     if(funcLabel) funcLabel->setPos(x+labelPos.x(),y+labelPos.y()+15);
 }
 
+/**
+  * Obslouzeni kliknuti na prvek
+  * @param event udalost spojena s mysi
+  * @return
+  */
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  {
     if(erase){
@@ -139,6 +159,10 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     }
  }
 
+/**
+  * Obslouzeni posunuti prvku
+  * @param event udalost spojena s mysi
+  */
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     mw->getCurrentSim()->isAct = false;
     mw->actAct(mw->getCurrentIndex());
@@ -160,7 +184,10 @@ void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     setCursor(Qt::OpenHandCursor);
 }
 
-
+/**
+  * Obslouzeni pusteni zmacknuteho tlacitka po kliknuti na prvek
+  * @param event udalost spojena s mysi
+  */
 void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
  {
      if(event->button()==Qt::LeftButton)
@@ -169,16 +196,30 @@ void pnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
      }
  }
 
+/**
+  * Obslouzeni dvojkliku na prvek
+  * @param event udalost spojena s mysi
+  */
 void pnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     Q_UNUSED(event);
     editor->loadData(this);
     editor->show();
 }
 
+/**
+  * Ziskani ohranicujiciho obdelnika
+  * @return ohranicujici obdelnik
+  */
 QRectF pnItem::boundingRect() const{
     return QRectF(-20.5, -20.5, 41, 41);
 }
 
+/**
+  * Obslouzeni vykresleni mista do sceny
+  * @param painter vykreslovac (vnitrne obsluhuje scena)
+  * @param option vykreslovaci volba
+  * @param widget uakaztel na vykreslovaci widget
+  */
 void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -188,6 +229,11 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawEllipse(-20, -20, 40, 40);
 }
 
+
+/**
+  * Ziskani ohranicujiciho obdelnika
+  * @return ohranicujici obdelnik
+  */
 QRectF pnRect::boundingRect() const{
     //TODO
     int textLen = label->toPlainText().length()*6;
@@ -195,6 +241,12 @@ QRectF pnRect::boundingRect() const{
     return QRectF(-66, -26, 66 + ((textLen > funcLen)? textLen : funcLen), 51);
 }
 
+/**
+  * Obslouzeni vykresleni prechodu do sceny
+  * @param painter vykreslovac (vnitrne obsluhuje scena)
+  * @param option vykreslovaci volba
+  * @param widget uakaztel na vykreslovaci widget
+  */
 void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -206,20 +258,40 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->drawRect(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
 }
 
+/**
+  *
+  * Trida pro popisek reagujici na dvojklik
+  *
+  */
 class dClickLabel: public QGraphicsTextItem {
 private:
-    pnLine * sender;
+    pnLine * sender; ///< ukazatel na prvek, ktery tento label popisuje
 public:
+
+    /**
+      * Konstruktor dClickLabel
+      * @param _sender ukazatel na prvek, ktery tento label popisuje
+      */
     dClickLabel(pnLine * _sender){
         sender = _sender;
     }
 protected:
+
+    /**
+      * Obslouzeni dvojkliku na prvek
+      * @param event udalost spojena s mysi
+      */
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
         Q_UNUSED(event);
         sender->editor->loadData(sender);
         sender->editor->show();
     }
 
+    /**
+      * Obslouzeni kliknuti na prvek
+      * @param event udalost spojena s mysi
+      * @return
+      */
     void mousePressEvent(QGraphicsSceneMouseEvent *event){
         Q_UNUSED(event);
         if(erase){
@@ -233,6 +305,12 @@ protected:
         }
     }
 
+    /**
+      * Obslouzeni vykresleni popisku do sceny
+      * @param painter vykreslovac (vnitrne obsluhuje scena)
+      * @param option vykreslovaci volba
+      * @param widget uakaztel na vykreslovaci widget
+      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
         Q_UNUSED(widget);
         Q_UNUSED(option);
@@ -247,13 +325,28 @@ protected:
     }
 };
 
+/**
+  *
+  * Trida reprezentujici sipku ve scene
+  *
+  */
 class arrow: public QGraphicsLineItem {
-    pnItem * colider;
+    pnItem * colider; ///< ukazatel na koncovy prvek
 public:
+    /**
+      * Nastavi ukazatel na koncovy prvek
+      * @param _colider ukazatel na koncovy prvek
+      */
     void setColider(pnItem * _colider){
         colider = _colider;
     }
 
+    /**
+      * Obslouzeni vykresleni sipky do sceny
+      * @param painter vykreslovac (vnitrne obsluhuje scena)
+      * @param option vykreslovaci volba
+      * @param widget uakaztel na vykreslovaci widget
+      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
         Q_UNUSED(widget);
         Q_UNUSED(option);
@@ -286,6 +379,12 @@ public:
     }
 };
 
+/**
+  * Konstruktor vytvarejici pnLine
+  * @param _start pocatecni prvek
+  * @param _end koncovy prvek
+  * @param _canvas scena kam se kresli
+  */
 pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    start = _start;
    end = _end;
@@ -317,12 +416,18 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    funcLabel = NULL;
 }
 
+/**
+  * Destruktor pnLine
+  */
 pnLine::~pnLine(){
 
     delete line;
     delete label;
 }
 
+/**
+  * Obslozeni prekresleni hrany po presunu mista nebo prechodu
+  */
 void pnLine::update(){
     line->setLine(start->x(),start->y(),end->x(),end->y());
     label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);    

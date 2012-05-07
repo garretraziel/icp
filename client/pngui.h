@@ -109,7 +109,7 @@ public:
     pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace = NULL);
 
     /**
-      * Obslozeni vykresleni mista do sceny
+      * Obslouzeni vykresleni mista do sceny
       * @param painter vykreslovac (vnitrne obsluhuje scena)
       * @param option vykreslovaci volba
       * @param widget uakaztel na vykreslovaci widget
@@ -171,7 +171,7 @@ public:
     ~pnLine();
 
     /**
-      * Obslozeni prekresleni hrany po presunu mista nebo prechodu
+      * Obslouzeni prekresleni hrany po presunu mista nebo prechodu
       */
     void update();
 

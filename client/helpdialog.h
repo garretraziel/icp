@@ -8,6 +8,8 @@
  *
  * Dialog zobrazujici napovedu.
  *
+ * Vygeneroval automaticky Qt Creator
+ *
  */
 
 #ifndef HELPDIALOG_H

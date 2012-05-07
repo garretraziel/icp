@@ -16,6 +16,10 @@
 #include "mainwindow.h"
 #include "communicator.h"
 
+/**
+  * Konstruktor vytvarejici propertiesDialog
+  * @param predek pro uklid
+  */
 propertiesDialog::propertiesDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::propertiesDialog)
@@ -23,11 +27,21 @@ propertiesDialog::propertiesDialog(QWidget *parent) :
     ui->setupUi(this);
 }
 
+/**
+  * Destruktor propertiesDialog
+  */
 propertiesDialog::~propertiesDialog()
 {
     delete ui;
 }
 
+/**
+  * Nacte data do dialogu
+  * @param name jmeno simulace
+  * @param author jmeno autora
+  * @param version verze
+  * @param info informace o simulaci
+  */
 void propertiesDialog::loadData(QString name, QString author, QString version, QString info){
     ui->nameEdit->setText(name);
     author = (author=="")? communicator.userLoggedIn() : author;
@@ -36,6 +50,9 @@ void propertiesDialog::loadData(QString name, QString author, QString version, Q
     ui->infoEdit->setPlainText(info);
 }
 
+/**
+  * Slot volany po prijeti dialogu (klik na OK)
+  */
 void propertiesDialog::accept(){
 
     mw->getCurrentSim()->setProperies(

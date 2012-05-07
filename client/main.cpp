@@ -13,7 +13,12 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
 
-
+/**
+  * Main funkce programu
+  * @param argc pocet argumentu
+  * @param vektor argumentu
+  * @return return code progamu
+  */
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

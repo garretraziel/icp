@@ -31,8 +31,12 @@
 
 MainWindow * mw;
 
-int UniqID = 0;
+int UniqID = 0; ///< unikatni id prvku ve scene
 
+/**
+  * Konstruktor vytvarejici MainWindow
+  * @param predek pro uklid
+  */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -83,7 +87,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setStatusLabel("Offline", "#ff0000");
 }
 
-
+/**
+  * Slot aktualizujici informaci o aktualnosti site
+  */
 void MainWindow::actAct(int i){
     unsigned int j = i;
     if(simVect.empty() || j >= simVect.size())
@@ -95,6 +101,9 @@ void MainWindow::actAct(int i){
         ui->actLabel->setText("na serveru neni aktualni verze");
 }
 
+/**
+  * Slot volany pred zavrenim okna (uklizeni statusbaru)
+  */
 void MainWindow::preClose(){
     communicator.blockSocket(true);
     delete statusLabel;
@@ -102,6 +111,9 @@ void MainWindow::preClose(){
     this->close();
 }
 
+/**
+  * Destruktor MainWindow
+  */
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -117,6 +129,9 @@ MainWindow::~MainWindow()
 
 }
 
+/**
+  * Slot otevirajici novy tab
+  */
 void MainWindow::newTab(){
 
 
@@ -154,6 +169,10 @@ void MainWindow::newTab(){
 
 }
 
+/**
+  * Zobrazeni z OneOut do QString (vyvotreni textu podminky)
+  * @return text operace
+  */
 QString fromConstraint(Constraint * cons){
     QString guard = "";
     QString ops[] = {"<","<=",">=",">","==","!="};
@@ -171,6 +190,10 @@ QString fromConstraint(Constraint * cons){
     return guard;
 }
 
+/**
+  * Zobrazeni z OneOut do QString (vyvotreni textu operace)
+  * @return text operace
+  */
 QString fromOperation(OneOut oper){
     QString func = "";
     func += oper.output + "= ";
@@ -182,7 +205,10 @@ QString fromOperation(OneOut oper){
     return func;
 }
 
-
+/**
+  * Nacte simulaci ze souboru
+  * @param fileName jmeno souboru
+  */
 void MainWindow::__loadSim(QString fileName) {
     QFile xmlfile(fileName);
     xmlfile.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -191,11 +217,19 @@ void MainWindow::__loadSim(QString fileName) {
     __loadSimString(xml.data());
 }
 
+/**
+  * Nacte simulaci z XML retezce, ulozi do aktualni
+  * @param simString XML stav simulace
+  */
 void MainWindow::__loadSimString(QString simString){
     newTab();
     __loadSimStringNoNewTab(simString);
 }
 
+/**
+  * Nacte simulaci z XML ..., neotevira novy tab
+  * @param simString XML stav simulace
+  */
 void MainWindow::__loadSimStringNoNewTab(QString simString){
 
     SimState * currentSim = getCurrentSim();
@@ -207,7 +241,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
     int centerCnt = 0;
     std::map<PNPlace *, pnItem *> placeToGui;
     foreach(PNPlace * place, currentSim->places){
-        UniqID = (UniqID > place->id.toInt())? UniqID : place->id.toInt();
+        UniqID = (UniqID <= place->id.toInt())? place->id.toInt()+1 : UniqID;
         pnItem * item = __addItem(place);
         placeToGui[place] = item;
         QString id = "";
@@ -223,7 +257,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
 
 
     foreach(PNTrans * transit, currentSim->transits){
-        UniqID = (UniqID > transit->id.toInt())? UniqID : transit->id.toInt();
+        UniqID = (UniqID <= transit->id.toInt())? transit->id.toInt()+1 : UniqID;
         pnItem * item = __addItemRect(transit);
         QString guard = "";
         foreach(Constraint * cons, transit->constraints){
@@ -260,6 +294,9 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
 
 }
 
+/**
+  * Slot nacitajici simulaci
+  */
 void MainWindow::loadSim(){
 
     simList simulations;
@@ -276,9 +313,9 @@ void MainWindow::loadSim(){
     //__loadSim("");
 }
 
-// TODO:
-// tyto dve mozna pujdou prepracovat do jedne
-
+/**
+  * Slot ukladajici simulaci
+  */
 void MainWindow::saveSim(){
     if(!getCurrentSim())
         return;
@@ -297,10 +334,17 @@ void MainWindow::saveSim(){
     }
 }
 
+/**
+  * Ziska aktualni index
+  * @return aktualni index
+  */
 int MainWindow::getCurrentIndex(){
     return ui->tabWidget->currentIndex();
 }
 
+/**
+  * Slot ukladajici simulaci lokalne
+  */
 void MainWindow::saveLocalSim(){
     if(!getCurrentSim())
         return;
@@ -332,30 +376,47 @@ void MainWindow::saveLocalSim(){
 
 }
 
+/**
+  * Slot zobrazujici connect dialog
+  */
 void MainWindow::showConnectDialog()
 {
     cd->show();
 }
 
+/**
+  * Slot zobrazujici about dialog
+  */
 void MainWindow::showAboutDialog()
 {
     ad->show();
 }
 
+/**
+  * Ziskani aktualniho zobrazovace scen
+  * @return uakaztel na aktualni zobrazovac scen
+  */
 QGraphicsView * MainWindow::currentTabView(){
     return ((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]));
 }
 
-#define currentTabScene (((QGraphicsView *)(ui->tabWidget->currentWidget()->children()[0]))->scene())
 #define returnIfNoTab if(ui->tabWidget->currentWidget() == NULL) return
 
-
+/**
+  * Prida misto do aktualni sceny
+  * @param simPlace ukazatel na misto do SimState
+  * @return ukazatel na misto
+  */
 pnItem * MainWindow::__addItem(PNPlace * simPlace){
     returnIfNoTab NULL;
     pnItem * item = new pnCircle(currentTabView()->scene(), simPlace);
     return item;
 }
 
+/**
+  * Slot pridavajici misto do sceny
+  * @return ukazatel na misto (nepouzivan, jen pro uplnost)
+  */
 pnItem * MainWindow::addItem(){
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
@@ -372,6 +433,11 @@ pnItem * MainWindow::addItem(){
 #undef simPlace
 }
 
+/**
+  * Prida prechod do aktialni sceny
+  * @param simTrans ukazatel na prechod do SimState
+  * @return ukazatel na prechod
+  */
 pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
     returnIfNoTab NULL;
     pnItem * item = new pnRect(currentTabView()->scene(), simTrans);
@@ -379,6 +445,10 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
     return item;
 }
 
+/**
+  * Slot pridavajici prechod do sceny
+  * @return ukazatel na misto (nepouzivan, jen pro uplnost)
+  */
 pnItem * MainWindow::addItemRect(){
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
@@ -395,22 +465,33 @@ pnItem * MainWindow::addItemRect(){
 
 }
 
-
+/**
+  * Slot kontrolujici nastaveni mazani (nastavuje globalni promennou)
+  */
 void MainWindow::checkErase(){
     erase = ui->deleter->isChecked();
 }
 
+/**
+  * Slot pro oddaleni sceny
+  */
 void MainWindow::zoomOut(){
     if(getCurrentSim())
         currentTabView()->scale(0.8,0.8);
 }
 
+/**
+  * Slot pro priblizeni sceny
+  */
 void MainWindow::zoomIn(){
     if(getCurrentSim())
         currentTabView()->scale(1/0.8,1/0.8);
 }
 
-
+/**
+  * Ziska aktualni simulaci
+  * @return ukazatel na aktualni simulaci
+  */
 SimState * MainWindow::getCurrentSim(){
     int cnt = ui->tabWidget->count();
     if(!cnt)
@@ -419,18 +500,33 @@ SimState * MainWindow::getCurrentSim(){
         return simVect[ui->tabWidget->currentIndex()];
 }
 
+/**
+  * Nastavi ID simulace
+  * @param id id simulace
+  */
 void MainWindow::setID(QString id){
     idVect[ui->tabWidget->currentIndex()] = id;
 }
 
+/**
+  * Ziksa ID simulace
+  * @return ID simulace
+  */
 QString MainWindow::getID(){
     return idVect[ui->tabWidget->currentIndex()];
 }
 
+/**
+  * Ziska ukazatel na edit dialog
+  * @return ukazatel na editDialog
+  */
 editDialog * MainWindow::getEditor(){
     return editor;
 }
 
+/**
+  * Slot nacitajici lokalno simulaci
+  */
 void MainWindow::loadLocalSim(){
     //ld->show();
     QString fileName = QFileDialog::getOpenFileName(this, "Load local simulation",
@@ -442,6 +538,9 @@ void MainWindow::loadLocalSim(){
     __loadSim(fileName);
 }
 
+/**
+  * Slot pro editaci vlasnosti site
+  */
 void MainWindow::editProperties(){
     SimState * currentSim = getCurrentSim();
     if(!currentSim) return;
@@ -450,15 +549,25 @@ void MainWindow::editProperties(){
     pd->show();
 }
 
+/**
+  * Nastavi jmeno simulaci (do tab widgetu)
+  * @param name jmeno simulace
+  */
 void MainWindow::setSimName(QString name){
     ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), name);
 }
 
+/**
+  * Slot pro naceni vykomunikovane site od serveru
+  */
 void MainWindow::simOk(){
 
     simReload(communicator.simID, communicator.sim);
 }
 
+/**
+  * Slot spoustejici simulaci na serveru (pres communikator)
+  */
 void MainWindow::runSim() {
     if(!getCurrentSim()->isAct)
         return;
@@ -467,6 +576,9 @@ void MainWindow::runSim() {
     communicator.runSimulation(id, true);
 }
 
+/**
+  * Slot krokujici simulaci na serveru (pres komunikator)
+  */
 void MainWindow::stepSim() {
     if(!getCurrentSim()->isAct)
         return;
@@ -475,6 +587,11 @@ void MainWindow::stepSim() {
     communicator.runSimulation(id, false);
 }
 
+/**
+  * Zobrazi ID simulace na index
+  * @param _id ID simulace
+  * @return index
+  */
 int MainWindow::findID(QString _id){
     for(unsigned int i= 0; i< idVect.size(); i++){
         if(idVect[i] == _id){
@@ -483,8 +600,11 @@ int MainWindow::findID(QString _id){
     }
     return -1;
 }
-
-//volat se bude simReaload("id", new SimState()
+/**
+  * Znovu nacte simulaci a prepne na jeji tab
+  * @param _id ID simulace
+  * @param newSimstate XML stav simulace
+  */
 void MainWindow::simReload(QString _id, QString newSimState){
     int tabIndex = findID(_id);
     if(tabIndex == -1){
@@ -521,6 +641,11 @@ void MainWindow::simReload(QString _id, QString newSimState){
     }
 }
 
+/**
+  * Nastavi online/offline status simulace a barvu
+  * @param status text statusu
+  * @param barava statusu
+  */
 void MainWindow::setStatusLabel(QString status, QString color){
     if(statusLabel){
         QString styleSheet = "QLabel { color : "+color+";}";

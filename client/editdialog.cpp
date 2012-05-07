@@ -19,9 +19,13 @@
 #include "../server/constraint.h"
 #include <map>
 #include <iostream>
-
 #include "mainwindow.h"
 
+
+/**
+  * Konstruktor vytvarejici editDialog
+  * @param predek pro uklid
+  */
 editDialog::editDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::editDialog)
@@ -29,11 +33,21 @@ editDialog::editDialog(QWidget *parent) :
     ui->setupUi(this);
 }
 
+/**
+  * Destruktor editDialog
+  */
 editDialog::~editDialog()
 {
     delete ui;
 }
 
+/**
+  * Zkontroluje, zda regularni vyraz opovida textu, pokud ne, konci s info oknem
+  * @param pattern regularni vyraz
+  * @param str kontrolovany text
+  * @param errStr text chybove hlasky
+  * @return ukazatel na vytvoreny regularni vyraz, ktery odpovida textu
+  */
 QRegExp * checkExp(QString pattern, QString str, QString errStr){
     QRegExp * rx = new QRegExp(pattern);
     if(!rx->exactMatch(str)){
@@ -44,6 +58,9 @@ QRegExp * checkExp(QString pattern, QString str, QString errStr){
     return rx;
 }
 
+/**
+  * Slot volany pri prijeti dialogu (klik na OK)
+  */
 void editDialog::accept(){
     switch(sender->primType){
     case TRANS:
@@ -158,6 +175,10 @@ void editDialog::accept(){
     this->hide();
 }
 
+/**
+  * nacte data do dialogu
+  * @param sender ukazatel na prvek, ktery nastaveni zavolal
+  */
 void editDialog::loadData(pnPrimitive * _sender){
     sender = _sender;
     ui->labelEdit->setText(sender->label->toPlainText());

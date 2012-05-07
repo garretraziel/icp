@@ -18,6 +18,10 @@
 #include <QRegExp>
 #include <QMessageBox>
 
+/**
+  * Konstruktor vytvarejici loadSimDialog
+  * @param predek pro uklid
+  */
 loadSimDialog::loadSimDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::loadSimDialog)
@@ -32,17 +36,27 @@ loadSimDialog::loadSimDialog(QWidget *parent) :
     connect(this,SIGNAL(rejected()),this,SLOT(clearSims()));
 }
 
+/**
+  * Destruktor loadSimDialog
+  */
 loadSimDialog::~loadSimDialog()
 {
 
     delete ui;
 }
 
+/**
+  * zapise informace o simulaci do seznamu
+  * @param sim vektor vlatnosti site (jmeno, autor, verze, info)
+  */
 void loadSimDialog::pushSim(StringVector sim){
 
     items.push_back(sim);
 }
 
+/**
+  * slot volany pri zmene filter pole (profiltruje vypsane hodnoty)
+  */
 void loadSimDialog::updateList(){
     ui->listWidget->clear();
     QStringList filterList = ui->filterEdit->text().split(QRegExp("\\s*,\\s*"));
@@ -56,6 +70,9 @@ void loadSimDialog::updateList(){
     }
 }
 
+/**
+  * slot volany pri prijeti dialogu (klik na OK)
+  */
 void loadSimDialog::accept(){
     QString selected = ui->listWidget->item(ui->listWidget->currentRow())->text();
     foreach(StringVector item, items){
@@ -72,6 +89,9 @@ void loadSimDialog::accept(){
     items.clear();
 }
 
+/**
+  * slot zajistujici smazani simulaci ze seznamu
+  */
 void loadSimDialog::clearSims()
 {
     items.clear();
