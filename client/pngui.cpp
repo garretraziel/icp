@@ -29,6 +29,23 @@ bool erase;                      ///< globalni prepinas, urcuje zda se prave maz
 
 #define PI 3.1415927537
 
+
+/**
+  * Nastavi barvu cary
+  * @param _color barva cary
+  */
+void pnPrimitive::setColor(QColor _color){
+    penColor = _color;
+}
+
+/**
+  * Nastavi barvu vyplne
+  * @param _color barva vyplne
+  */
+void pnPrimitive::setBkgColor(QColor _color){
+    brushColor = _color;
+}
+
 /**
   * Konstruktor vytvarejici misto ve scene
   * @param _canvas ukazatel na scena, kam se vykresluje
@@ -52,6 +69,9 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     editor = mw->getEditor();
     simPlace = _simPlace;
     primType = PLACE;
+
+    setColor(mw->color);
+    setBkgColor(mw->bkg);
 }
 
 /**
@@ -76,6 +96,9 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     editor = mw->getEditor();
     simTrans = _simTrans;
     primType = TRANS;
+
+    setColor(mw->color);
+    setBkgColor(mw->bkg);
 }
 
 /**
@@ -246,8 +269,8 @@ void pnCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    painter->setPen(QPen(Qt::black, 2));
-    painter->setBrush(QBrush(QColor(255,255,255)));
+    painter->setPen(QPen(penColor, 2));
+    painter->setBrush(QBrush(brushColor));
     painter->drawEllipse(-20, -20, 40, 40);
 }
 
@@ -273,8 +296,8 @@ void pnRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    painter->setPen(QPen(Qt::black, 2));
-    painter->setBrush(QBrush(QColor(255,255,255)));
+    painter->setPen(QPen(penColor, 2));
+    painter->setBrush(QBrush(brushColor));
     int textLen = label->toPlainText().length()*6;
     int funcLen = funcLabel->toPlainText().length()*6;
     painter->drawRect(-65, -25, 65 + ((textLen > funcLen)? textLen : funcLen), 50);
@@ -352,8 +375,9 @@ protected:
   * Trida reprezentujici sipku ve scene
   *
   */
-class arrow: public QGraphicsLineItem {
+class arrow: public QGraphicsLineItem, public pnPrimitive {
     pnItem * colider; ///< ukazatel na koncovy prvek
+    //QColor penColor;
 public:
     /**
       * Nastavi ukazatel na koncovy prvek
@@ -363,6 +387,13 @@ public:
         colider = _colider;
     }
 
+    /**
+      * Nastavi barvu hrany
+      * @param _color barva hrany
+      */
+    /*
+    void setColor(QColor _color){ penColor = _color; }
+    */
     /**
       * Obslouzeni vykresleni sipky do sceny
       * @param painter vykreslovac (vnitrne obsluhuje scena)
@@ -383,7 +414,7 @@ public:
         boundingLines.push_back(QLineF(bndRct.topRight()+bPos, bndRct.bottomRight()+bPos));
 #undef bndRct
 
-        painter->setPen(QPen(Qt::black, 2));
+        painter->setPen(QPen(penColor, 2));
         //zjistit se kterou se protina
         QPointF intersectPoint;
         foreach(QLineF boundingLine, boundingLines){
@@ -418,17 +449,14 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
 
    //nastavi se koncovy bod pro detekci pruniku
    ((arrow *)line)->setColider(end);
-
+   ((arrow *)line)->setColor(mw->color);
    //nastavice pozice
    line->setLine(start->x(),start->y(),end->x(),end->y());
    canvas->addItem(line);
 
    //cary budou pod prvky
    line->setZValue(-1);
-   if(start->primType == PLACE)
-       line->setPen(QPen(Qt::green, 2));
-   else
-       line->setPen(QPen(Qt::red, 2));
+
    lineVect.push_back(this);
 
    //a popisek bude prijimat dvojkliky
@@ -460,4 +488,12 @@ pnLine::~pnLine(){
 void pnLine::update(){
     line->setLine(start->x(),start->y(),end->x(),end->y());
     label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);    
+}
+
+/**
+  * Nastavi barvu hrany
+  * @param _color barva hrany
+  */
+void setColor(QColor _color){
+    ((arrow *)line)->setColor(_color);
 }

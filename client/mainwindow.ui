@@ -65,6 +65,25 @@
        </spacer>
       </item>
       <item>
+       <widget class="QComboBox" name="colorBox">
+        <item>
+         <property name="text">
+          <string>Color</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Black</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Red</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="zoomIn">
         <property name="text">
          <string>+</string>

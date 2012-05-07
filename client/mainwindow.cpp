@@ -29,6 +29,8 @@
 #include "communicator.h"
 #include <time.h>
 
+#include <QGraphicsColorizeEffect>
+
 MainWindow * mw;
 
 int UniqID = 0; ///< unikatni id prvku ve scene
@@ -84,10 +86,87 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(actAct(int)));
 
+    QObject::connect(ui->colorBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(colorize(QString)));
+
     statusLabel = new QLabel;
     ui->statusBar->addWidget(statusLabel);
 
     setStatusLabel("Offline", "#ff0000");
+
+    color = Qt::black;
+    bkg = Qt::lightGray;
+
+    QFile settings("settings.dat");
+    settings.open(QIODevice::ReadOnly | QIODevice::Text);
+    if(!settings.isReadable()) return;
+    QString xmlSettings = settings.readAll();
+    settings.close();
+
+    QXmlStreamReader xml(xmlSettings);
+
+    if (xml.readNext() != QXmlStreamReader::StartDocument) {
+        std::cout << "tady\n";
+        return;
+    }
+    xml.readNext();
+    if (xml.atEnd() || xml.hasError()) {
+        return;
+    }
+    QString _color;
+    QString _bkg;
+    xml.readNextStartElement();
+
+    if (xml.name() == "color-settings") {
+        _color = xml.attributes().value("color").toString();
+        _bkg = xml.attributes().value("bkg").toString();
+        color = QColor(_color);
+        bkg = QColor(_bkg);
+    }
+
+}
+
+/**
+  * Slot volany pro zmenu barvy prvku
+  */
+void MainWindow::colorize(QString _color){
+    if(simVect.empty()) return;
+
+    QString settingsXml;
+    QXmlStreamWriter xml(&settingsXml);
+    xml.writeStartDocument(); // <? xml ..
+    xml.writeStartElement("settings");
+    xml.writeStartElement("color-settings");
+
+    QGraphicsScene * canvas = currentTabView()->scene();
+    if(_color == "Black"){
+        color = QColor("#000000");
+        bkg = QColor("#cccccc");
+        xml.writeAttribute("color","#000000");
+        xml.writeAttribute("bkg","#cccccc");
+    }
+    else if(_color == "Red"){
+        color = QColor("#ff0000");
+        bkg = QColor("#ffcccc");
+        xml.writeAttribute("color","#ff0000");
+        xml.writeAttribute("bkg","#ffcccc");
+    }
+
+    pnPrimitive * prim;
+
+    foreach(QGraphicsItem * item, canvas->items()){
+        prim = dynamic_cast<pnPrimitive*>(item);
+        if(!prim) continue;
+
+        prim->setColor(color);
+        prim->setBkgColor(bkg);
+    }
+
+    xml.writeEndDocument();
+    QFile settings("settings.dat");
+    settings.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!settings.isWritable()) return;
+    settings.write(settingsXml.toStdString().data());
+    settings.close();
 }
 
 /**

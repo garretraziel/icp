@@ -121,6 +121,8 @@ public:
       */
     QPointF currentTabViewCenter();
 
+    QColor color, bkg; ///< barvy car a vyplne prvku
+
 private:
     Ui::MainWindow *ui;     ///< user interface
 
@@ -185,6 +187,11 @@ private slots:
       * Slot volany pred zavrenim okna (uklizeni statusbaru)
       */
     void preClose();
+
+    /**
+      * Slot volany pro zmenu barvy prvku
+      */
+    void colorize(QString);
 
 public slots:
     /**

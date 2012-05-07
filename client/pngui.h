@@ -22,6 +22,7 @@
 #include "editdialog.h"
 #include "../server/pnplace.h"
 #include "../server/pntrans.h"
+#include <QColor>
 
 #define PLACE 0
 #define TRANS 1
@@ -39,8 +40,23 @@ public:
     QGraphicsTextItem * funcLabel;  ///< popisek (vytupni funkce)
     QGraphicsScene * canvas;        ///< scena, na ktere je prvek
     int primType;                   ///< typ prvku
+
+    /**
+      * Nastavi barvu cary
+      * @param _color barva cary
+      */
+    void setColor(QColor _color);
+
+    /**
+      * Nastavi barvu vyplne
+      * @param _color barva vyplne
+      */
+    void setBkgColor(QColor _color);
+
 protected:
     QPointF labelPos;               ///< pozice popisku
+    QColor penColor;                ///< barva cary
+    QColor brushColor;              ///< barva vyplne
 };
 
 /**
@@ -177,6 +193,12 @@ public:
 
     pnItem * start; ///< ukazatel na pocatecni misto/prechod
     pnItem * end;   ///< ukazatel na pocatecni prechod/misto
+
+    /**
+      * Nastavi barvu hrany
+      * @param _color barva hrany
+      */
+    void setColor(QColor _color);
 };
 
 
