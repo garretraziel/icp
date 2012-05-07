@@ -20,6 +20,8 @@
 #include <typeinfo>
 #include <QString>
 
+#include <QDebug>
+
 pnItem * startpos;               ///< ukazatel na pocatecni misto/prechod, ze ktereho je vedena hrana
 bool line;                       ///< globalni prepinac, urcuje zda se prave spojuji prvky ve scene
 std::vector<pnLine*> lineVect;   ///< vektor hran, uzit pro iterovani a opraveni pozice metodou update()
@@ -39,9 +41,8 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     canvas = _canvas;
     canvas->addItem(this);
     //a napozicuje doprostred sceny
-    QGraphicsView * thisView = canvas->views()[0];
-    QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
-    this->setPos(center.x(),center.y());
+    this->setPos(mw->currentTabViewCenter());
+
     label = canvas->addText("?? P");
     labelPos = QPointF(-15, -10);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
@@ -64,9 +65,7 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
     canvas->addItem(this);
-    QGraphicsView * thisView = canvas->views()[0];
-    QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
-    this->setPos(center.x(),center.y());
+    this->setPos(mw->currentTabViewCenter());
     label = canvas->addText("?? T");
     labelPos = QPointF(-60,-20);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());

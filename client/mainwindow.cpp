@@ -436,8 +436,8 @@ pnItem * MainWindow::addItem(){
 #define simPlace ((PNPlace *)(currentSim->places.back()))
     //nastavi vlastnosti prvku
     simPlace->id = QString::number(++UniqID);
-    simPlace->x = QString::number(int(this->x()));
-    simPlace->y = QString::number(int(this->y()));
+    simPlace->x = QString::number(int(currentTabViewCenter().x()));
+    simPlace->y = QString::number(int(currentTabViewCenter().y()));
     //a necha vytvorit grafickou reprezentaci
     return __addItem(simPlace);
 #undef simPlace
@@ -471,8 +471,8 @@ pnItem * MainWindow::addItemRect(){
     currentSim->transits.push_back(new PNTrans());
 #define simTrans ((PNTrans *)(currentSim->transits.back()))
     simTrans->id = QString::number(++UniqID);
-    simTrans->x = QString::number(int(this->x()));
-    simTrans->y = QString::number(int(this->y()));
+    simTrans->x = QString::number(int(currentTabViewCenter().x()));
+    simTrans->y = QString::number(int(currentTabViewCenter().x()));
     return __addItemRect(simTrans);
 #undef simTrans
 
@@ -676,5 +676,11 @@ void MainWindow::setStatusLabel(QString status, QString color){
     }
 }
 
-
+/**
+  * Ziska stred aktualniho zobrazovace mapovaneho na scenu
+  * @return stred zobrazovce
+  */
+QPointF MainWindow::currentTabViewCenter(){
+    return currentTabView()->mapToScene(currentTabView()->viewport()->rect().center());
+}
 

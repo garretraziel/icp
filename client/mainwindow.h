@@ -31,6 +31,7 @@
 #include "propertiesdialog.h"
 #include "loadsimdialog.h"
 #include "helpdialog.h"
+#include <QPointF>
 
 namespace Ui {
 class MainWindow;
@@ -113,6 +114,12 @@ public:
       * @param barava statusu
       */
     void setStatusLabel(QString status, QString color);
+
+    /**
+      * Ziska stred aktualniho zobrazovace mapovaneho na scenu
+      * @return stred zobrazovce
+      */
+    QPointF currentTabViewCenter();
 
 private:
     Ui::MainWindow *ui;     ///< user interface
