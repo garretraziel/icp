@@ -43,6 +43,7 @@ propertiesDialog::~propertiesDialog()
   * @param info informace o simulaci
   */
 void propertiesDialog::loadData(QString name, QString author, QString version, QString info){
+    //nacte si data do dialogu
     ui->nameEdit->setText(name);
     author = (author=="")? communicator.userLoggedIn() : author;
     ui->authorEdit->setText(author);
@@ -54,7 +55,7 @@ void propertiesDialog::loadData(QString name, QString author, QString version, Q
   * Slot volany po prijeti dialogu (klik na OK)
   */
 void propertiesDialog::accept(){
-
+    //ulozi editovana data
     mw->getCurrentSim()->setProperies(
                 ui->nameEdit->text(),
                 ui->authorEdit->text(),

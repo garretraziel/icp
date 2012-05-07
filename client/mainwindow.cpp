@@ -108,6 +108,7 @@ void MainWindow::actAct(int i){
   * Slot volany pred zavrenim okna (uklizeni statusbaru)
   */
 void MainWindow::preClose(){
+    // workaround aby se nezasilal signal u vypinani
     communicator.blockSocket(true);
     delete statusLabel;
     statusLabel = NULL;
@@ -140,10 +141,12 @@ void MainWindow::newTab(){
 
     tabVect.push_back(new QWidget(this));
 
-    //~~~~~ tyto dva musi byt v tomto poradi
+    //~~~~~ tyto dva musi byt v tomto poradi (kvuli ocekavanemu poradi widgetu)
     viewVect.push_back(new QGraphicsView(tabVect.back()));
     QLayout * layout = new QVBoxLayout(tabVect.back());
     //~~~~~
+
+    // na za zasobniky vsechny potrebne informace a nastavi je
 
     canvasVect.push_back(new QGraphicsScene(viewVect.back()));
     viewVect.back()->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -187,7 +190,7 @@ QString fromConstraint(Constraint * cons){
     if(cons->type == TYPECONST)
         guard += QString::number(cons->second_const);
     else
-        guard += "??"; //TODO! jeste nefunguje jinde
+        guard += "??";
     guard += " && ";
 
     return guard;
@@ -236,12 +239,13 @@ void MainWindow::__loadSimString(QString simString){
 void MainWindow::__loadSimStringNoNewTab(QString simString){
 
     SimState * currentSim = getCurrentSim();
-
+    //nastavi prazde simulaci stav
     currentSim->setState(simString);
     mw->setSimName(getCurrentSim()->name);
 
-    QPointF center(0,0);
-    int centerCnt = 0;
+
+
+    //pro vsechny mista v simulaci vytvori jejich obraz ve scene
     std::map<PNPlace *, pnItem *> placeToGui;
     foreach(PNPlace * place, currentSim->places){
         UniqID = (UniqID <= place->id.toInt())? place->id.toInt()+1 : UniqID;
@@ -254,11 +258,10 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
         id = id.mid(0,id.length()-2);
         item->label->setPlainText(id);
         item->setPosition(place->x.toInt(),place->y.toInt());
-        center += QPointF(item->pos());
-        centerCnt++;
+
     }
 
-
+    // pro vsechny prechody v simulaci vytvori jejich obrazy ve scene
     foreach(PNTrans * transit, currentSim->transits){
         UniqID = (UniqID <= transit->id.toInt())? transit->id.toInt()+1 : UniqID;
         pnItem * item = __addItemRect(transit);
@@ -276,9 +279,8 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
         item->funcLabel->setPlainText(func);
         item->setPosition(transit->x.toInt(),transit->y.toInt());
 
-        center += QPointF(item->pos());
-        centerCnt++;
 
+        // propoji mista a prechody podle vstupu a vystupu v simulaci
         StringToPnplaceMap::iterator it;
         for(it=transit->in_names.begin(); it!=transit->in_names.end(); it++){
             pnLine * newLine = new pnLine(placeToGui[(*it).second],item, item->canvas);
@@ -290,9 +292,7 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
         }
 
     }
-    /*if(centerCnt)
-        currentTabView()->centerOn(center/centerCnt);
-    */
+
     return;
 
 }
@@ -303,11 +303,13 @@ void MainWindow::__loadSimStringNoNewTab(QString simString){
 void MainWindow::loadSim(){
 
     simList simulations;
+    //ziska od serveru seznam simulaci
     if(!communicator.getSimulations(simulations)){
         QMessageBox::critical(this,"Error","Server didn't response");
         return;
     }
 
+    //a nastrka je do dialogu
     foreach(StringVector sim, simulations)
         ld->pushSim(sim);
 
@@ -328,6 +330,7 @@ void MainWindow::saveSim(){
     else{
 
         QString message;
+        // zasle komunikatoru stav site a zkontroluje vysledek
         if(!communicator.saveSimState(getCurrentSim()->getState(), message)){
             QMessageBox::critical(this, "Error", message);
         } else {
@@ -356,6 +359,7 @@ void MainWindow::saveLocalSim(){
         QMessageBox::critical(this, "Wrong configuration", "Check the vars on edges and vars in transits");
     else{
 
+        // lokalne ulozi do souboru
         QString xmlOut = getCurrentSim()->getState();
         QString fileName = QFileDialog::getSaveFileName(this,
                                                         "Save Local Simulation",
@@ -370,11 +374,9 @@ void MainWindow::saveLocalSim(){
             QMessageBox::critical(this,"Error", "Unable to open file "+fileName+" for writing");
             return;
         }
-
-        //fileOut.write(xmlOut.toStdString().data());
         QTextStream out(&fileOut);
         out << xmlOut;
-
+        // zavre samo v destruktoru
     }
 
 }
@@ -421,17 +423,21 @@ pnItem * MainWindow::__addItem(PNPlace * simPlace){
   * @return ukazatel na misto (nepouzivan, jen pro uplnost)
   */
 pnItem * MainWindow::addItem(){
+
+
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
         return NULL;
-
+    //do simulace vlozi novy prvek a nastavi neaktualno simulace
     currentSim->places.push_back(new PNPlace());
     currentSim->isAct = false;
     actAct(ui->tabWidget->currentIndex());
 #define simPlace ((PNPlace *)(currentSim->places.back()))
+    //nastavi vlastnosti prvku
     simPlace->id = QString::number(++UniqID);
     simPlace->x = QString::number(int(this->x()));
     simPlace->y = QString::number(int(this->y()));
+    //a necha vytvorit grafickou reprezentaci
     return __addItem(simPlace);
 #undef simPlace
 }
@@ -453,6 +459,9 @@ pnItem * MainWindow::__addItemRect(PNTrans *simTrans){
   * @return ukazatel na misto (nepouzivan, jen pro uplnost)
   */
 pnItem * MainWindow::addItemRect(){
+
+    // obdobne jako v addItem()
+
     SimState * currentSim = getCurrentSim();
     if(!currentSim)
         return NULL;
@@ -574,9 +583,10 @@ void MainWindow::simOk(){
 void MainWindow::runSim() {
     if(simVect.empty())
         return;
+    //neaktualni nesimulujeme
     if(!getCurrentSim()->isAct)
         return;
-
+    // ziska ID simulace
     QString id = idVect[ui->tabWidget->currentIndex()];
     communicator.runSimulation(id, true);
 }
@@ -587,9 +597,10 @@ void MainWindow::runSim() {
 void MainWindow::stepSim() {
     if(simVect.empty())
         return;
+    //neaktualni nesimulujeme
     if(!getCurrentSim()->isAct)
         return;
-
+    // ziska ID simulace
     QString id = idVect[ui->tabWidget->currentIndex()];
     communicator.runSimulation(id, false);
 }
@@ -613,16 +624,18 @@ int MainWindow::findID(QString _id){
   * @param newSimstate XML stav simulace
   */
 void MainWindow::simReload(QString _id, QString newSimState){
+    //zjisti jestli uz je tab s danym ID
     int tabIndex = findID(_id);
+
     if(tabIndex == -1){
-        //neni tab
+        //neni tab, vytvori novy a do nej simulaci
         __loadSimString(newSimState);
         getCurrentSim()->isAct = true;
         actAct(ui->tabWidget->currentIndex());
-        //snad to nebude indexovat blbe
         idVect.back() = _id;
     }
     else {
+        //tab je, jen smazeme cary zvlast
         ui->tabWidget->setCurrentIndex(tabIndex);
         std::vector<pnLine *> tmp;
         foreach(pnLine * l, lineVect){
@@ -634,14 +647,13 @@ void MainWindow::simReload(QString _id, QString newSimState){
         lineVect.clear();
         foreach(pnLine * l, tmp)
             lineVect.push_back(l);
-        //smazani obsahu sceny
-
-        //((QGraphicsScene *)canvasVect[tabIndex])->clear();
-
+        // a obsah zvlast
         currentTabView()->scene()->clear();
 
-
+        // nacteni ze stavu
         __loadSimStringNoNewTab(newSimState);
+
+        //simulace je aktualni
         getCurrentSim()->isAct = true;
         actAct(tabIndex);
 

@@ -35,17 +35,19 @@ bool erase;                      ///< globalni prepinas, urcuje zda se prave maz
 pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
+    //nastavi si canvas
     canvas = _canvas;
     canvas->addItem(this);
-
+    //a napozicuje doprostred sceny
     QGraphicsView * thisView = canvas->views()[0];
     QPointF center = thisView->mapToScene(thisView->viewport()->rect().center());
     this->setPos(center.x(),center.y());
     label = canvas->addText("?? P");
     labelPos = QPointF(-15, -10);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
+    //mame jen tokeny, zadnou funcki
     funcLabel = NULL;
-
+    //ziska spolecny editor
     editor = mw->getEditor();
     simPlace = _simPlace;
     primType = PLACE;
@@ -57,6 +59,7 @@ pnCircle::pnCircle(QGraphicsScene * _canvas, PNPlace * _simPlace){
   * @param _simTrans ukazatel na prechod do SimState
   */
 pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
+    //podobne jako pnCircle
     setCursor(Qt::OpenHandCursor);
     setAcceptedMouseButtons(Qt::LeftButton|Qt::RightButton);
     canvas = _canvas;
@@ -67,10 +70,10 @@ pnRect::pnRect(QGraphicsScene * _canvas, PNTrans * _simTrans){
     label = canvas->addText("?? T");
     labelPos = QPointF(-60,-20);
     label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
-
+    //funkci ale mame, tak ji nastavime
     funcLabel = canvas->addText("output func = ??");
     funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
-
+    //ziska editor
     editor = mw->getEditor();
     simTrans = _simTrans;
     primType = TRANS;
@@ -95,9 +98,11 @@ void pnItem::setPosition(int x, int y){
 void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
  {
     if(erase){
+        //simulace neni aktualni
         mw->getCurrentSim()->isAct = false;
         mw->actAct(mw->getCurrentIndex());
         std::vector<pnLine *> tmp;
+        //zkontroluje pripojene hrany a smaze je
         foreach(pnLine * l, lineVect){
             if(l->start==this || l->end == this){
                 if(l->start->primType == TRANS){
@@ -113,7 +118,7 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         lineVect.clear();
         foreach(pnLine * l, tmp)
             lineVect.push_back(l);
-
+        //smaze popisky
         delete label;
         if(funcLabel) delete funcLabel;
 
@@ -134,16 +139,22 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
         }
 
         delete this;
-        return; //!!! lol suicide
+        return;
     }
 
+    //klik, ale nic nezmeneni, simulaci zustava jeji aktualnost
     if(event->button()==Qt::LeftButton){
         setCursor(Qt::ClosedHandCursor);
         line = false;
     }
+
+
     else{
+        //simulace neni aktualni
         mw->getCurrentSim()->isAct = false;
         mw->actAct(mw->getCurrentIndex());
+
+        //propojuje, pokud nebylo kliknuto na ten jeden a samy, nebo na stejny typ
         if(line){
             line = false;
             if(startpos->primType== this->primType || startpos == this)
@@ -164,10 +175,15 @@ void pnItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   * @param event udalost spojena s mysi
   */
 void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
+    // pri pohnuti sit neni aktualni
+    // server by zaslal puvodni pozice prvku
+    // a grafika by poskakovala
     mw->getCurrentSim()->isAct = false;
     mw->actAct(mw->getCurrentIndex());
-    this->setPos(event->scenePos().x(),event->scenePos().y());
-    label->setPos(this->x()+labelPos.x(),this->y()+labelPos.y());
+
+    setPosition(event->scenePos().x(),event->scenePos().y());
+
+    //nastavi pozice v simulaci
     if(primType == PLACE){
         ((pnCircle *)this)->simPlace->x = QString::number(int(this->x()));
         ((pnCircle *)this)->simPlace->y = QString::number(int(this->y()));
@@ -176,8 +192,8 @@ void pnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
         ((pnRect *)this)->simTrans->x = QString::number(int(this->x()));
         ((pnRect *)this)->simTrans->y = QString::number(int(this->y()));
     }
-    if(funcLabel)
-        funcLabel->setPos(this->x()+labelPos.x(),this->y()+labelPos.y() +15);
+
+    // a upravi hrany
     foreach(pnLine * l,lineVect){
         l->update();
     }
@@ -351,6 +367,7 @@ public:
         Q_UNUSED(widget);
         Q_UNUSED(option);
 
+        //pres vsechny stehny ohranicujicho obdelnika
         std::vector<QLineF> boundingLines;
 #define bndRct colider->boundingRect()
 #define bPos colider->pos()
@@ -361,18 +378,20 @@ public:
 #undef bndRct
 
         painter->setPen(QPen(Qt::black, 2));
-
+        //zjistit se kterou se protina
         QPointF intersectPoint;
         foreach(QLineF boundingLine, boundingLines){
             QLineF::IntersectType intersectType =
                     this->line().intersect(boundingLine, &intersectPoint);
             if (intersectType == QLineF::BoundedIntersection) break;
         }
+        //udelat caru az k bodu pruniku
         painter->drawLine(this->line().p1(),intersectPoint);
 
         double alfa = ::acos(this->line().dx()/this->line().length());
         if(this->line().dy() >= 0) alfa = (2*PI)-alfa;
 
+        //a za pomoci jednotkove kruznice vykresli sipku
         painter->drawLine(QLineF(intersectPoint, intersectPoint+QPointF(sin(alfa-PI/3)*10,cos(alfa-PI/3)*10)));
         painter->drawLine(QLineF(intersectPoint, intersectPoint+QPointF(sin(alfa+PI+PI/3)*10,cos(alfa+PI+PI/3)*10)));
 
@@ -390,11 +409,15 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
    end = _end;
    canvas = _canvas;
    line = new arrow;
-   //TODO
+
+   //nastavi se koncovy bod pro detekci pruniku
    ((arrow *)line)->setColider(end);
+
+   //nastavice pozice
    line->setLine(start->x(),start->y(),end->x(),end->y());
    canvas->addItem(line);
 
+   //cary budou pod prvky
    line->setZValue(-1);
    if(start->primType == PLACE)
        line->setPen(QPen(Qt::green, 2));
@@ -402,7 +425,7 @@ pnLine::pnLine(pnItem * _start, pnItem * _end, QGraphicsScene * _canvas){
        line->setPen(QPen(Qt::red, 2));
    lineVect.push_back(this);
 
-
+   //a popisek bude prijimat dvojkliky
    label = new dClickLabel(this);
    label->setPos((start->x()+end->x())/2,(start->y()+end->y())/2);
    label->setPlainText("?? L");
