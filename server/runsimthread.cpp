@@ -21,13 +21,13 @@ RunSimThread::RunSimThread(QString myid, PetriSim *sim, QMutex *outmutex, QStrin
 
 void RunSimThread::run()
 {
-    qsrand(QTime::currentTime().msec());
+    qsrand(QTime::currentTime().msec()); //pro kazde vlakno musim volat srand zvlast
     qDebug() << "[info] starting: " << myid;
     if (run_or_step) {
-        sim->run();
+        sim->run(); //chce spustit vse naraz
     } else {
-        sim->step();
+        sim->step(); //chce krokovat
     }
-    outmutex->lock();
-    (*outid) = myid;
+    outmutex->lock(); //pockam az muzu vratit hodnotu
+    (*outid) = myid; //vratim hodnotu, zkoncim
 }
