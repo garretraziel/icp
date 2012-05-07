@@ -18,18 +18,28 @@
 
 #define PORTNUMBER 11899
 
+/**
+  * Hlavni funkce serveru aplikace.
+  *
+  * Vytvori se QCoreApplication, spusti server a pote spusti event-loop Qt.
+  *
+  * @param argc pocet argumentu - automaticky zadan z konzole
+  * @param argv pole argumenty - automaticky zadan z konzole
+  *
+  * @return 0 pri spravnem ukonceni, 1 jinak
+  */
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     
-    PetriNetServer server(0,50,PORTNUMBER);
+    PetriNetServer server(0,50,PORTNUMBER); //spusti server na zadanem portu
 
-    bool is_running = server.start();
+    bool is_running = server.start(); //zacne naslouchat
 
     if (!is_running) {
         qCritical() << "Cannot start server\n";
         return 1;
     }
 
-    return a.exec();
+    return a.exec(); //spusti event-loop
 }
