@@ -8,7 +8,7 @@
  *
  * Dialog na editaci vlastnosti casti site.
  *
- * Vygeneroval automaticky Qt Creator
+ * Vygeneroval automaticky Qt Creator (nektere metody dopsany rucne)
  *
  */
 
@@ -58,8 +58,8 @@ public:
     void loadData(pnPrimitive * sender);
 
 private:
-    Ui::editDialog *ui;   /// user interface
-    pnPrimitive * sender; /// odesilatel pozadavku na editaci
+    Ui::editDialog *ui;   ///< user interface
+    pnPrimitive * sender; ///< odesilatel pozadavku na editaci
 public slots:
     /**
       * Slot volany pri prijeti dialogu (klik na OK)

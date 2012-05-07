@@ -54,9 +54,9 @@ public:
     void pushSim(StringVector sim);
     
 private:
-    Ui::loadSimDialog *ui;  /// user interface
-    int index;              /// index do seznamu simulaci
-    simList items;          /// seznam simulaci
+    Ui::loadSimDialog *ui;  ///< user interface
+    int index;              ///< index do seznamu simulaci
+    simList items;          ///< seznam simulaci
 
 public slots:
     /**

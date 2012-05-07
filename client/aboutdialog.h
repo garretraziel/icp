@@ -8,6 +8,8 @@
  *
  * Dialog, ktery zobrazuje informace o nazvu a autorech programu.
  *
+ * Vygeneroval automaticky Qt Creator
+ *
  */
 
 #ifndef ABOUTDIALOG_H

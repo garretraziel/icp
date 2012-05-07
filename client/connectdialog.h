@@ -43,7 +43,7 @@ public:
     ~ConnectDialog();
     
 private:
-    Ui::ConnectDialog *ui; /// user interface
+    Ui::ConnectDialog *ui; ///< user interface
 
 public slots:
     /**

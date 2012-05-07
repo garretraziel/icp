@@ -44,7 +44,7 @@ public:
     ~helpDialog();
     
 private:
-    Ui::helpDialog *ui; /// user interface
+    Ui::helpDialog *ui; ///< user interface
 };
 
 #endif // HELPDIALOG_H

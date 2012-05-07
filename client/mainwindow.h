@@ -268,6 +268,6 @@ public slots:
     void stepSim();
 };
 
-extern MainWindow * mw; /// ukazatel na hlavni okno
+extern MainWindow * mw; ///< ukazatel na hlavni okno
 
 #endif // MAINWINDOW_H

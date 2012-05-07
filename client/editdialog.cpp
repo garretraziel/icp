@@ -170,9 +170,23 @@ void editDialog::accept(){
 
         // u hrany musime nastavit vstupy a vystupy u prechodu
         if(((pnLine *)sender)->start->primType == TRANS){
+            if(((pnRect *)startPoint)->simTrans->out_names.find(ui->labelEdit->text())
+                    !=
+               ((pnRect *)startPoint)->simTrans->out_names.end()){
+                    QMessageBox::critical(this, "Var error", "Output var names must be unique");
+                    return;
+                }
+
             ((pnRect *)startPoint)->simTrans->out_names[ui->labelEdit->text()]
                     = ((pnCircle *)(endPoint))->simPlace;
         }else {
+            if(((pnRect *)endPoint)->simTrans->in_names.find(ui->labelEdit->text())
+                    !=
+               ((pnRect *)endPoint)->simTrans->in_names.end()){
+                    QMessageBox::critical(this, "Var error", "Input var names must be unique");
+                    return;
+                }
+
             ((pnRect *)endPoint)->simTrans->in_names[ui->labelEdit->text()]
                     = ((pnCircle *)(startPoint))->simPlace;
         }
