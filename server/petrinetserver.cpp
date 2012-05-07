@@ -20,7 +20,7 @@ PetriNetServer::PetriNetServer(QObject *parent, int maxconnections, int port) :
     setProxy(QNetworkProxy::NoProxy);
     setMaxPendingConnections(maxconnections);
 
-    my_ip = QHostAddress::Any;
+    my_ip = QHostAddress::Any; //nasloucha na vsech IP adresach hostitelskeho systemu
 
     this -> port = port; //pokud je port 0, automaticky vyber portu.
     iomutex = new QMutex;
@@ -35,21 +35,22 @@ PetriNetServer::~PetriNetServer()
 
 bool PetriNetServer::start()
 {
-    bool listening = listen(my_ip, port);
+    bool listening = listen(my_ip, port); //zacne naslouchat
 
-    if (!listening) {
+    if (!listening) { //port je nejspise zabrany
         qCritical() << "Cannot listen on: " << port;
         return false;
     } else {
         qDebug() << "listening on port: " << serverPort();
-        qDebug() << "and ip:" << my_ip.toString();
+        qDebug() << "and ip:" << my_ip.toString(); //nejspis bude 0.0.0.0, kvuli "ANY"
     }
     return true;
 }
 
 void PetriNetServer::incomingConnection(int socketDescriptor)
 {
+    //vytvori se nove vlakno, preda se mu mutex na i/o operace
     PNSimThread *thread = new PNSimThread(socketDescriptor, iomutex, this);
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
-    thread->start();
+    thread->start(); //vlako se spusti
 }
